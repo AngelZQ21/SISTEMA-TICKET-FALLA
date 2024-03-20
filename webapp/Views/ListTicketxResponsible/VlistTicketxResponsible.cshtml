@@ -1,0 +1,2234 @@
+﻿<script src="~/Scripts/util/jsUtilCambioGuardia.js"></script>
+@*<script src="~/Scripts/util/ColoresPersonalizados.js"></script>
+    <script src="~/Scripts/plugin/dygraphs/dygraph-combined.min.js"></script>*@
+
+<!--LIBRERIA PARA DATEPICKER-->
+@*<link href="~/Content/plugin/datapicker/datepicker3.css" rel="stylesheet" />*@
+<script src="~/Scripts/plugin/datapicker/bootstrap-datepicker.js"></script>
+@*<script src="~/Scripts/plugin/bootstrap-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>*@
+<!--LIBRERIA PARA CARGA DE ARCHIVOS-->
+<script src="~/Scripts/bootstrap-filestyle.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script type="text/javascript">
+    function anular(e) {
+
+        tecla = (document.all) ? e.keyCode : e.which;
+        return (tecla != 13);
+    }
+</script>
+
+<style>
+
+    .panel-group {
+        margin-bottom: 0;
+    }
+
+        .panel-group .panel {
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+            .panel-group .panel .panel-heading {
+                padding: 0;
+            }
+
+                .panel-group .panel .panel-heading h4 a {
+                    background: #D7F2DF;
+                    display: block;
+                    font-size: 12px;
+                    font-weight: bold;
+                    padding: 15px;
+                    text-decoration: none;
+                    transition: 0.15s all ease-in-out;
+                }
+
+                    .panel-group .panel .panel-heading h4 a:hover, .panel-group .panel .panel-heading h4 a:not(.collapsed) {
+                        background: #fff;
+                        transition: 0.15s all ease-in-out;
+                    }
+
+                        .panel-group .panel .panel-heading h4 a:not(.collapsed) i:before {
+                            content: "‾";
+                        }
+
+                    .panel-group .panel .panel-heading h4 a i {
+                        color: #999;
+                    }
+
+            .panel-group .panel .panel-body {
+                padding-top: 0;
+            }
+
+            .panel-group .panel .panel-heading + .panel-collapse > .list-group,
+            .panel-group .panel .panel-heading + .panel-collapse > .panel-body {
+                border-top: none;
+            }
+
+            .panel-group .panel + .panel {
+                border-top: none;
+                margin-top: 0;
+            }
+
+
+    .colorAzul {
+        background-color: #C2E1F8 !important;
+        font-weight: bold !important;
+    }
+
+    .colorVerde {
+        background-color: #ced !important;
+    }
+
+    .colorRojo {
+        background-color: #FE8475;
+    }
+
+    .colorAmarillo {
+        background-color: #FFDF6A;
+    }
+
+    .swal2-popup {
+        font-size: 1em !important;
+    }
+</style>
+
+<div id="content">
+
+    <div class="well" style="padding:0px 30px 10px 30px; background-color:white;">
+        <div class="row wrapper">
+            <div style="width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            text-align: center;
+            align-items: center;
+            ">
+                <h2 title="Cambio del Responsable de Ticket"><i class="fa fa-bar-chart-o fa-fw"></i> [Cambio del Responsable de Ticket]</h2>
+                @*<button class="btn btn-primary" type="button" id="btnNuevoCambioDeGuardia" disabled title="Registrar nueva Acta de Reunión"><i class="fa fa-plus"></i> Nueva Acta de Reunión</button>*@
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 10px;">
+            <form id="FrmFiltrosTicketxResponsible" onsubmit="return false" onkeypress="return anular(event)">
+                 <!--<div class="row">
+                    <section class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+                        @*<label style="color: #2F4050"><strong>: </strong><strong class="CampoRequerido">*</strong></label>*@
+                        <div style="width: 100%;">
+                            <input tabindex="7" type="radio" name="rdoRadioTicketResponsible" id="rdoTicket" checked="checked">
+                            <label style="color: #2F4050;"><strong>Ticket </strong></label>
+                            <input tabindex="7" type="radio" name="rdoRadioTicketResponsible" id="rdoResponsable" style="margin-left:30px">
+                            <label style="color: #2F4050"><strong>Responsable </strong></label>
+                            @*<input tabindex="7" type="radio" name="rdoNameCriticidad" style="margin-left:30px" id="rdoBajaCriticidad">
+                                <label style="color: #2F4050"><strong>Baja: </strong></label>*@
+                        </div>
+                    </section>
+                </div>-->
+
+                <div class="row">
+                    <!--FECHA INICIO-->
+                    <section class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                        <label style="color: #2F4050"><strong>Desde: </strong><strong class="CampoRequerido">*</strong></label>
+                        <div class="input-group date">
+                            <input type="text" class="form-control hasDatepicker" id="txtFechaInicioTicket" name="txtFechaInicioTicket" value="" data-dateformat="dd/mm/yy">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </section>
+
+                    @*FECHA FIN*@
+                    <section class="col-xs-12 col-sm-12 col-md-2 col-lg-2 ">
+                        <label style="color: #2F4050"><strong>Hasta: </strong><strong class="CampoRequerido">*</strong></label>
+                        <div class="input-group date">
+                            <input type="text" class="form-control hasDatepicker" id="txtFechaFinalTicket" name="txtFechaFinalTicket" value="" data-dateformat="dd/mm/yy">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </section>
+
+                    <!--TICKET-->
+                    @*<section class="col-xs-12 col-sm-12 col-md-2 col-lg-3 ContainerTicket">
+                         <label style="color: #2F4050"><strong>Ticket: </strong><strong class="CampoRequerido">*</strong></label>
+                         <div class="input-group">
+                             <input type="text" tabindex="1" class="form-control" name="txtTicket" id="txtTicket" maxlength="25" style="padding-left:5px;" />
+                             <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                         </div>
+                     </section>*@
+
+                    <section class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                        <label style="color: #2F4050"><strong>Responsable: </strong><strong class="CampoRequerido">*</strong></label>
+                        <div class="form-group">
+                            <select id="selectorResponsible" class="selectpicker" multiple data-selected-text-format="count > 3" data-live-search="true" data-width="100%" title="Selección múltiple" data-actions-box="true"></select>
+                        </div>
+                    </section>
+
+                    <section class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                        <label style="color: #2F4050"><strong>Ticket: </strong><strong class="CampoRequerido">*</strong></label>
+                        <div class="form-group">
+                            <select id="selectorTicket" class="selectpicker" multiple data-selected-text-format="count > 3" data-live-search="true" data-width="100%" title="Selección múltiple" data-actions-box="true"></select>
+                        </div>
+                    </section>
+
+                    <section class="col-xs-4 col-sm-4 col-md-1 col-lg-1 pull-right" style="margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                        <div style="margin-top:25px">
+                            <button class="btn btn-success pull-right" type="button" id="BtnExportarExcel" disabled title="Exportar listado a Excel"><i class="fa fa-file-excel-o"></i> Excel</button>
+                        </div>
+                    </section>
+
+                    <section class="col-xs-4 col-sm-4 col-md-1 col-lg-1 pull-right">
+                        <div style="margin-top:25px">
+                            <button style="margin:0px;" tabindex="9" disabled class="btn btn-primary pull-right" type="submit" id="btnBuscar"><i class="fa fa-search"></i> Buscar</button>
+                        </div>
+                    </section>
+
+                </div>
+
+                <div class="row">
+
+                    <i style="margin: 20px 10px"><strong><span style="color:red">Nota :</span></strong> Solo se podra cambiar de responsable en el ticket, si es que este no tiene ninguna actividad asignada</i>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="widget-grid" class="Contenedor1">
+        <div class="row">
+            <article class="col-xs-12 ContenedoresReportes">
+
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-rga1" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-list"></i> </span>
+                        <h2>Listado de Tickets</h2>
+                    </header>
+                    <div style="border:none;">
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                        </div>
+                        <div class="widget-body no-padding" id="ContenedorgrCreateTicket">
+                            <div id="LstTicketxResponsible" class="hidden"></div>
+                            <div class="spiner-example" id="imgCargaLstTicketxResponsible">
+                                @Html.Partial("../MensajesParciales/_MensajeCargando")
+                            </div>
+
+                            <div class="hidden" id="msjErrorLstTicketxResponsible" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeError")
+                            </div>
+
+                            <div class="hidden" id="msjVacioLstTicketxResponsible" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeVacio")
+                            </div>
+
+                            <div class="hidden" id="msjErrorListarLstTicketxResponsible" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                            </div>
+                            <div class="hidden" id="msjSuperaLimiteLstTicketxResponsible" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeLimiteGraficas")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </div>
+
+    <div id="widget-grid" class="Contenedor2 hidden">
+        <div class="row">
+            <article class="col-xs-12 ContenedoresReportes">
+
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-rga1" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-list"></i> </span>
+                        <h2>Listado de Responsables</h2>
+                    </header>
+                    <div style="border:none;">
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                        </div>
+                        <div class="widget-body no-padding" id="ContenedorgrCreateTicket">
+                            <div id="LstResponsibleQuantity" class="hidden"></div>
+                            <div class="spiner-example" id="imgCargaLstResponsibleQuantity">
+                                @Html.Partial("../MensajesParciales/_MensajeCargando")
+                            </div>
+
+                            <div class="hidden" id="msjErrorLstResponsibleQuantity" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeError")
+                            </div>
+
+                            <div class="hidden" id="msjVacioLstResponsibleQuantity" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeVacio")
+                            </div>
+
+                            <div class="hidden" id="msjErrorListarLstResponsibleQuantity" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                            </div>
+                            <div class="hidden" id="msjSuperaLimiteLstResponsibleQuantity" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeLimiteGraficas")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </div>
+
+</div>
+
+<div id="ModalTicketEdit" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true" style="overflow-y:scroll;">
+
+    <div class="modal-dialog" style="width:85%;">
+        <div class="modal-content animated">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">
+                    <label><strong>Nro Ticket: <label id="lblModelTicketEdit" style="color:red;font-weight:bold"> </label></strong></label>
+                    @*<label style="float:right;margin-right:15px;font-weight:bold;color:red"> FECHA INICIO : 00/00/0000  --- FECHA FIN 00/00/0000 </label>*@
+                </h4>
+            </div>
+            <form id="FrmTicketCreado" onsubmit="return false">
+
+                <div class="modal-body" style="overflow:auto;">
+
+                    <div id="exTab2" class="container" style="background-color:white; width:100%;">
+
+                        <!--TAB OPERACION-->
+                        <div class="tab-pane active" id="tabCompraDirecta">
+
+                            <div class="content">
+
+                                <div class="panel-group" id="accordion1" role="tablist" aria-multiselectable="true">
+
+                                    <div class="row form-group">
+
+                                        <section class="col-xs-3">
+                                            <label style="color: #2F4050">Operación: <strong class="CampoRequerido">*</strong></label>
+                                            <div class="input-group">
+                                                <input type="text" tabindex="1" class="form-control" name="txtOperacionTicket" id="txtOperacionTicket" disabled maxlength="25" style="padding-left:5px;" />
+                                                <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                                            </div>
+                                        </section>
+
+                                        <section class="col-xs-5">
+                                            <label style="color: #2F4050">Quien Llama: <strong class="CampoRequerido">*</strong></label>
+                                            <div class="input-group">
+                                                <input type="text" tabindex="1" class="form-control" name="txtWhoCall" id="txtWhoCall" disabled maxlength="25" style="padding-left:5px;" />
+                                                <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                                            </div>
+                                        </section>
+
+                                        <section class="col-xs-4">
+                                            <label style="color: #2F4050">Quien Registra: <strong class="CampoRequerido">*</strong></label>
+                                            <div class="input-group">
+                                                <input type="text" tabindex="1" class="form-control" name="txtWhoRegister" id="txtWhoRegister" disabled maxlength="25" style="padding-left:5px;" />
+                                                <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                                            </div>
+                                        </section>
+                                    </div>
+
+                                    <div id="divFechasTimer" class="row form-group">
+
+                                        <section class="col-xs-4">
+                                            <label style="color: #2F4050">Responsable: <strong class="CampoRequerido">*</strong></label>
+                                            <div class="form-group">
+                                                <select id="WhoResponsible" class="selectpicker" multiple data-selected-text-format="count > 3" data-live-search="true" data-width="100%" title="Selección múltiple" data-size="5" data-max-options="1" data-actions-box="false" data-style="btn-info"></select>
+                                            </div>
+                                        </section>
+
+
+                                        <section class="col-xs-4">
+                                            <label style="color: #2F4050">Razon:  <strong class="CampoRequerido">*</strong></label>
+                                            <div class="input-group">
+                                                <input type="text" tabindex="1" class="form-control" name="txtRazonTicket" id="txtRazonTicket" disabled maxlength="25" style="padding-left:5px;" />
+                                                <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                                            </div>
+                                        </section>
+
+                                        <section class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+                                            <label style="color: #2F4050">Criticidad:<strong class="CampoRequerido">*</strong></label>
+                                            <div style="width: 100%;">
+                                                <input tabindex="7" type="radio" name="rdoNameCriticidad" disabled id="rdoAltaCriticidad">
+                                                <label style="color: #2F4050;"><strong>Alta: </strong></label>
+                                                <input tabindex="7" type="radio" name="rdoNameCriticidad" disabled style="margin-left:30px" id="rdoMedioCriticidad">
+                                                <label style="color: #2F4050"><strong>Media: </strong></label>
+                                                <input tabindex="7" type="radio" name="rdoNameCriticidad" disabled style="margin-left:30px" id="rdoBajaCriticidad">
+                                                <label style="color: #2F4050"><strong>Baja: </strong></label>
+                                            </div>
+                                        </section>
+
+                                    </div>
+
+                                    <div class="row form-group">
+
+                                        <section class="col-xs-4">
+                                            <label style="color: #2F4050">Locación:  <strong class="CampoRequerido">*</strong></label>
+                                            <div class="input-group">
+                                                <input type="text" tabindex="1" class="form-control" name="txtLocationTicket" id="txtLocationTicket" disabled maxlength="25" style="padding-left:5px;" />
+                                                <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                                            </div>
+                                        </section>
+
+                                        <section class="col-xs-4">
+                                            <label style="color: #2F4050">Fecha Inicio: <strong class="CampoRequerido">*</strong></label>
+                                            <div class="input-group">
+                                                <input type="text" tabindex="1" class="form-control" name="txtTicketDate" id="txtTicketDate" disabled maxlength="25" style="padding-left:5px;" />
+                                                <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                                            </div>
+                                        </section>
+
+                                        <section id="divCambioDeGuardiaHora" class="col-xs-12 col-sm-12 col-md-3 col-lg-3 hidden">
+                                            <label style="color: #2F4050"><strong>Hora: </strong></label>
+                                            <div class="input-group">
+                                                <input type="text" tabindex="2" class="form-control" name="txtCambioDeGuardiaHora" id="txtCambioDeGuardiaHora" disabled maxlength="12" style="padding-left:5px;" />
+                                                <span class="input-group-addon"><i class="icon-prev fa fa-list-alt"></i></span>
+                                            </div>
+                                        </section>
+
+                                    </div>
+
+                                    <div class="row form-group">
+
+                                        <section class="col-xs-6">
+                                            <label style="color: #2F4050">Titulo Detalle:  <strong class="CampoRequerido">*</strong></label>
+                                            <div class="input-group">
+                                                <input type="text" tabindex="1" class="form-control" name="txtTitleDescription" id="txtTitleDescription" disabled maxlength="25" style="padding-left:5px;" />
+                                                <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                                            </div>
+                                        </section>
+
+                                    </div>
+
+                                    <div class="row form-group">
+                                        <!-- DETALLER DE TICKET-->
+                                        <section class="col-xs-12 col-sm-12 col-md-6 col-lg-12 form-group">
+                                            <label style="color: #2F4050">Detalle: </label>
+                                            <div style="width: 100%; display:flex; flex-flow:row nowrap;">
+                                                <textarea style="min-width: 100%" class="form-control" id="txtDetallerTicket" name="txtAreaDetalleTicket" disabled rows="5"></textarea>
+                                            </div>
+                                        </section>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div><!-- fin id="exTab2"  -->
+
+                </div>
+
+                <div class="modal-footer">
+                    <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-start">
+                        @Html.Partial("../MensajesParciales/_MensajeLeyendaCampoRequerido")
+                    </div>
+
+                    <button style="margin:3px;" tabindex="8" class="btn btn-danger" type="button" id="btnCancelar"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    <button style="margin:3px;" tabindex="9" class="btn btn-primary" type="submit" id="btnEdit"><i class="fa fa-edit"></i> Editar</button>
+                    @*<button style="margin:3px;" tabindex="9" class="btn btn-success" type="button" id="BtnAbrirModalPDF" title="Exportar PDF Acta de Reunión"><i class="fa fa-file-pdf-o"></i> Imprimir PDF</button>*@
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div id="ModalResponsibleTicketEdit" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true" style="overflow-y:scroll;">
+
+    <div class="modal-dialog" style="width:85%;">
+        <div class="modal-content animated">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">
+                    <label><strong>Redireccion de Ticket a Responsable </strong></label>
+                    @*<label style="float:right;margin-right:15px;font-weight:bold;color:red"> FECHA INICIO : 00/00/0000  --- FECHA FIN 00/00/0000 </label>*@
+                </h4>
+            </div>
+            <form id="FrmResponsibleTicket" onsubmit="return false">
+
+                <div class="modal-body" style="overflow:auto;">
+
+                    <div id="exTab2" class="container" style="background-color:white; width:100%;">
+
+                        <!--TAB OPERACION-->
+                        <div class="tab-pane active" id="tabCompraDirecta">
+
+                            <div class="content">
+
+                                <div class="panel-group" id="accordion1" role="tablist" aria-multiselectable="true">
+
+                                    <div class="row form-group">
+
+                                        <section class="col-xs-4">
+                                            <label style="color: #2F4050">Resposable: <strong class="CampoRequerido">*</strong></label>
+                                            <div class="input-group">
+                                                <input type="text" tabindex="1" class="form-control" name="txtResponsibleTicket" id="txtResponsibleTicket" disabled maxlength="25" style="padding-left:5px;" />
+                                                <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                                            </div>
+                                        </section>
+
+                                        <section class="col-xs-4">
+                                            <label style="color: #2F4050">Cargo: <strong class="CampoRequerido">*</strong></label>
+                                            <div class="input-group">
+                                                <input type="text" tabindex="1" class="form-control" name="txtCargoTicket" id="txtCargoTicket" disabled maxlength="25" style="padding-left:5px;" />
+                                                <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                                            </div>
+                                        </section>
+
+                                        <section class="col-xs-4">
+                                            <label style="color: #2F4050">Tickets : <strong class="CampoRequerido">*</strong></label>
+                                            <div class="form-group">
+                                                @*<select id="TicketResponsible" class="selectpicker" multiple data-selected-text-format="count > 3" data-live-search="true" data-width="100%" title="Selección múltiple" data-size="5" data-max-options="1" data-actions-box="false" data-style="btn-info"></select>*@
+                                                <select id="TicketResponsible" class="selectpicker" multiple data-selected-text-format="count > 3" data-live-search="true" data-width="100%" title="Selección múltiple" data-actions-box="true"></select>
+                                            </div>
+                                        </section>
+
+                                        <section class="col-xs-4">
+                                            <label style="color: #2F4050">Nuevo Responsable: <strong class="CampoRequerido">*</strong></label>
+                                            <div class="form-group">
+                                                <select id="NewResponsible" class="selectpicker" multiple data-selected-text-format="count > 3" data-live-search="true" data-width="100%" title="Selección múltiple" data-size="5" data-max-options="1" data-actions-box="false" data-style="btn-info"></select>
+                                            </div>
+                                        </section>
+
+                                    </div>
+
+                                    <div id="widget-grid" class="Contenedor2 hidden">
+                                        <div class="row">
+                                            <article class="col-xs-12 ContenedoresReportes">
+
+                                                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-rga1" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050">
+                                                    <header>
+                                                        <span class="widget-icon"> <i class="fa fa-list"></i> </span>
+                                                        <h2>Listado de Tickets del Actual Responsable</h2>
+                                                    </header>
+                                                    <div style="border:none;">
+                                                        <div class="jarviswidget-editbox">
+                                                            <!-- This area used as dropdown edit box -->
+                                                        </div>
+                                                        <div class="widget-body no-padding" id="ContenedorgrCreateTicket">
+                                                            <div id="LstResponsibleChange" class="hidden"></div>
+                                                            <div class="spiner-example" id="imgCargaLstResponsibleChange">
+                                                                @Html.Partial("../MensajesParciales/_MensajeCargando")
+                                                            </div>
+
+                                                            <div class="hidden" id="msjErrorLstResponsibleChange" style="margin:30px;">
+                                                                @Html.Partial("../MensajesParciales/_MensajeError")
+                                                            </div>
+
+                                                            <div class="hidden" id="msjVacioLstResponsibleChange" style="margin:30px;">
+                                                                @Html.Partial("../MensajesParciales/_MensajeVacio")
+                                                            </div>
+
+                                                            <div class="hidden" id="msjErrorListarLstResponsibleChange" style="margin:30px;">
+                                                                @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                                                            </div>
+                                                            <div class="hidden" id="msjSuperaLimiteLstResponsibleChange" style="margin:30px;">
+                                                                @Html.Partial("../MensajesParciales/_MensajeLimiteGraficas")
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </article>
+
+                                        </div>
+                                    </div>
+
+                                    @*<div class="row form-group">
+
+                                       
+
+
+                                    </div>*@
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div><!-- fin id="exTab2"  -->
+
+                </div>
+
+                <div class="modal-footer">
+                    <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-start">
+                        @Html.Partial("../MensajesParciales/_MensajeLeyendaCampoRequerido")
+                    </div>
+
+                    <button style="margin:3px;" tabindex="8" class="btn btn-danger" type="button" id="btnCancelarResponsible"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    <button style="margin:3px;" tabindex="9" class="btn btn-primary" type="submit" id="btnEditResponsableTicket"><i class="fa fa-edit"></i> Editar</button>
+                    @*<button style="margin:3px;" tabindex="9" class="btn btn-success" type="button" id="BtnAbrirModalPDF" title="Exportar PDF Acta de Reunión"><i class="fa fa-file-pdf-o"></i> Imprimir PDF</button>*@
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        /* ------------------- VALUES ----------------- */
+
+        var Valor = 1;
+        var IdTicketUpdate = 0;
+        var NroTicketActivity = 0;
+
+        var TextActivity = "";
+        var TextDetalleActivity = "";
+        var IdResponsibleActivity = 0;
+        var FechaEndActivity = "";
+
+        /* -------------------- FUNCIONES ---------------*/
+
+        function FormatoFechas() {
+            var FechaHoy = new Date();
+            var FechaActual = new Date(FechaHoy.getFullYear(), FechaHoy.getMonth(), FechaHoy.getDate());
+
+            $('#txtFechaInicioTicket').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                endDate: FechaActual,
+            });
+            $('#txtFechaFinalTicket').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                endDate: FechaActual,
+            });
+
+            //$('#txtCambioDeGuardiaFecha').datepicker({
+            //    keyboardNavigation: false,
+            //    forceParse: false,
+            //    autoclose: true,
+            //    format: 'dd/mm/yyyy',
+            //    endDate: FechaActual,
+            //});
+
+            //$('#txtActivityDateEnd').datepicker({
+            //    keyboardNavigation: false,
+            //    forceParse: false,
+            //    autoclose: true,
+            //    format: 'dd/mm/yyyy',
+            //    //endDate: FechaActual,
+            //});
+
+            $("#txtFechaInicioTicket").datepicker("setDate", primerDiaMes);
+            $("#txtFechaFinalTicket").datepicker("setDate", FechaFinalReporte);
+            //$("#txtCambioDeGuardiaFecha").datepicker("setDate", FechaFinalReporte);
+            //$("#txtActivityDateEnd").datepicker("setDate", FechaFinalReporte);
+            ComboTicket();
+            ComboEncargado('1');
+        }
+
+        function ComboEncargado(tipoConsulta) {
+
+            $.ajax({
+                type: "GET", /*Puede ser post*/
+                url: tRutaServidor + "/Person/ListarPersonaTicket", /* es importante poner los .. delante*/
+                contentType: "application/json; charset=utf-8",
+                data:
+                    "IdOperation=" + 0,
+                dataType: "json",
+                success: function (resultado) {
+
+                    var opcionesPersonTicket = "";
+
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+
+                        if (resultado[0].ValorConsulta == "1") {
+
+                            /**Llenar el combo con todo las compañías**/
+                            for (i = 0; i < resultado.length; i++) {
+
+                                opcionesPersonTicket += "<option value='" + resultado[i].IdPerson + "'>" + resultado[i].FullNameOperation + "</option>";
+                            }
+
+                            if (tipoConsulta == "1") {
+
+                                $("#selectorResponsible").empty();
+                                $("#selectorResponsible").append(opcionesPersonTicket);
+                                $("#selectorResponsible").selectpicker('refresh');
+
+                                $("#WhoResponsible").empty();
+                                $("#WhoResponsible").append(opcionesPersonTicket);
+                                $("#WhoResponsible").selectpicker('refresh');
+
+                            }
+
+                        }
+                        else {
+                            /*Error al listar*/
+
+                        }
+
+                    } else {
+
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*Fallo al llamar funcion ajax*/
+
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+        }
+
+        function ComboResponsibleWithoutMain(valor) {
+
+            $.ajax({
+                type: "GET", /*Puede ser post*/
+                url: tRutaServidor + "/Person/ListarResponsibleNotMain", /* es importante poner los .. delante*/
+                contentType: "application/json; charset=utf-8",
+                data: {
+                     IdResponsible : valor,
+                },  
+                dataType: "json",
+                success: function (resultado) {
+
+                    var opcionesResponsibleTikcet = "";
+
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+
+                        if (resultado[0].ValorConsulta == "1") {
+
+                            /**Llenar el combo con todo las compañías**/
+                            for (i = 0; i < resultado.length; i++) {
+
+                                opcionesResponsibleTikcet += "<option value='" + resultado[i].ResponsibleId + "'>" + resultado[i].FullName + "</option>";
+                            }
+
+                            $("#NewResponsible").empty();
+                            $("#NewResponsible").append(opcionesResponsibleTikcet);
+                            $("#NewResponsible").selectpicker('refresh');
+
+
+                        }
+                        else {
+                            /*Error al listar*/
+
+                        }
+
+                    } else {
+
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*Fallo al llamar funcion ajax*/
+
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+        }
+
+        function ComboTicket() {
+            $.ajax({
+                type: "GET", /*Puede ser post*/
+                url: tRutaServidor + "/Ticket/ListarTicketCombo", /* es importante poner los .. delante*/
+                contentType: "application/json; charset=utf-8",
+                //data: "yearMonthNumber=" + yearMonthIds1,
+                dataType: "json",
+                success: function (resultado) {
+
+                    var opcionesTicket = "";
+
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+
+                        if (resultado[0].ValorConsulta == "1") {
+
+                            /**Llenar el combo con todo las compañías**/
+                            for (i = 0; i < resultado.length; i++) {
+
+                                opcionesTicket += "<option value='" + resultado[i].IdTicket + "'>" + resultado[i].NroTicket + "</option>";
+                            }
+
+                            $("#selectorTicket").empty();
+                            $("#selectorTicket").append(opcionesTicket);
+                            $("#selectorTicket").selectpicker('refresh');
+
+                        }
+                        else {
+                            /*Error al listar*/
+
+                        }
+
+                    } else {
+                        /*Vacio*/
+                        $("#selectorTicket").empty();
+
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*Fallo al llamar funcion ajax*/
+
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+        }
+
+        function ComboTicketResponsable(valor) {
+            $.ajax({
+                type: "GET", /*Puede ser post*/
+                url: tRutaServidor + "/Ticket/ListarTicketxResponsable", /* es importante poner los .. delante*/
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    StartDate: $("#txtFechaInicioTicket").val(),
+                    EndDate: $("#txtFechaFinalTicket").val(),
+                    IdsResponsible: valor,
+                    NumberTicket: '0',
+                },
+                dataType: "json",
+                success: function (resultado) {
+
+                    var opcionesTicketResponsible = "";
+
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+
+                        if (resultado[0].ValorConsulta == "1") {
+
+                            /**Llenar el combo con todo las compañías**/
+                            for (i = 0; i < resultado.length; i++) {
+
+                                opcionesTicketResponsible += "<option value='" + resultado[i].IdTicket + "'>" + resultado[i].NroTicket + "</option>";
+                            }
+
+                            $("#TicketResponsible").empty();
+                            $("#TicketResponsible").append(opcionesTicketResponsible);
+                            $("#TicketResponsible").selectpicker('refresh');
+
+                        }
+                        else {
+                            /*Error al listar*/
+
+                        }
+
+                    } else {
+                        /*Vacio*/
+                        $("#selectorTicket").empty();
+
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*Fallo al llamar funcion ajax*/
+
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+        }
+
+        function GrillaListado() {
+
+            var IdTicket = "0";
+            var IdResponsible = "0";
+
+            if ($("#selectorTicket").val() == "" || $("#selectorTicket").val() == null) {
+
+                IdTicket = "0";
+
+            } else {
+
+                IdTicket = $("#selectorTicket").val().toString();
+
+            }
+
+            if ($("#selectorResponsible").val() == "" || $("#selectorResponsible").val() == null) {
+
+                IdResponsible = "0";
+
+            } else {
+
+                IdResponsible = $("#selectorResponsible").val().toString();
+
+            }
+
+
+            var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: function (options) {
+                        $.ajax({
+                            type: "GET",
+                            url: tRutaServidor + "/Ticket/ListarTicketxResponsable", /* es importante poner los .. delante*/
+                            data: {
+                                StartDate: $("#txtFechaInicioTicket").val(),
+                                EndDate: $("#txtFechaFinalTicket").val(),
+                                IdsResponsible: IdResponsible,
+                                IdsTicket: IdTicket,
+                            },
+                            dataType: "json",
+                            /*async: false,*/
+                            success: function (resultado) {
+                                /*exitosamente*/
+                                if (resultado.length > 0) {
+                                    /* proceso exitoso con datos*/
+                                    if (resultado[0].ValorConsulta == "1") {
+                                        $("#LstTicketxResponsible").removeClass("hidden");
+                                        $("#imgCargaLstTicketxResponsible").addClass("hidden");
+                                        $("#msjErrorLstTicketxResponsible").addClass("hidden");
+                                        $("#msjVacioLstTicketxResponsible").addClass("hidden");
+                                        $("#msjErrorListarLstTicketxResponsible").addClass("hidden");
+                                        $("#msjSuperaLimiteLstTicketxResponsible").addClass("hidden");
+
+                                        $("#btnBuscar").prop('disabled', false);
+                                        $("#BtnExportarExcel").prop('disabled', false);
+
+                                    } else if (resultado[0].ValorConsulta == "-1") {
+
+                                        $("#LstTicketxResponsible").addClass("hidden");
+                                        $("#imgCargaLstTicketxResponsible").addClass("hidden");
+                                        $("#msjErrorLstTicketxResponsible").addClass("hidden");
+                                        $("#msjVacioLstTicketxResponsible").addClass("hidden");
+                                        $("#msjErrorListarLstTicketxResponsible").addClass("hidden");
+                                        $("#msjSuperaLimiteLstTicketxResponsible").removeClass("hidden");
+
+                                        $("#btnBuscar").prop('disabled', false);
+                                        $("#BtnExportarExcel").prop('disabled', true);
+                                    }
+                                    else {
+                                        /* proceso fallido catch listado datos*/
+                                        $("#LstTicketxResponsible").addClass("hidden");
+                                        $("#imgCargaLstTicketxResponsible").addClass("hidden");
+                                        $("#msjErrorLstTicketxResponsible").addClass("hidden");
+                                        $("#msjVacioLstTicketxResponsible").addClass("hidden");
+                                        $("#msjErrorListarLstTicketxResponsible").removeClass("hidden");
+                                        $("#msjSuperaLimiteLstTicketxResponsible").addClass("hidden");
+
+                                        $("#btnBuscar").prop('disabled', true);
+                                        $("#BtnExportarExcel").prop('disabled', true);
+                                        console.log(resultado);
+                                    }
+
+                                } else {
+                                    $("#LstTicketxResponsible").addClass("hidden");
+                                    $("#imgCargaLstTicketxResponsible").addClass("hidden");
+                                    $("#msjErrorLstTicketxResponsible").addClass("hidden");
+                                    $("#msjVacioLstTicketxResponsible").removeClass("hidden");
+                                    $("#msjErrorListarLstTicketxResponsible").addClass("hidden");
+                                    $("#msjSuperaLimiteLstTicketxResponsible").addClass("hidden");
+
+                                    $("#btnBuscar").prop('disabled', false);
+                                    $("#BtnExportarExcel").prop('disabled', true);
+                                }
+
+                                options.success(resultado);
+                                var grid = $("#LstTicketxResponsible").data("kendoGrid");
+                                if (grid.dataSource.total() > 0) {
+                                    grid.setDataSource(dataSource);
+                                }
+
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                /*fallo al llamar a la funcion ajax*/
+                                $("#LstTicketxResponsible").addClass("hidden");
+                                $("#imgCargaLstTicketxResponsible").addClass("hidden");
+                                $("#msjErrorLstTicketxResponsible").removeClass("hidden");
+                                $("#msjVacioLstTicketxResponsible").addClass("hidden");
+                                $("#msjErrorListarLstTicketxResponsible").addClass("hidden");
+                                $("#msjSuperaLimiteLstTicketxResponsible").addClass("hidden");
+
+                                $("#btnBuscar").prop('disabled', true);
+                                $("#BtnExportarExcel").prop('disabled', true);
+                                console.log("ERROR AJAX : " + ajaxOptions);
+                                console.log("ERROR AJAX : " + thrownError);
+                                console.log(xhr.responseText);
+                                console.log(xhr);
+
+                            }
+                        });
+                    },
+                    parameterMap: function (data, operation) {
+                        if (operation !== "read" && data.models) {
+                            return JSON.stringify({ JSONparam: data.models });
+                        }
+                    }
+                },
+                error: function (e) {
+                    alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+                },
+                batch: false,
+                pageSize: PaginationKendoGrid,
+                schema: {
+                    model: {
+                        fields: {
+                            IdTicket: { type: "number" },
+                            NroTicket: { type: "string" },
+                            StartDate: { type: "string" },
+                            UsuarioNameTicket: { type: "string" },
+                            ResponsibleId: { type: "number" },
+                            ResponsibleNameTicket: { type: "string" },
+                            FullNameTicket: { type: "string" },
+                            OperationName: { type: "string" },
+                            ReasonName: { type: "string" },
+                            LocationNameTicket: { type: "string" },
+                            CriticalityName: { type: "string" },
+                            DetalleText: { type: "string" },
+                            TitleDescription: { type: "string" },
+                        }
+                    }
+                },
+                //aggregate: [
+                //    {
+                //        field: "TicketNumber",
+                //        aggregate: "count"
+                //    },
+                //    {
+                //        field: "FuelQuantity",
+                //        aggregate: "sum"
+                //    }
+                //]
+            });
+
+            $("#LstTicketxResponsible").kendoGrid({
+                dataSource: dataSource,
+                sortable: true,
+                pageable: true,
+                columnMenu: true,
+                columnMenu: {
+                    sortable: true,
+                    filterable: true,
+                    columns: true,
+                    messages: {
+                        columns: KendoMsjColumnMenuColumns,
+                        filter: KendoMsjColumnMenuFilter,
+                        sortAscending: KendoMsjColumnMenuSortAscending,
+                        sortDescending: KendoMsjColumnMenuSortDescending,
+                        settings: KendoMsjSettings
+                    }
+                },
+                columnMenuInit: function (e) {
+                    var menu = e.container.find(".k-menu").data("kendoMenu");
+                    menu.bind("select", function (e) {
+                        var EtiquetaInput = $(".k-animation-container > .k-menu-group > .k-item > .k-content > .k-filter-menu > .k-textbox :input");
+                        EtiquetaInput.focus();
+                    });
+                },
+                groupable: false,
+                reorderable: true,
+                selectable: "row",
+                scrollable: true,
+                resizable: true,
+                filterable: {
+                    multi: true,
+                    checkAll: true,
+                    search: true,
+                    messages: {
+                        clear: KendoMsjClear,
+                        filter: KendoMsjFilter,
+                        selectedItemsFormat: KendoMsjSelectedItemsFormat,
+                        checkAll: KendoMsjCheckAll,
+                        search: KendoMsjSearch
+                    }
+                },
+                //groupable: {
+                //    info: true,
+                //    messages: {
+                //        empty: "<b style='font-style:italic';>Arrastre una cabecera aquí para agrupar su información por esa columna</b>"
+                //    }
+                //},
+                pageable: {
+                    messages: {
+                        empty: KendoMsjEmpty,
+                        page: kendoMsjPage,
+                        of: KendoMsjOf,
+                        itemsPerPage: KendoMsjItemsPerPage,
+                        first: KendoMsjFirst,
+                        last: KendoMsjLast,
+                        next: KendoMsjNext,
+                        previous: KendoMsjPrevious,
+                        refresh: KendoMsjRefresh,
+                        morePages: KendoMsjMorePages,
+                        display: KendoMsjDisplay
+                    },
+                    refresh: false,
+                    pageSizes: true,
+                    pageSizes: [5, 10, 15],
+                    /*para la cantidad de paginas se sugieren 5*/
+                    buttonCount: 5,
+                    /*Posicion de la pagina*/
+                    pageSize: 5
+                },
+                excel: { fileName: "Listado de Tickets por Reponsables.xlsx", filterable: true, allPages: true },
+                columns: [
+                    {
+                        width: 70,
+                        command: {
+                            template:
+                                "<button class='btn-grid btn-xs BtnVerInfo' type='button' title='Ver datos'><i class='fa fa-lg fa-fw fas fa-edit'></i></button>"
+                            //+ " " + "<button class='btn-grid btn-xs BtnAnular' type='button' title='Ver datos'><i class='fa fa-lg fa-fw fas fa-ban'></i></button>"
+                        },
+                        attributes: { "class": "text-center" },
+                        title: ""
+                    },
+                    { field: "NroTicket", title: "Nro. Ticket", width: 100, attributes: { "class": "text-center" } },
+                    { field: "StartDate", title: "Fecha Registro", width: 120, attributes: { "class": "text-center" } },
+                    { field: "FullNameTicket", title: "Quien Llama", width: 150, attributes: { "class": "text-center" } },
+                    { field: "UsuarioNameTicket", title: "Quien Registra", hidden: true, width: 150, attributes: { "class": "text-center" } },
+                    { field: "ResponsibleNameTicket", title: "Responsable", width: 150, attributes: { "class": "text-center" } },
+                    { field: "OperationName", title: "Operacion", width: 120, attributes: { "class": "text-center" } },
+                    { field: "ReasonName", title: "Razón", width: 120, attributes: { "class": "text-center" } },
+                    { field: "CriticalityName", title: "Criticidad", width: 120, attributes: { "class": "text-center" } },
+                    { field: "LocationNameTicket", title: "Locación", width: 120, attributes: { "class": "text-center" } },
+                    { field: "DetalleText", title: "Detalle Ticket",  hidden: true, width: 150, attributes: { "class": "text-center" } },
+                    { field: "TitleDescription", title: "Titulo Detalle", width: 150, attributes: { "class": "text-center" } }
+                ],
+                dataBound: function () {
+
+                       //var Grilla = this;
+
+                       //for (i = 0; i < Grilla.dataSource._view.length; i++) {
+                       //    var estadoActual = Grilla.tbody.children()[i].children[8].textContent;
+                       //    if (estadoActual == 'BAJA') {
+                       //       $($("#LstTicketxResponsible").data("kendoGrid").tbody.children()[i]).addClass('colorVerde');
+                       //    }
+                       //    else if (estadoActual == 'MEDIA') {
+                       //       $($("#LstTicketxResponsible").data("kendoGrid").tbody.children()[i]).addClass('colorAmarillo');
+                       //    }
+                       //    else {
+                       //       $($("#LstTicketxResponsible").data("kendoGrid").tbody.children()[i]).addClass('colorRojo');
+                       //    }
+                       //}
+
+                }
+            });
+
+
+        }
+
+        function GrillaListado2(){
+
+            var IdTicket = "0";
+            var IdResponsible = "0";
+
+            if ($("#txtTicket").val() == "" || $("#txtTicket").val() == null) {
+
+                IdTicket = "0";
+
+            } else {
+
+                IdTicket = $("#txtTicket").val();
+
+            }
+
+            if ($("#selectorResponsible").val() == "" || $("#selectorResponsible").val() == null) {
+
+                IdResponsible = "0";
+
+            } else {
+
+                IdResponsible = $("#selectorResponsible").val().toString();
+
+            }
+
+
+            var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: function (options) {
+                        $.ajax({
+                            type: "GET",
+                            url: tRutaServidor + "/Ticket/ListarResponsableReport", /* es importante poner los .. delante*/
+                            data: {
+                                StartDate: $("#txtFechaInicioTicket").val(),
+                                EndDate: $("#txtFechaFinalTicket").val(),
+                                IdsResponsible: IdResponsible,
+                                NumberTicket: IdTicket,
+                            },
+                            dataType: "json",
+                            /*async: false,*/
+                            success: function (resultado) {
+                                /*exitosamente*/
+                                if (resultado.length > 0) {
+                                    /* proceso exitoso con datos*/
+                                    if (resultado[0].ValorConsulta == "1") {
+
+                                        $("#LstResponsibleQuantity").removeClass("hidden");
+                                        $("#imgCargaLstResponsibleQuantity").addClass("hidden");
+                                        $("#msjErrorLstResponsibleQuantity").addClass("hidden");
+                                        $("#msjVacioLstResponsibleQuantity").addClass("hidden");
+                                        $("#msjErrorListarLstResponsibleQuantity").addClass("hidden");
+                                        $("#msjSuperaLimiteLstResponsibleQuantity").addClass("hidden");
+
+                                        $("#btnBuscar").prop('disabled', false);
+                                        $("#BtnExportarExcel").prop('disabled', false);
+
+                                    } else if (resultado[0].ValorConsulta == "-1") {
+
+                                        $("#LstResponsibleQuantity").addClass("hidden");
+                                        $("#imgCargaLstResponsibleQuantity").addClass("hidden");
+                                        $("#msjErrorLstResponsibleQuantity").addClass("hidden");
+                                        $("#msjVacioLstResponsibleQuantity").addClass("hidden");
+                                        $("#msjErrorListarLstResponsibleQuantity").addClass("hidden");
+                                        $("#msjSuperaLimiteLstResponsibleQuantity").removeClass("hidden");
+
+                                        $("#btnBuscar").prop('disabled', false);
+                                        $("#BtnExportarExcel").prop('disabled', true);
+                                    }
+                                    else {
+                                        /* proceso fallido catch listado datos*/
+                                        $("#LstResponsibleQuantity").addClass("hidden");
+                                        $("#imgCargaLstResponsibleQuantity").addClass("hidden");
+                                        $("#msjErrorLstResponsibleQuantity").addClass("hidden");
+                                        $("#msjVacioLstResponsibleQuantity").addClass("hidden");
+                                        $("#msjErrorListarLstResponsibleQuantity").removeClass("hidden");
+                                        $("#msjSuperaLimiteLstResponsibleQuantity").addClass("hidden");
+
+                                        $("#btnBuscar").prop('disabled', true);
+                                        $("#BtnExportarExcel").prop('disabled', true);
+                                        console.log(resultado);
+                                    }
+
+                                } else {
+                                    $("#LstResponsibleQuantity").addClass("hidden");
+                                    $("#imgCargaLstResponsibleQuantity").addClass("hidden");
+                                    $("#msjErrorLstResponsibleQuantity").addClass("hidden");
+                                    $("#msjVacioLstResponsibleQuantity").removeClass("hidden");
+                                    $("#msjErrorListarLstResponsibleQuantity").addClass("hidden");
+                                    $("#msjSuperaLimiteLstResponsibleQuantity").addClass("hidden");
+
+                                    $("#btnBuscar").prop('disabled', false);
+                                    $("#BtnExportarExcel").prop('disabled', true);
+                                }
+
+                                options.success(resultado);
+                                var grid = $("#LstResponsibleQuantity").data("kendoGrid");
+                                if (grid.dataSource.total() > 0) {
+                                    grid.setDataSource(dataSource);
+                                }
+
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                /*fallo al llamar a la funcion ajax*/
+                                $("#LstResponsibleQuantity").addClass("hidden");
+                                $("#imgCargaLstResponsibleQuantity").addClass("hidden");
+                                $("#msjErrorLstResponsibleQuantity").removeClass("hidden");
+                                $("#msjVacioLstResponsibleQuantity").addClass("hidden");
+                                $("#msjErrorListarLstResponsibleQuantity").addClass("hidden");
+                                $("#msjSuperaLimiteLstResponsibleQuantity").addClass("hidden");
+
+                                $("#btnBuscar").prop('disabled', true);
+                                $("#BtnExportarExcel").prop('disabled', true);
+                                console.log("ERROR AJAX : " + ajaxOptions);
+                                console.log("ERROR AJAX : " + thrownError);
+                                console.log(xhr.responseText);
+                                console.log(xhr);
+
+                            }
+                        });
+                    },
+                    parameterMap: function (data, operation) {
+                        if (operation !== "read" && data.models) {
+                            return JSON.stringify({ JSONparam: data.models });
+                        }
+                    }
+                },
+                error: function (e) {
+                    alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+                },
+                batch: false,
+                pageSize: PaginationKendoGrid,
+                schema: {
+                    model: {
+                        fields: {
+                            ResponsibleId: { type: "number" },
+                            FullName: { type: "string" },
+                            CantidadTicket: { type: "string" },
+                            Cargo: { type: "string" }
+                        }
+                    }
+                },
+                //aggregate: [
+                //    {
+                //        field: "TicketNumber",
+                //        aggregate: "count"
+                //    },
+                //    {
+                //        field: "FuelQuantity",
+                //        aggregate: "sum"
+                //    }
+                //]
+            });
+
+            $("#LstResponsibleQuantity").kendoGrid({
+                dataSource: dataSource,
+                sortable: true,
+                pageable: true,
+                columnMenu: true,
+                columnMenu: {
+                    sortable: true,
+                    filterable: true,
+                    columns: true,
+                    messages: {
+                        columns: KendoMsjColumnMenuColumns,
+                        filter: KendoMsjColumnMenuFilter,
+                        sortAscending: KendoMsjColumnMenuSortAscending,
+                        sortDescending: KendoMsjColumnMenuSortDescending,
+                        settings: KendoMsjSettings
+                    }
+                },
+                columnMenuInit: function (e) {
+                    var menu = e.container.find(".k-menu").data("kendoMenu");
+                    menu.bind("select", function (e) {
+                        var EtiquetaInput = $(".k-animation-container > .k-menu-group > .k-item > .k-content > .k-filter-menu > .k-textbox :input");
+                        EtiquetaInput.focus();
+                    });
+                },
+                groupable: false,
+                reorderable: true,
+                selectable: "row",
+                scrollable: true,
+                resizable: true,
+                filterable: {
+                    multi: true,
+                    checkAll: true,
+                    search: true,
+                    messages: {
+                        clear: KendoMsjClear,
+                        filter: KendoMsjFilter,
+                        selectedItemsFormat: KendoMsjSelectedItemsFormat,
+                        checkAll: KendoMsjCheckAll,
+                        search: KendoMsjSearch
+                    }
+                },
+                //groupable: {
+                //    info: true,
+                //    messages: {
+                //        empty: "<b style='font-style:italic';>Arrastre una cabecera aquí para agrupar su información por esa columna</b>"
+                //    }
+                //},
+                pageable: {
+                    messages: {
+                        empty: KendoMsjEmpty,
+                        page: kendoMsjPage,
+                        of: KendoMsjOf,
+                        itemsPerPage: KendoMsjItemsPerPage,
+                        first: KendoMsjFirst,
+                        last: KendoMsjLast,
+                        next: KendoMsjNext,
+                        previous: KendoMsjPrevious,
+                        refresh: KendoMsjRefresh,
+                        morePages: KendoMsjMorePages,
+                        display: KendoMsjDisplay
+                    },
+                    refresh: false,
+                    pageSizes: true,
+                    pageSizes: [5, 10, 15],
+                    /*para la cantidad de paginas se sugieren 5*/
+                    buttonCount: 5,
+                    /*Posicion de la pagina*/
+                    pageSize: 5
+                },
+                excel: { fileName: "Listado de Tickets por Reponsables.xlsx", filterable: true, allPages: true },
+                columns: [
+                    {
+                        width: 100,
+                        command: {
+                            template:
+                                "<button class='btn-grid btn-xs BtnVerInfo2' type='button' title='Ver datos'><i class='fa fa-lg fa-fw fas fa-edit'></i></button>"
+                            //+ " " + "<button class='btn-grid btn-xs BtnAnular' type='button' title='Ver datos'><i class='fa fa-lg fa-fw fas fa-ban'></i></button>"
+                        },
+                        attributes: { "class": "text-center" },
+                        title: ""
+                    },
+                    { field: "FullName", title: "Nombre Responsable", width: 150, attributes: { "class": "text-center" } },
+                    { field: "Cargo", title: "Cargo", width: 120, attributes: { "class": "text-center" } },
+                    { field: "CantidadTicket", title: "Cantidad Ticket", width: 100, attributes: { "class": "text-center" } },
+                    //{ field: "UsuarioNameTicket", title: "Quien Registra", width: 150, attributes: { "class": "text-center" } },
+                    //{ field: "ResponsibleNameTicket", title: "Responsable", width: 150, attributes: { "class": "text-center" } },
+                    //{ field: "OperationName", title: "Operacion", width: 120, attributes: { "class": "text-center" } },
+                    //{ field: "ReasonName", title: "Razón", width: 120, attributes: { "class": "text-center" } },
+                    //{ field: "CriticalityName", title: "Criticidad", width: 120, attributes: { "class": "text-center" } },
+                    //{ field: "LocationNameTicket", title: "Locación", width: 120, attributes: { "class": "text-center" } },
+                    //{ field: "DetalleText", title: "Detalle Ticket", width: 150, attributes: { "class": "text-center" } }
+                ],
+                dataBound: function () {
+
+                //    for (i = 0; i < $("#LstCotizacion").data("kendoGrid").dataSource._view.length; i++) {
+                //        var diasRestantes = $("#LstCotizacion").data("kendoGrid").tbody.children()[i].children[2].textContent;
+
+                //        if (diasRestantes < 11) {
+                //            $($("#LstCotizacion").data("kendoGrid").tbody.children()[i]).addClass('colorRojo');
+                //        }
+                //        else if (diasRestantes > 10 && diasRestantes < 21) {
+                //            $($("#LstCotizacion").data("kendoGrid").tbody.children()[i]).addClass('colorAmarillo');
+                //        }
+                //        else if (diasRestantes > 20) {
+                //            $($("#LstCotizacion").data("kendoGrid").tbody.children()[i]).addClass('colorVerde');
+                //        }
+                //        else {
+                //            $($("#LstCotizacion").data("kendoGrid").tbody.children()[i]).addClass('colorRojo');
+                //        }
+                //    }
+
+                    var Grilla = this;
+                    Grilla.tbody.find("tr[role='row']").each(function () {
+                        var model = Grilla.dataItem(this);
+                        if (model.QuotationStatus != "C") {
+                            $(this).find("td > button.BtnVerInfo").remove();
+                        }
+
+                    });
+
+                }
+            });
+
+
+        }
+
+        function GrillaListadoTicketsResponsable() {
+
+            var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: function (options) {
+                        $.ajax({
+                            type: "GET",
+                            url: tRutaServidor + "/Ticket/ListarTicketxResponsable2", /* es importante poner los .. delante*/
+                            data: {
+                                StartDate: $("#txtFechaInicioTicket").val(),
+                                EndDate: $("#txtFechaFinalTicket").val(),
+                                //IdsResponsible: IdResponsible,
+                                IdsTicket: IdTicket,
+                            },
+                            dataType: "json",
+                            /*async: false,*/
+                            success: function (resultado) {
+                                /*exitosamente*/
+                                if (resultado.length > 0) {
+                                    /* proceso exitoso con datos*/
+                                    if (resultado[0].ValorConsulta == "1") {
+                                        $("#LstResponsibleChange").removeClass("hidden");
+                                        $("#imgCargaLstResponsibleChange").addClass("hidden");
+                                        $("#msjErrorLstResponsibleChange").addClass("hidden");
+                                        $("#msjVacioLstResponsibleChange").addClass("hidden");
+                                        $("#msjErrorListarLstResponsibleChange").addClass("hidden");
+                                        $("#msjSuperaLimiteLstResponsibleChange").addClass("hidden");
+
+                                    } else if (resultado[0].ValorConsulta == "-1") {
+
+                                        $("#LstResponsibleChange").addClass("hidden");
+                                        $("#imgCargaLstResponsibleChange").addClass("hidden");
+                                        $("#msjErrorLstResponsibleChange").addClass("hidden");
+                                        $("#msjVacioLstResponsibleChange").addClass("hidden");
+                                        $("#msjErrorListarLstResponsibleChange").addClass("hidden");
+                                        $("#msjSuperaLimiteLstResponsibleChange").removeClass("hidden");
+
+                                    }
+                                    else {
+                                        /* proceso fallido catch listado datos*/
+                                        $("#LstResponsibleChange").addClass("hidden");
+                                        $("#imgCargaLstResponsibleChange").addClass("hidden");
+                                        $("#msjErrorLstResponsibleChange").addClass("hidden");
+                                        $("#msjVacioLstResponsibleChange").addClass("hidden");
+                                        $("#msjErrorListarLstResponsibleChange").removeClass("hidden");
+                                        $("#msjSuperaLimiteLstResponsibleChange").addClass("hidden");
+
+                                        console.log(resultado);
+                                    }
+
+                                } else {
+                                    $("#LstResponsibleChange").addClass("hidden");
+                                    $("#imgCargaLstResponsibleChange").addClass("hidden");
+                                    $("#msjErrorLstResponsibleChange").addClass("hidden");
+                                    $("#msjVacioLstResponsibleChange").removeClass("hidden");
+                                    $("#msjErrorListarLstResponsibleChange").addClass("hidden");
+                                    $("#msjSuperaLimiteLstResponsibleChange").addClass("hidden");
+
+                                }
+
+                                options.success(resultado);
+                                var grid = $("#LstResponsibleChange").data("kendoGrid");
+                                if (grid.dataSource.total() > 0) {
+                                    grid.setDataSource(dataSource);
+                                }
+
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                /*fallo al llamar a la funcion ajax*/
+                                $("#LstResponsibleChange").addClass("hidden");
+                                $("#imgCargaLstResponsibleChange").addClass("hidden");
+                                $("#msjErrorLstResponsibleChange").removeClass("hidden");
+                                $("#msjVacioLstResponsibleChange").addClass("hidden");
+                                $("#msjErrorListarLstResponsibleChange").addClass("hidden");
+                                $("#msjSuperaLimiteLstResponsibleChange").addClass("hidden");
+
+                                console.log("ERROR AJAX : " + ajaxOptions);
+                                console.log("ERROR AJAX : " + thrownError);
+                                console.log(xhr.responseText);
+                                console.log(xhr);
+
+                            }
+                        });
+                    },
+                    parameterMap: function (data, operation) {
+                        if (operation !== "read" && data.models) {
+                            return JSON.stringify({ JSONparam: data.models });
+                        }
+                    }
+                },
+                error: function (e) {
+                    alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+                },
+                batch: false,
+                pageSize: PaginationKendoGrid,
+                schema: {
+                    model: {
+                        fields: {
+                            IdTicket: { type: "number" },
+                            NroTicket: { type: "string" },
+                            StartDate: { type: "string" },
+                            UsuarioNameTicket: { type: "string" },
+                            ResponsibleId: { type: "number" },
+                            ResponsibleNameTicket: { type: "string" },
+                            FullNameTicket: { type: "string" },
+                            OperationName: { type: "string" },
+                            ReasonName: { type: "string" },
+                            LocationNameTicket: { type: "string" },
+                            CriticalityName: { type: "string" },
+                            DetalleText: { type: "string" },
+                        }
+                    }
+                },
+                //aggregate: [
+                //    {
+                //        field: "TicketNumber",
+                //        aggregate: "count"
+                //    },
+                //    {
+                //        field: "FuelQuantity",
+                //        aggregate: "sum"
+                //    }
+                //]
+            });
+
+            $("#LstResponsibleChange").kendoGrid({
+                dataSource: dataSource,
+                sortable: true,
+                pageable: true,
+                columnMenu: true,
+                columnMenu: {
+                    sortable: true,
+                    filterable: true,
+                    columns: true,
+                    messages: {
+                        columns: KendoMsjColumnMenuColumns,
+                        filter: KendoMsjColumnMenuFilter,
+                        sortAscending: KendoMsjColumnMenuSortAscending,
+                        sortDescending: KendoMsjColumnMenuSortDescending,
+                        settings: KendoMsjSettings
+                    }
+                },
+                columnMenuInit: function (e) {
+                    var menu = e.container.find(".k-menu").data("kendoMenu");
+                    menu.bind("select", function (e) {
+                        var EtiquetaInput = $(".k-animation-container > .k-menu-group > .k-item > .k-content > .k-filter-menu > .k-textbox :input");
+                        EtiquetaInput.focus();
+                    });
+                },
+                groupable: false,
+                reorderable: true,
+                selectable: "row",
+                scrollable: true,
+                resizable: true,
+                filterable: {
+                    multi: true,
+                    checkAll: true,
+                    search: true,
+                    messages: {
+                        clear: KendoMsjClear,
+                        filter: KendoMsjFilter,
+                        selectedItemsFormat: KendoMsjSelectedItemsFormat,
+                        checkAll: KendoMsjCheckAll,
+                        search: KendoMsjSearch
+                    }
+                },
+                //groupable: {
+                //    info: true,
+                //    messages: {
+                //        empty: "<b style='font-style:italic';>Arrastre una cabecera aquí para agrupar su información por esa columna</b>"
+                //    }
+                //},
+                pageable: {
+                    messages: {
+                        empty: KendoMsjEmpty,
+                        page: kendoMsjPage,
+                        of: KendoMsjOf,
+                        itemsPerPage: KendoMsjItemsPerPage,
+                        first: KendoMsjFirst,
+                        last: KendoMsjLast,
+                        next: KendoMsjNext,
+                        previous: KendoMsjPrevious,
+                        refresh: KendoMsjRefresh,
+                        morePages: KendoMsjMorePages,
+                        display: KendoMsjDisplay
+                    },
+                    refresh: false,
+                    pageSizes: true,
+                    pageSizes: [5, 10, 15],
+                    /*para la cantidad de paginas se sugieren 5*/
+                    buttonCount: 5,
+                    /*Posicion de la pagina*/
+                    pageSize: 5
+                },
+                excel: { fileName: "Listado de Tickets.xlsx", filterable: true, allPages: true },
+                columns: [
+                    //{
+                    //    width: 100,
+                    //    command: {
+                    //        template:
+                    //            "<button class='btn-grid btn-xs BtnVerInfo' type='button' title='Ver datos'><i class='fa fa-lg fa-fw fas fa-edit'></i></button>"
+                    //        //+ " " + "<button class='btn-grid btn-xs BtnAnular' type='button' title='Ver datos'><i class='fa fa-lg fa-fw fas fa-ban'></i></button>"
+                    //    },
+                    //    attributes: { "class": "text-center" },
+                    //    title: ""
+                    //},
+                    { field: "NroTicket", title: "Nro. Ticket", width: 100, attributes: { "class": "text-center" } },
+                    { field: "StartDate", title: "Fecha Registro", width: 120, attributes: { "class": "text-center" } },
+                    { field: "FullNameTicket", title: "Quien Llama", width: 150, attributes: { "class": "text-center" } },
+                    { field: "UsuarioNameTicket", title: "Quien Registra", width: 150, attributes: { "class": "text-center" } },
+                    { field: "ResponsibleNameTicket", title: "Responsable", width: 150, attributes: { "class": "text-center" } },
+                    { field: "OperationName", title: "Operacion", width: 120, attributes: { "class": "text-center" } },
+                    { field: "ReasonName", title: "Razón", width: 120, attributes: { "class": "text-center" } },
+                    { field: "CriticalityName", title: "Criticidad", width: 120, attributes: { "class": "text-center" } },
+                    { field: "LocationNameTicket", title: "Locación", width: 120, attributes: { "class": "text-center" } },
+                    { field: "DetalleText", title: "Detalle Ticket", width: 150, attributes: { "class": "text-center" } }
+                ]
+                //dataBound: function () {
+
+                //    for (i = 0; i < $("#LstCotizacion").data("kendoGrid").dataSource._view.length; i++) {
+                //        var diasRestantes = $("#LstCotizacion").data("kendoGrid").tbody.children()[i].children[2].textContent;
+
+                //        if (diasRestantes < 11) {
+                //            $($("#LstCotizacion").data("kendoGrid").tbody.children()[i]).addClass('colorRojo');
+                //        }
+                //        else if (diasRestantes > 10 && diasRestantes < 21) {
+                //            $($("#LstCotizacion").data("kendoGrid").tbody.children()[i]).addClass('colorAmarillo');
+                //        }
+                //        else if (diasRestantes > 20) {
+                //            $($("#LstCotizacion").data("kendoGrid").tbody.children()[i]).addClass('colorVerde');
+                //        }
+                //        else {
+                //            $($("#LstCotizacion").data("kendoGrid").tbody.children()[i]).addClass('colorRojo');
+                //        }
+                //    }
+
+                //    var Grilla = this;
+                //    Grilla.tbody.find("tr[role='row']").each(function () {
+                //        var model = Grilla.dataItem(this);
+                //        if (model.QuotationStatus != "C") {
+                //            $(this).find("td > button.BtnVerInfo").remove();
+                //        }
+
+                //    });
+
+                //}
+            });
+
+
+        }
+
+        function ExportarExcel(Etiqueta) {
+            var Grilla = $("#" + Etiqueta).data("kendoGrid");
+            var count = Grilla.dataSource.total();
+
+            if (count > CantidadRegistrosExportar) {
+
+                new swal({
+                    title: tTituloConfirmacionExportarExcel,
+                    text: tMensajeConfirmacionExportarExcel,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: tColorBoton,
+                    confirmButtonText: tNombreBotonSi,
+                    cancelButtonText: tNombreBotonNo,
+                    closeOnConfirm: true
+                }, function () {
+
+                    setTimeout(function () {
+                        swal({
+                            title: tTituloExportarExcel,
+                            text: tMensajeExportarExcel,
+                            type: "warning"
+                        });
+                    }, 500);
+
+                    setTimeout(function () {
+                        Grilla.saveAsExcel();
+                    }, 2000)
+
+                });
+
+            } else {
+                new swal({
+                    title: tTituloExportarExcel,
+                    text: tMensajeExportarExcel,
+                    type: "warning"
+                });
+
+                setTimeout(function () {
+
+                    Grilla.saveAsExcel();
+                }, 2000)
+            }
+        };
+
+        function EditarResponsible(IdValor) {
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Ticket/EditarResponsible",
+                dataType: "json",
+                data: {
+                    ResponsibleId: IdValor,
+                    TicketId: IdTicketUpdate
+                },
+                success: function (resultado) {
+
+                    if (resultado.length > 0) {
+
+                        if (resultado == '1') {
+
+                            toastr.options.timeOut = nTiempoMedio;
+                            toastr.options.extendedTimeOut = nTiempoMedio;
+                            /*success - info - warning - error*/
+                            var $toast = toastr["success"](tMensajeCreadoExito, tTituloExito); $toastlast = $toast;
+
+                            IdsResponsible = "0";
+                            IdTicket = "0";
+
+                            GrillaListado();
+                            //ComboEncargado('1');
+                            //$("#PanelActivityFather").removeClass("hidden");
+                            $('#ModalTicketEdit').modal('hide');
+
+                        } else {
+
+                            toastr.options.timeOut = nTiempoMedio;
+                            toastr.options.extendedTimeOut = nTiempoMedio;
+                            /*success - info - warning - error*/
+                            var $toast = toastr["warning"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                            return;
+                        }
+
+                    } else if (resultado == 2) {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValidacionNroCotizacionExiste, tTituloError); $toastlast = $toast;
+                        document.getElementById('btnGrabar').disabled = false;
+
+                    } else if (resultado == 3) {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorActualizarRutas, tTituloError); $toastlast = $toast;
+                        document.getElementById('btnGrabar').disabled = false;
+                    } else {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado);
+                    }
+                    $("#CargaTemporal").addClass("hidden");
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+
+        };
+
+        function EditarTicketResponsible(IdResponsablesUpdate , IdTicketUpdate) {
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Ticket/EditarTicketResponsible",
+                dataType: "json",
+                data: {
+                    ResponsibleId: IdResponsablesUpdate,
+                    TicketId: IdTicketUpdate
+                },
+                success: function (resultado) {
+
+                    if (resultado.length > 0) {
+
+                        if (resultado == '1') {
+
+                            toastr.options.timeOut = nTiempoMedio;
+                            toastr.options.extendedTimeOut = nTiempoMedio;
+                            /*success - info - warning - error*/
+                            var $toast = toastr["success"](tMensajeActualizadoExito, tTituloExito); $toastlast = $toast;
+
+                            //IdsResponsible = "0";
+                            //IdTicket = "0";
+                            //$('#TicketResponsible').val();
+                            //IdResponsible
+                            $("#LstResponsibleChange").addClass("hidden");
+                            $("#imgCargaLstResponsibleChange").addClass("hidden");
+                            $("#msjErrorLstResponsibleChange").addClass("hidden");
+                            $("#msjVacioLstResponsibleChange").removeClass("hidden");
+                            $("#msjErrorListarLstResponsibleChange").addClass("hidden");
+                            $("#msjSuperaLimiteLstResponsibleChange").addClass("hidden");
+                            //GrillaListadoTicketsResponsable();
+                            //ComboEncargado('1');
+                            //$("#PanelActivityFather").removeClass("hidden");
+                            $('#ModalResponsibleTicketEdit').modal('hide');
+
+                        } else {
+
+                            toastr.options.timeOut = nTiempoMedio;
+                            toastr.options.extendedTimeOut = nTiempoMedio;
+                            /*success - info - warning - error*/
+                            var $toast = toastr["warning"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                            return;
+                        }
+
+                    } else if (resultado == 2) {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValidacionNroCotizacionExiste, tTituloError); $toastlast = $toast;
+                        document.getElementById('btnGrabar').disabled = false;
+
+                    } else if (resultado == 3) {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorActualizarRutas, tTituloError); $toastlast = $toast;
+                        document.getElementById('btnGrabar').disabled = false;
+                    } else {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado);
+                    }
+                    $("#CargaTemporal").addClass("hidden");
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+
+        };
+        /* ------------------- EVENTOS -----------------*/
+
+        $('#TicketResponsible').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+
+            var ValorTickets;
+
+            ValorTickets = $('#TicketResponsible').val();
+
+            if (ValorTickets == undefined || ValorTickets == null || ValorTickets == "") {
+
+                ValorTickets = "";
+                
+            } else {
+
+                ValorTickets = ValorTickets.toString();
+
+            }
+
+
+            if (ValorTickets != "") {
+
+                IdTicket = ValorTickets;
+                IdResponsible = "0";
+
+                GrillaListadoTicketsResponsable();
+
+            } else {
+
+                $("#LstResponsibleChange").addClass("hidden");
+                $("#imgCargaLstResponsibleChange").addClass("hidden");
+                $("#msjErrorLstResponsibleChange").addClass("hidden");
+                $("#msjVacioLstResponsibleChange").removeClass("hidden");
+                $("#msjErrorListarLstResponsibleChange").addClass("hidden");
+                $("#msjSuperaLimiteLstResponsibleChange").addClass("hidden");
+            }
+
+        });
+
+        $("#btnCancelar").click(function () {
+
+            $('#ModalTicketEdit').modal('hide');
+
+        });
+
+        $("#btnCancelarResponsible").click(function () {
+
+            $('#ModalResponsibleTicketEdit').modal('hide');
+
+        });
+
+        $("#btnEdit").click(function () {
+
+            if ($("#WhoResponsible").val() == "" || $("#WhoResponsible").val() == null || $("#WhoResponsible").val() == undefined) {
+                 toastr.options.timeOut = nTiempoCorto;
+                 toastr.options.extendedTimeOut = nTiempoCorto;
+                 /*success - info - warning - error*/
+                 var $toast = toastr["error"]("Es necesario seleccionar un responsable al Ticket", tTituloError); $toastlast = $toast;
+                 return;
+            }
+
+            //$('#ModalTicketEdit').modal('hide');
+            Swal.fire({
+                title: 'Estas seguro de editar el Responsable?',
+                text: "Ya no podras revertirla!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, deseo Editar!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    var IdResponsibleUpdate = 0;
+
+                    IdResponsibleUpdate = $("#WhoResponsible").val().toString();
+
+                    EditarResponsible(IdResponsibleUpdate);
+
+                } else {
+
+
+
+                }
+            });
+
+
+
+        });
+
+        $("#btnEditResponsableTicket").click(function () {
+
+            //$('#ModalTicketEdit').modal('hide');
+            Swal.fire({
+                title: 'Estas seguro de editar el los Tickets al Responsable?',
+                text: "Ya no podras revertirla!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, deseo Editar!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    var IdResponsibleTicketUpdate = 0;
+                    var IdTicketsUpdate = 0;
+
+                    IdResponsibleTicketUpdate = $("#NewResponsible").val().toString();
+                    IdTicketsUpdate = $("#TicketResponsible").val().toString();
+
+                    EditarTicketResponsible(IdResponsibleTicketUpdate , IdTicketsUpdate);
+
+                } else {
+
+
+
+                }
+            });
+        });
+        
+        $("#btnBuscar").click(function () {
+
+            var $registerForm = $("#FrmFiltrosTicketxResponsible").validate({
+                rules: {
+                    txtFechaInicioTicket: {
+                        required: true,
+                        regx: ReFecha
+                    },
+                    txtFechaFinalTicket: {
+                        required: true,
+                        regx: ReFecha
+                    }
+                },
+                messages: {
+                    txtFechaInicioTicket: {
+                        required: tCampoRequerido,
+                        regx: tFormatoFechaNoValido
+                    },
+                    txtFechaFinalTicket: {
+                        required: tCampoRequerido,
+                        regx: tFormatoFechaNoValido
+                    }
+                },
+
+                submitHandler: function (form) {
+
+                    //if (Valor == 1) {
+
+                    //    //if ($("#txtTicket").val() == "" || $("#txtTicket").val() == null || $("#txtTicket").val() == undefined) {
+                    //    //    toastr.options.timeOut = nTiempoCorto;
+                    //    //    toastr.options.extendedTimeOut = nTiempoCorto;
+                    //    //    /*success - info - warning - error*/
+                    //    //    var $toast = toastr["error"]("No se a ingresado un Nro. de ticket", tTituloError); $toastlast = $toast;
+                    //    //    return;
+
+                    //    //}
+                    //}
+
+                    //if (Valor == 2) {
+
+                    //    if ($("#selectorResponsible").val() == "" || $("#selectorResponsible").val() == null || $("#selectorResponsible").val() == undefined) {
+                    //        toastr.options.timeOut = nTiempoCorto;
+                    //        toastr.options.extendedTimeOut = nTiempoCorto;
+                    //        /*success - info - warning - error*/
+                    //        var $toast = toastr["error"]("No se a seleccionado un Responsable", tTituloError); $toastlast = $toast;
+                    //        return;
+
+                    //    }
+                    //}
+
+                    /*Mensajes de los graficos y la cabecera**/
+
+                    /*****Gráfico 1*****/
+                    $("#btnBuscar").prop('disabled', true);
+                    $("#BtnExportarExcel").prop('disabled', true);
+
+                    $("#imgCargaLstTicketxResponsible").removeClass("hidden");
+                    $("#LstTicketxResponsible").addClass("hidden");
+                    $("#msjErrorLstTicketxResponsible").addClass("hidden");
+                    $("#msjVacioLstTicketxResponsible").addClass("hidden");
+                    $("#msjErrorListarLstTicketxResponsible").addClass("hidden");
+                    $("#msjSuperaLimiteLstTicketxResponsible").addClass("hidden");
+
+                    //if (Valor == 1) {
+
+                    //    $(".Contenedor1").removeClass("hidden");
+                    //    $(".Contenedor2").addClass("hidden");
+
+                    GrillaListado();
+
+                    //} else {
+
+                    //    $(".Contenedor1").addClass("hidden");
+                    //    $(".Contenedor2").removeClass("hidden");
+
+                    //    GrillaListado2();
+
+                    //}
+
+
+                },
+                errorPlacement: function (error, element) {
+                    error.insertAfter(element.parent());
+                }
+            });
+        });
+
+        $("#BtnExportarExcel").click(function () {
+
+            if (Valor == 1) {
+
+                ExportarExcel("LstTicketxResponsible");
+
+            } else {
+
+                ExportarExcel("LstResponsibleQuantity");
+
+            }
+
+            
+        });
+
+        $("#LstTicketxResponsible").delegate(".BtnVerInfo", "click", function (e) {
+
+            var grid = $("#LstTicketxResponsible").data("kendoGrid");
+            var myVar = grid.dataItem($(this).closest("tr"));
+
+            var NroTicket = 0;
+            var FechaRegistroTicket = "";
+            var CallTicket = "";
+            var RegisterTicket = "";
+            var ResponsibleTicket = "";
+            var OperacionTicket = "";
+            var RazonTicket = "";
+            var LocationTicket = "";
+            var CriticidadTicket = "";
+            var TitleTicket = "";
+            var DetalleTicket = "";
+            var IdResponsibleTicket = "";
+
+
+            IdTicketUpdate = myVar.IdTicket;
+
+            NroTicketActivity = myVar.NroTicket;
+            NroTicket = myVar.NroTicket;
+            FechaRegistroTicket = myVar.StartDate;
+            CallTicket = myVar.FullNameTicket;
+            RegisterTicket = myVar.UsuarioNameTicket;
+            ResponsibleTicket = myVar.ResponsibleNameTicket;
+            OperacionTicket = myVar.OperationName;
+            RazonTicket = myVar.ReasonName;
+            LocationTicket = myVar.LocationNameTicket;
+            CriticidadTicket = myVar.CriticalityName;
+            TitleTicket = myVar.TitleDescription;
+            DetalleTicket = myVar.DetalleText;
+            IdResponsibleTicket = myVar.ResponsibleId;
+
+            //document.getElementById("txtNroTicket").value = NroTicket;
+            document.getElementById("txtOperacionTicket").value = OperacionTicket;
+            document.getElementById("txtWhoCall").value = CallTicket;
+            document.getElementById("txtWhoRegister").value = RegisterTicket;
+            //document.getElementById("WhoResponsible").value = ResponsibleTicket;
+
+            $("#WhoResponsible").selectpicker('val', IdResponsibleTicket);
+
+            document.getElementById("txtTicketDate").value = FechaRegistroTicket;
+            document.getElementById("txtRazonTicket").value = RazonTicket;
+            document.getElementById("txtLocationTicket").value = LocationTicket;
+            document.getElementById("txtTitleDescription").value = TitleTicket;
+            document.getElementById("txtDetallerTicket").value = DetalleTicket;
+
+            if (CriticidadTicket == 'ALTA') {
+
+                document.getElementById("rdoAltaCriticidad").checked = true;
+                document.getElementById("rdoMedioCriticidad").checked = false;
+                document.getElementById("rdoBajaCriticidad").checked = false;
+
+            } else if (CriticidadTicket == 'MEDIA') {
+
+                document.getElementById("rdoAltaCriticidad").checked = false;
+                document.getElementById("rdoMedioCriticidad").checked = true;
+                document.getElementById("rdoBajaCriticidad").checked = false;
+
+
+            } else if (CriticidadTicket == 'BAJA') {
+
+                document.getElementById("rdoAltaCriticidad").checked = false;
+                document.getElementById("rdoMedioCriticidad").checked = false;
+                document.getElementById("rdoBajaCriticidad").checked = true;
+
+            }
+
+            var titulo;
+            titulo = document.getElementById("lblModelTicketEdit");
+            titulo.innerHTML = NroTicket;
+
+            $('#ModalTicketEdit').modal('show');
+        });
+
+        $("#LstResponsibleQuantity").delegate(".BtnVerInfo2", "click", function (e) {
+
+            var grid = $("#LstResponsibleQuantity").data("kendoGrid");
+            var myVar = grid.dataItem($(this).closest("tr"));
+
+            $("#LstResponsibleChange").addClass("hidden");
+            $("#imgCargaLstResponsibleChange").addClass("hidden");
+            $("#msjErrorLstResponsibleChange").addClass("hidden");
+            $("#msjVacioLstResponsibleChange").removeClass("hidden");
+            $("#msjErrorListarLstResponsibleChange").addClass("hidden");
+            $("#msjSuperaLimiteLstResponsibleChange").addClass("hidden");
+
+            var ResponsibleTicket = "";
+            var CargoTicket = "";
+            var IdResponsibleTicket = 0;
+
+            ResponsibleTicket = myVar.FullName;
+            CargoTicket = myVar.Cargo;
+            IdResponsibleTicket = myVar.ResponsibleId;
+
+            document.getElementById("txtResponsibleTicket").value = ResponsibleTicket;
+            document.getElementById("txtCargoTicket").value = CargoTicket;
+
+            ComboTicketResponsable(IdResponsibleTicket);
+            ComboResponsibleWithoutMain(IdResponsibleTicket);
+
+            $('#ModalResponsibleTicketEdit').modal('show');
+        });
+
+        $('input[type=radio][name=rdoRadioTicketResponsible]').change(function (e) {
+
+            if (e.target.id == 'rdoTicket') {
+
+                document.getElementById("rdoTicket").checked = true;
+                document.getElementById("rdoResponsable").checked = false;
+
+                $(".ContainerTicket").removeClass("hidden");
+                $(".ContainerResponsible").addClass("hidden");
+
+                Valor = 1;
+
+                //$("#selectorTicket").selectpicker('val', "");
+                //$("#selectorTicket").selectpicker('refresh');
+                $("#txtTicket").val("");
+                
+
+                //console.log(1);
+
+            } else if (e.target.id == 'rdoResponsable') {
+
+                document.getElementById("rdoTicket").checked = false;
+                document.getElementById("rdoResponsable").checked = true;
+
+                $(".ContainerTicket").addClass("hidden");
+                $(".ContainerResponsible").removeClass("hidden");
+
+                Valor = 2;
+
+                $("#selectorResponsible").selectpicker('val', "");
+                $("#selectorResponsible").selectpicker('refresh');
+                //console.log(2);
+            }
+
+        });
+
+        $.validator.addMethod("regx", function (value, element, regexpr) {
+            return regexpr.test(value);
+        }, "");
+
+        FormatoFechas();
+        GrillaListado();
+    });
+
+</script>

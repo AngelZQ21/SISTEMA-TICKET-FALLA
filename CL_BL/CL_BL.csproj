@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A85FC6EC-7132-488E-A067-EECAD636858E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CL_BL</RootNamespace>
+    <AssemblyName>CL_BL</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BL_Activity.cs" />
+    <Compile Include="BL_Components.cs" />
+    <Compile Include="BL_ListActivityDetail.cs" />
+    <Compile Include="BL_Area.cs" />
+    <Compile Include="BL_Configuration.cs" />
+    <Compile Include="BL_Criticality.cs" />
+    <Compile Include="BL_Employee.cs" />
+    <Compile Include="BL_GuardChange.cs" />
+    <Compile Include="BL_Indicator_Type.cs" />
+    <Compile Include="BL_Indicator.cs" />
+    <Compile Include="BL_Indicator_Answer.cs" />
+    <Compile Include="BL_Indicator_Register.cs" />
+    <Compile Include="BL_ListActivity.cs" />
+    <Compile Include="BL_ListGeneralActivity.cs" />
+    <Compile Include="BL_MeetingRecord.cs" />
+    <Compile Include="BL_Meeting_Record_Activity.cs" />
+    <Compile Include="BL_Menu.cs" />
+    <Compile Include="BL_Menu_Profile.cs" />
+    <Compile Include="BL_Menu_Profile_Action.cs" />
+    <Compile Include="BL_Operation.cs" />
+    <Compile Include="BL_PathFile.cs" />
+    <Compile Include="BL_Person.cs" />
+    <Compile Include="BL_Position.cs" />
+    <Compile Include="BL_Profile.cs" />
+    <Compile Include="BL_Profile_Indicator.cs" />
+    <Compile Include="BL_Reason.cs" />
+    <Compile Include="BL_ReportListTicketActivity.cs" />
+    <Compile Include="BL_Restriction.cs" />
+    <Compile Include="BL_Restriction_Setting.cs" />
+    <Compile Include="BL_Search.cs" />
+    <Compile Include="BL_Role.cs" />
+    <Compile Include="BL_Ticket.cs" />
+    <Compile Include="BL_User.cs" />
+    <Compile Include="BL_Value.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CL_BE\CL_BE.csproj">
+      <Project>{e3d984e9-01fc-466a-b23d-d76d69c2ed03}</Project>
+      <Name>CL_BE</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CL_DA\CL_DA.csproj">
+      <Project>{6d1c9d29-ed57-4a01-bf04-2f0b95f8dc47}</Project>
+      <Name>CL_DA</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

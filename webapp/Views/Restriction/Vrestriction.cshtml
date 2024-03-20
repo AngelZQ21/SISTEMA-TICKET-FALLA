@@ -1,0 +1,1288 @@
+﻿
+<script src="~/Scripts/util/jsUtilCambioGuardia.js"></script>
+<link href="~/Content/plugin/datapicker/datepicker3.css" rel="stylesheet" />
+<script src="~/Scripts/plugin/datapicker/bootstrap-datepicker.js"></script>
+<link href="~/Content/plugin/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet" />
+
+<div id="content">
+
+    <div class="well" style="padding:0px 30px 10px 30px; background-color:white;">
+        <div class="row wrapper">
+            <div style="width: 100%; display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:space-between; text-align:center; align-items:center;">
+                <h2><i class="fa fa-edit fa-fw"></i> Restricciones</h2>
+                <button class="btn btn-primary" type="button" id="btnNuevaRestriccion" disabled title="Registra una nueva restricción "><i class="fa fa-plus"></i> Nueva Restricción</button>
+            </div>
+            <p>[Listado de Restricciones]</p>
+        </div>
+
+        <div class="row" style="margin-top: 10px;">
+
+            <section class="col-xs-12 col-sm-5 col-md-5 col-lg-5" style="margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                <div class="input-group">
+                    <input class="form-control" id="txtBuscarValor" type="text" maxlength="150" placeholder="Buscar...">
+                    <div class="input-group-btn">
+                        <button class="btn btn-primary" type="button" id="btnBuscar" disabled><i class="icon-append fa fa-search"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="col-xs-12 col-sm-5 col-md-4 col-lg-4" style="margin-left:0px; padding-left:20px; margin-right:0px; padding-right:0px; padding-top:5px;">
+                <div class="input-group">
+                    <section class="radio radio-info radio-inline">
+                        <input tabindex="7" type="radio" name="RrbTipo" id="RrbActivos" disabled checked="checked">
+                        <label for="RrbActivos"> Activos </label>
+                    </section>
+                    <section class="radio radio-info radio-inline">
+                        <input tabindex="7" type="radio" name="RrbTipo" id="RrbInactivos" disabled>
+                        <label for="RrbInactivos"> Inactivos </label>
+                    </section>
+                </div>
+            </section>
+
+            <section class="col-xs-12 col-sm-2 col-md-3 col-lg-3" style="margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                <button class="btn btn-success pull-right" type="button" id="BtnExportarExcel" disabled title="Exportar listado a Excel"><i class="fa fa-file-excel-o"></i> Excel</button>
+            </section>
+        </div>
+    </div>
+
+    <div id="widget-grid">
+
+        <div class="row">
+            <article class="col-xs-12">
+
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-restriccion" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-list"></i> </span>
+                        <h2>Listado de Restricciones </h2>
+                    </header>
+                    <div style="border:none;">
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                        </div>
+                        <div class="widget-body no-padding">
+                            <div id="GrillaRestriccion" class="hidden"></div>
+                            <div class="spiner-example" id="ImagenCarga">
+                                @Html.Partial("../MensajesParciales/_MensajeCargando")
+                            </div>
+                            <div class="hidden" id="MensajeError" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeError")
+                            </div>
+                            <div class="hidden" id="MensajeVacio" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeVacio")
+                            </div>
+                            <div class="hidden" id="MensajeErrorListar" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+</div>
+
+<div id="ModalRestriccion" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <div class="modal-dialog" style="width:70%;">
+        <div class="modal-content animated">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Datos de la Restricción</h4>
+            </div>
+            <div class="modal-body clearfix" style="padding-left:10px; padding-right:10px;">
+                <form id="FrmRestriccion" onsubmit="return false">
+
+                    <section class="col-xs-12 col-sm-12 col-lg-4">
+                        <label style="color: #2F4050">Tipo: <strong class="CampoRequerido">*</strong></label>
+                        <div class="" style="width: 100%; display:flex; flex-flow:row nowrap;">
+                            <input id="ComboTipo" style="width:90%; background-color:white;" />
+                        </div>
+                    </section>
+                   
+                    <section class="col-xs-12 col-md-5">
+                        <label style="color: #2F4050">Restricción: </label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="txtRestriccion" id="txtRestriccion" maxlength="40" style="padding-left:5px;" />
+                            <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                        </div>
+                    </section>
+                    <section class="col-xs-12 col-md-3" hidden="hidden">
+                        <label style="color: #2F4050">Columna Clave: </label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="txtColumnaClave" id="txtColumnaClave" maxlength="50" style="padding-left:5px;" />
+                            <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                        </div>
+                    </section>                    
+                    <section class="col-xs-12" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:space-between">
+                        <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-start">
+                            @Html.Partial("../MensajesParciales/_MensajeLeyendaCampoRequerido")
+                        </div>
+                        <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-end">
+                            <button style="margin:3px;" class="btn btn-danger" type="button" id="btnCancelar"><i class="fa fa-times-circle"></i> Cancelar</button>
+                            <button style="margin:3px;" class="btn btn-primary" type="submit" id="btnGrabar"><i class="fa fa-save"></i> Grabar</button>
+                        </div>
+                    </section>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="ModalRestriccionMapa" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:80%;">
+        <div class="modal-content animated">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Listado de Mapas</h4>
+            </div>
+            <div class="modal-body clearfix" style="padding-left:10px; padding-right:10px;">
+
+                <div class="row">
+                    <article class="col-xs-12">
+                        <section>
+                            <section class="col-xs-12" style="margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                                <p style="color:red; font-size:16px;"><span style="font-weight:bold">(*) </span>Las siguientes restricciones están relacionadas al mapa: <span style="font-weight:bold" id="txtMapa"></span></p>
+                                <p style="color: red; font-size: 16px;">Favor de deshabilitar todas las restricciones asociados a este mapa.</p>
+                            </section>
+                        </section>
+                        <section class="col-xs-12" style="margin-bottom:10px;">
+                            <button class="btn btn-success pull-right" type="button" id="BtnExportarExcelRestricción" title="Exportar listado a Excel"><i class="fa fa-file-excel-o"></i> Excel</button>
+                            <a target="_blank" href="@Url.Action("VrestrictionConfig", "RestrictionConfig")" class="btn btn-info pull-right" style="margin-right:10px;" type="button" title="Abrir una pestaña Restricción de Mapa"><i class="fa fa-forward"></i> Ir a Configuración Mapa</a>
+                        </section>
+
+                    </article>
+                </div>
+
+                <div class="row">
+                    <article class="col-xs-12">
+
+                        <div class="jarviswidget jarviswidget-color-blue" id="wid-id-compania" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050">
+                            <header>
+                                <span class="widget-icon"> <i class="fa fa-list"></i> </span>
+                                <h2>Listado de Mapas </h2>
+                            </header>
+                            <div style="border:none;">
+                                <div class="jarviswidget-editbox">
+                                    <!-- This area used as dropdown edit box -->
+                                </div>
+                                <div class="widget-body no-padding">
+                                    <div id="GrillaRestriccionesMapa" class="hidden"></div>
+                                    <div class="spiner-example" id="ImagenCargaRestriccionMapa">
+                                        @Html.Partial("../MensajesParciales/_MensajeCargando")
+                                    </div>
+                                    <div class="hidden" id="MensajeErrorRestriccionMapa" style="margin:30px;">
+                                        @Html.Partial("../MensajesParciales/_MensajeError")
+                                    </div>
+                                    <div class="hidden" id="MensajeVacioRestriccionMapa" style="margin:30px;">
+                                        @Html.Partial("../MensajesParciales/_MensajeVacio")
+                                    </div>
+                                    <div class="hidden" id="MensajeErrorListarRestriccionMapa" style="margin:30px;">
+                                        @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="row">
+                    <article class="col-xs-12">
+                        <button style="margin:3px;" tabindex="8" class="btn btn-danger pull-right" type="button" id="btnCancelarRestriccionMapa"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    </article>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        /*----------------------------------------------------------------------------------------------- VARIABLES*/
+
+        var idRestriccion = 0;
+        var restriccionTable = '';
+        var restrictionColumn = '';
+        var EstadoRegistro = '1';
+        var oldRestrinccionColumn = '';
+        var htmlBody = "<button class='btn-grid btn-xs BtnEditarRestriction' type='button' title='Editar'><i class='fa fa-lg fa-fw fa-edit'></i></button>" + " " +
+                                "<button class='btn-grid btn-xs BtnEditarEstadoRestriction' type='button' title='Desactivar'><i class='fa fa-lg fa-fw fa-check'></i></button>";
+
+        function ValidarCaracter(cadenaAnalizar) {
+            var flag = false;
+            var CampoNoValidos = "<>";
+            for (var i = 0; i < cadenaAnalizar.length; i++) {
+
+                var caracter = cadenaAnalizar.charAt(i);
+                flag = false;
+                for (var y = 0; y < CampoNoValidos.length; y++) {
+                    var CaracterValido = CampoNoValidos.charAt(y);
+                    if (caracter == CaracterValido) {
+                        flag = true;
+                        break;
+                    }
+                }
+
+                if (flag == true) {
+                    flag = true;
+                    break;
+                }
+            }
+            return flag;
+        }
+
+        /*----------------------------------------------------------------------------------------------- GRILLAS*/
+        function GrillaListadoRestriccion() {
+
+            var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: function (options) {
+                        $.ajax({
+                            type: "GET", /*Puede ser post*/
+                            url: tRutaServidor + "/Restriction/ListarRestriccion", /* es importante poner los .. delante*/
+                            contentType: "application/json; charset=utf-8",
+                            data: "valorBusqueda=" + $("#txtBuscarValor").val().trim() + "&valorConsulta=" + EstadoRegistro,
+                            dataType: "json",
+                            /*async: false,*/
+                            success: function (resultado) {
+
+                                /*exitosamente*/
+                                if (resultado.length > 0) {
+                                    /* proceso exitoso con datos*/
+                                    if (resultado[0].ValorConsulta == "1") {
+                                        $("#ImagenCarga").addClass("hidden");
+                                        $("#GrillaRestriccion").removeClass("hidden");
+                                        $("#MensajeError").addClass("hidden");
+                                        $("#MensajeErrorListar").addClass("hidden");
+                                        $("#MensajeVacio").addClass("hidden");
+
+                                        $("#RrbActivos").prop('disabled', false);
+                                        $("#RrbInactivos").prop('disabled', false);
+                                        $("#BtnExportarExcel").prop('disabled', false);
+                                        $("#btnBuscar").prop('disabled', false);
+                                        $("#btnNuevaRestriccion").prop('disabled', false);
+
+                                    } else {
+                                        /* proceso fallido catch listado datos*/
+                                        $("#ImagenCarga").addClass("hidden");
+                                        $("#GrillaRestriccion").addClass("hidden");
+                                        $("#MensajeError").addClass("hidden");
+                                        $("#MensajeErrorListar").removeClass("hidden");
+                                        $("#MensajeVacio").addClass("hidden");
+                                        console.log(resultado);
+
+                                        $("#RrbActivos").prop('disabled', true);
+                                        $("#RrbInactivos").prop('disabled', true);
+                                        $("#BtnExportarExcel").prop('disabled', true);
+                                        $("#btnBuscar").prop('disabled', true);
+                                        $("#btnNuevaRestriccion").prop('disabled', true);
+                                    }
+
+                                } else {
+                                    $("#ImagenCarga").addClass("hidden");
+                                    $("#GrillaRestriccion").addClass("hidden");
+                                    $("#MensajeError").addClass("hidden");
+                                    $("#MensajeVacio").removeClass("hidden");
+                                    $("#MensajeErrorListar").addClass("hidden");
+
+                                    $("#RrbActivos").prop('disabled', false);
+                                    $("#RrbInactivos").prop('disabled', false);
+                                    $("#BtnExportarExcel").prop('disabled', true);
+                                    $("#btnBuscar").prop('disabled', false);
+                                    $("#btnNuevaRestriccion").prop('disabled', false);
+                                }
+                                options.success(resultado);
+                                var grid = $("#GrillaRestriccion").data("kendoGrid");
+                                if (grid.dataSource.total() > 0) {
+                                    grid.setDataSource(dataSource);
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                /*fallo al llamar a la funcion ajax*/
+                                $("#ImagenCarga").addClass("hidden");
+                                $("#GrillaRestriccion").addClass("hidden");
+                                $("#MensajeError").removeClass("hidden");
+                                $("#MensajeVacio").addClass("hidden");
+                                $("#MensajeErrorListar").addClass("hidden");
+
+                                $("#RrbActivos").prop('disabled', true);
+                                $("#RrbInactivos").prop('disabled', true);
+                                $("#BtnExportarExcel").prop('disabled', true);
+                                $("#btnBuscar").prop('disabled', true);
+                                $("#btnNuevaRestriccion").prop('disabled', true);
+
+                                console.log("ERROR AJAX : " + ajaxOptions);
+                                console.log("ERROR AJAX : " + thrownError);
+                                console.log(xhr.responseText);
+                                console.log(xhr);
+
+                            }
+                        });
+                    },
+                    parameterMap: function (data, operation) {
+                        if (operation !== "read" && data.models) {
+                            return JSON.stringify({ JSONparam: data.models });
+                        }
+                    }
+                },
+                error: function (e) {
+                    alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+                },
+                batch: false,
+                pageSize: PaginationKendoGrid,
+                schema: {
+                    model: {
+                        fields: {
+                            IdRestriction: { type: "number" },
+                            RestrictionName: { type: "string" },
+                            RestrictionTable: { type: "string" },
+                            RestrictionTableDesc: { type: "string" },
+                            //RestrictionColumn: { type: "string" },
+                            RegistrationStatus: { type: "string" },
+                            RegistrationStatusDesc: { type: "string" },
+                            UpdateDate: { type: "date" }, //FECHA ACTUALIZACION
+                            UserDesc: { type: "string" }, //USUARIO ACTUALIZACION
+                            RegistrationDate: { type: "date" }, //FECHA REGISTRO
+                            UserRegistrationDesc: { type: "string" } //USUARIO REGISTRO
+                        }
+                    }
+                }
+            });
+
+            $("#GrillaRestriccion").kendoGrid({
+                dataSource: dataSource,
+                sortable: true,
+                pageable: true,
+                columnMenu: true,
+                columnMenu: {
+                    columns: true,
+                    filterable: true,
+                    sortable: true,
+                    messages: {
+                        columns: KendoMsjColumnMenuColumns,
+                        filter: KendoMsjColumnMenuFilter,
+                        sortAscending: KendoMsjColumnMenuSortAscending,
+                        sortDescending: KendoMsjColumnMenuSortDescending,
+                        settings: KendoMsjSettings
+                    }
+                },
+                columnMenuInit: function (e) {
+                    var menu = e.container.find(".k-menu").data("kendoMenu");
+                    menu.bind("select", function (e) {
+                        var EtiquetaInput = $(".k-animation-container > .k-menu-group > .k-item > .k-content > .k-filter-menu > .k-textbox :input");
+                        EtiquetaInput.focus();
+                    });
+                },
+                groupable: false,
+                reorderable: true,
+                selectable: "row",
+                scrollable: true,
+                resizable: true,
+                filterable: {
+                    multi: true,
+                    checkAll: true,
+                    search: true,
+                    messages: {
+                        clear: KendoMsjClear,
+                        filter: KendoMsjFilter,
+                        selectedItemsFormat: KendoMsjSelectedItemsFormat,
+                        checkAll: KendoMsjCheckAll,
+                        search: KendoMsjSearch
+                    }
+                },
+                pageable: {
+                    refresh: false,
+                    pageSize: 10,
+                    pageSizes: true,
+                    pageSizes: [5, 10, 15],
+                    buttonCount: 5,
+                    messages: {
+                        empty: KendoMsjEmpty,
+                        page: kendoMsjPage,
+                        of: KendoMsjOf,
+                        itemsPerPage: KendoMsjItemsPerPage,
+                        first: KendoMsjFirst,
+                        last: KendoMsjLast,
+                        next: KendoMsjNext,
+                        previous: KendoMsjPrevious,
+                        refresh: KendoMsjRefresh,
+                        morePages: KendoMsjMorePages,
+                        display: KendoMsjDisplay
+                    }
+                },
+                excel: { fileName: "Listado de Restricciones.xlsx", filterable: true, allPages: true },
+                columns: [
+                    {
+                        width: 130,
+                        command: {
+                            template: htmlBody,
+                        },
+                        attributes: { "class": "text-center" },
+                        title: ""
+                    },
+                    //{ field: "IdRestriction", title: "Id", width: 120, hidden: true, attributes: { "class": "text-center" } },
+                    { field: "RestrictionName", title: "Restricción", width: 250, attributes: { "class": "text-center" } },
+                    { field: "RestrictionTableDesc", title: "Tipo Restricción", width: 300, attributes: { "class": "text-center" } },
+                    //{ field: "RestrictionColumn", title: "Columna clave", width: 250, attributes: { "class": "text-center" } },
+                    { field: "RegistrationStatusDesc", title: "Estado", width: 150, attributes: { "class": "text-center" } },
+                    { field: "UpdateDate", title: "Fecha de Actualización", hidden: true, width: 250, format: "{0:dd/MM/yyyy HH:mm:ss}", attributes: { "class": "text-center" } },
+                    { field: "UserDesc", title: "Usuario de Actualización", hidden: true, width: 250, attributes: { "class": "text-center" } },
+                    { field: "RegistrationDate", title: "Fecha de Registro", hidden: true, width: 250, format: "{0:dd/MM/yyyy HH:mm:ss}", attributes: { "class": "text-center" } },
+                    { field: "UserRegistrationDesc", title: "Usuario de Registro", hidden: true, width: 250, attributes: { "class": "text-center" } }
+                ],
+                dataBound: function () {
+
+                    var Grilla = this;
+                    Grilla.tbody.find("tr[role='row']").each(function () {
+                        var model = Grilla.dataItem(this);
+                        //console.log(model);
+                        if (model.RegistrationStatus == "I") {
+                            $(this).find("td > button.BtnEditarEstadoRestriction > i").removeClass("fa-ban");
+                            $(this).find("td > button.BtnEditarEstadoRestriction > i").addClass("fa-check");
+                            $(this).find("td > button.BtnEditarEstadoRestriction").addClass("Color-gris");
+                            $(this).find("td > button.BtnEditarEstadoRestriction").removeClass("bg-color-blueDark");
+
+                        } else if (model.RegistrationStatus == "A") {
+                            $(this).find("td > button.BtnEditarEstadoRestriction > i").removeClass("fa-check");
+                            $(this).find("td > button.BtnEditarEstadoRestriction > i").addClass("fa-ban");
+                        }
+                    });
+                }
+            });
+
+        }
+
+        /*----------------------------------------------------------------------------------------------- FUNCIONES GUARDAR/ACTUALIZAR/ELIMINAR ETC RESTRICCION*/
+
+        function CrearRestriccion() {
+
+            $("#CargaTemporal").removeClass("hidden");
+
+            var cmbTipo = $("#ComboTipo").data("kendoDropDownList").value();
+            var txtRestrictionName = $("#txtRestriccion").val();
+            var txtRestrictionColumn = $("#txtColumnaClave").val();
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Restriction/CrearRestriccion",
+                dataType: "json",
+                data: {
+                    RestrictionName: txtRestrictionName,
+                    RestrictionTable: cmbTipo//,
+                    //RestrictionColumn: txtRestrictionColumn
+                },
+                success: function (resultado) {
+
+                    if (resultado == "1") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["success"](tMensajeCreadoExito, tTituloExito); $toastlast = $toast;
+                        $("#ImagenCarga").removeClass("hidden");
+                        $("#GrillaRestriccion").addClass("hidden");
+                        $("#MensajeError").addClass("hidden");
+                        $("#MensajeErrorListar").addClass("hidden");
+                        $("#MensajeVacio").addClass("hidden");
+
+                        $("#RrbActivos").prop('disabled', true);
+                        $("#RrbInactivos").prop('disabled', true);
+                        $("#BtnExportarExcel").prop('disabled', true);
+                        $("#btnBuscar").prop('disabled', true);
+                        $("#btnNuevaRestriccion").prop('disabled', true);
+
+                        $("#GrillaRestriccion").data("kendoGrid").dataSource.read();
+                        $('#ModalRestriccion').modal('hide');
+                    } else if (resultado == "2") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorYaExiste, tTituloError); $toastlast = $toast;
+                    } else if (resultado == "3") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValidaCantidadMaximaColumnas, tTituloError); $toastlast = $toast;
+
+                    } else if (resultado == "0") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    } else {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+        }
+
+        function EditarRestriccion() {
+
+            $("#CargaTemporal").removeClass("hidden");
+
+            var IdRestriccion = idRestriccion;
+            var cmbTipo = $("#ComboTipo").data("kendoDropDownList").value();
+            var txtRestrictionName = $("#txtRestriccion").val();
+            var txtRestrictionColumn = $("#txtColumnaClave").val();
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Restriction/EditarRestriccion",
+                dataType: "json",
+                data: {
+                    IdRestriction: IdRestriccion,
+                    RestrictionName: txtRestrictionName,
+                    RestrictionTable: cmbTipo,
+                    RestrictionColumn: txtRestrictionColumn,
+                    OldColumnName: oldRestrinccionColumn
+                },
+                success: function (resultado) {
+
+                    if (resultado == "1") {
+                        $("#CargaTemporal").addClass("hidden");
+                        $('#ModalRestriccion').modal('hide');
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["success"](tMensajeActualizadoExito, tTituloExito); $toastlast = $toast;
+                        $("#ImagenCarga").removeClass("hidden");
+                        $("#GrillaRestriccion").addClass("hidden");
+                        $("#MensajeError").addClass("hidden");
+                        $("#MensajeErrorListar").addClass("hidden");
+                        $("#MensajeVacio").addClass("hidden");
+
+                        $("#RrbActivos").prop('disabled', true);
+                        $("#RrbInactivos").prop('disabled', true);
+                        $("#BtnExportarExcel").prop('disabled', true);
+                        $("#btnBuscar").prop('disabled', true);
+                        $("#btnNuevaRestriccion").prop('disabled', true);
+
+                        $("#GrillaRestriccion").data("kendoGrid").dataSource.read();
+                    } else if (resultado == "2") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorYaExiste, tTituloError); $toastlast = $toast;
+                    } else if (resultado == "3") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorNoExiste, tTituloError); $toastlast = $toast;
+                    } else if (resultado == "0") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    } else {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+
+        }
+
+        function EditarEstadoRestriccion() {
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Restriction/EditarEstadoRestriccion",
+                dataType: "json",
+                data: {
+                    IdRestriction: idRestriccion
+                },
+                success: function (resultado) {
+
+                    if (resultado == "1") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["success"](tMensajeActualizadoExito, tTituloExito); $toastlast = $toast;
+                        $("#ImagenCarga").removeClass("hidden");
+                        $("#GrillaRestriccion").addClass("hidden");
+                        $("#MensajeError").addClass("hidden");
+                        $("#MensajeErrorListar").addClass("hidden");
+                        $("#MensajeVacio").addClass("hidden");
+
+                        $("#RrbActivos").prop('disabled', true);
+                        $("#RrbInactivos").prop('disabled', true);
+                        $("#BtnExportarExcel").prop('disabled', true);
+                        $("#btnBuscar").prop('disabled', true);
+                        $("#btnNuevaRestriccion").prop('disabled', true);
+
+                        $("#GrillaRestriccion").data("kendoGrid").dataSource.read();
+                    } else if (resultado == "0") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    } else if (resultado == "3") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorNoExiste, tTituloError); $toastlast = $toast;
+
+                    } else {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+
+        }
+
+        function EliminarRestriccion() {
+
+            $("#CargaTemporal").removeClass("hidden");
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Restriction/EliminarRestriccion",
+                dataType: "json",
+                data: {
+                    IdRestriction: idRestriccion
+                },
+                success: function (resultado) {
+
+                    if (resultado == "1") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["success"](tMensajeEliminadoExito, tTituloExito); $toastlast = $toast;
+                        $("#ImagenCarga").removeClass("hidden");
+                        $("#GrillaRestriccion").addClass("hidden");
+                        $("#MensajeError").addClass("hidden");
+                        $("#MensajeErrorListar").addClass("hidden");
+                        $("#MensajeVacio").addClass("hidden");
+
+                        $("#RrbActivos").prop('disabled', true);
+                        $("#RrbInactivos").prop('disabled', true);
+                        $("#BtnExportarExcel").prop('disabled', true);
+                        $("#btnBuscar").prop('disabled', true);
+                        $("#btnNuevaRestriccion").prop('disabled', true);
+                        $("#GrillaRestriccion").data("kendoGrid").dataSource.read();
+
+                    } else if (resultado == "0") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    } else if (resultado == "3") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorNoExiste, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    } else if (resultado == "2") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorRegistroNoInactivo, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    } else {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+
+        }
+
+        function ValidarRelacionRestriccionMapa() {
+
+            var cmbTipo = $("#ComboTipo").data("kendoDropDownList").value();
+
+            $("#CargaTemporal").removeClass("hidden");
+
+            var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: function (options) {
+                        $.ajax({
+                            type: "GET", /*Puede ser post*/
+                            url: tRutaServidor + "/Restriction/ValidarRelacionRestriccionMapa", /* es importante poner los .. delante*/
+                            contentType: "application/json; charset=utf-8",
+                            data: "IdRestriction=" + idRestriccion + "&RestrictionTable=" + restriccionTable + "&RestrictionColumn=" + restrictionColumn,
+                            //data: "valorBusqueda=" + $("#txtBuscarValorCC").val(),
+                            async: false,
+                            success: function (resultado) {
+
+                                console.log(resultado);
+                                //resultado.length = 0;
+                                //resultado[0].ValorConsulta = "0";
+                                /*exitosamente*/
+                                if (resultado.length > 0) {
+                                    /* proceso exitoso con datos*/
+                                    if (resultado[0].ValorConsulta == "1") {
+
+                                        $("#ModalRestriccionMapa").modal("show");
+
+                                        $("#ImagenCargaRestriccionMapa").addClass("hidden");
+                                        $("#GrillaRestriccionesMapa").removeClass("hidden");
+                                        $("#MensajeErrorRestriccionMapa").addClass("hidden");
+                                        $("#MensajeErrorListarRestriccionMapa").addClass("hidden");
+                                        $("#MensajeVacioRestriccionMapa").addClass("hidden");
+
+                                        $("#CargaTemporal").addClass("hidden");
+
+                                    } else if (resultado[0].ValorConsulta == "2") {
+                                        toastr.options.timeOut = nTiempoMedio;
+                                        toastr.options.extendedTimeOut = nTiempoMedio;
+                                        /*success - info - warning - error*/
+                                        var $toast = toastr["error"](tMensajeErrorNoExiste, tTituloError); $toastlast = $toast;
+
+                                        $("#ImagenCargaRestriccionMapa").addClass("hidden");
+                                        $("#GrillaRestriccionesMapa").addClass("hidden");
+                                        $("#MensajeErrorRestriccionMapa").addClass("hidden");
+                                        $("#MensajeErrorListarRestriccionMapa").removeClass("hidden");
+                                        $("#MensajeVacioRestriccionMapa").addClass("hidden");
+
+                                        console.log(tMensajeLogError + resultado[0].MensajeConsulta);
+
+                                        $("#CargaTemporal").addClass("hidden");
+                                    } else {
+                                        /* proceso fallido catch listado datos*/
+
+                                        toastr.options.timeOut = nTiempoMedio;
+                                        toastr.options.extendedTimeOut = nTiempoMedio;
+                                        /*success - info - warning - error*/
+                                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+
+                                        $("#ImagenCargaRestriccionMapa").addClass("hidden");
+                                        $("#GrillaRestriccionesMapa").addClass("hidden");
+                                        $("#MensajeErrorRestriccionMapa").addClass("hidden");
+                                        $("#MensajeErrorListarRestriccionMapa").removeClass("hidden");
+                                        $("#MensajeVacioRestriccionMapa").addClass("hidden");
+
+                                        console.log(tMensajeLogError + resultado[0].MensajeConsulta);
+
+                                        $("#CargaTemporal").addClass("hidden");
+                                    }
+
+                                } else {
+
+                                    EditarEstadoRestriccion();
+                                }
+                                options.success(resultado);
+                                var grid = $("#GrillaRestriccionesMapa").data("kendoGrid");
+                                if (grid.dataSource.total() > 0) {
+                                    grid.setDataSource(dataSource);
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                $("#CargaTemporal").addClass("hidden");
+                                toastr.options.timeOut = nTiempoMedio;
+                                toastr.options.extendedTimeOut = nTiempoMedio;
+                                /*success - info - warning - error*/
+                                var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+
+                                /*fallo al llamar a la funcion ajax*/
+                                $("#ImagenCargaRestriccionMapa").addClass("hidden");
+                                $("#GrillaRestriccionesMapa").addClass("hidden");
+                                $("#MensajeErrorRestriccionMapa").removeClass("hidden");
+                                $("#MensajeVacioRestriccionMapa").addClass("hidden");
+                                $("#MensajeErrorListarRestriccionMapa").addClass("hidden");
+                               
+                                console.log("ERROR AJAX : " + ajaxOptions);
+                                console.log("ERROR AJAX : " + thrownError);
+                                console.log(xhr.responseText);
+                                console.log(xhr);
+
+                            }
+                        });
+                    },
+                    parameterMap: function (data, operation) {
+                        if (operation !== "read" && data.models) {
+                            return JSON.stringify({ JSONparam: data.models });
+                        }
+                    }
+                },
+                error: function (e) {
+                    alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+                },
+                batch: false,
+                pageSize: PaginationKendoGrid,
+                schema: {
+                    model: {
+                        fields: {
+                            IdValidationMap: { type: "number" },
+                            ValidationDescription: { type: "string" },
+                            IdRestriction: { type: "number" },
+                            RestrictionName: { type: "string" }
+                            //Status: { type: "string" }
+                        }
+                    }
+                }
+            });
+
+            $("#GrillaRestriccionesMapa").kendoGrid({
+                dataSource: dataSource,
+                sortable: true,
+                pageable: true,
+                columnMenu: true,
+                columnMenuInit: function (e) {
+                    var menu = e.container.find(".k-menu").data("kendoMenu");
+                    menu.bind("select", function (e) {
+                        var EtiquetaInput = $(".k-animation-container > .k-menu-group > .k-item > .k-content > .k-filter-menu > .k-textbox :input");
+                        EtiquetaInput.focus();
+                    });
+                },
+                groupable: false,
+                reorderable: true,
+                selectable: "row",
+                scrollable: true,
+                resizable: true,
+                filterable: {
+                    multi: true,
+                    checkAll: true,
+                    search: true,
+                    messages: {
+                        clear: "Limpiar",
+                        filter: "Filtrar",
+                        selectedItemsFormat: "Hay {0} items seleccionados",
+                        checkAll: "Seleccionar todo"
+                    }
+                },
+                pageable: {
+                    refresh: false,
+                    pageSize: 10,
+                    pageSizes: true,
+                    pageSizes: [5, 10, 15],
+                    buttonCount: 5,
+                    messages: {
+                        empty: KendoMsjEmpty,
+                        page: kendoMsjPage,
+                        of: KendoMsjOf,
+                        itemsPerPage: KendoMsjItemsPerPage,
+                        first: KendoMsjFirst,
+                        last: KendoMsjLast,
+                        next: KendoMsjNext,
+                        previous: KendoMsjPrevious,
+                        refresh: KendoMsjRefresh,
+                        morePages: KendoMsjMorePages,
+                        display: KendoMsjDisplay
+                    }
+                },
+                excel: { fileName: "Listado de Mapas.xlsx", filterable: true, allPages: true },
+                columns: [
+                     { field: "ValidationDescription", title: "Mapa", width: 400, attributes: { "class": "text-center" } },
+                     { field: "RestrictionName", title: "Restricción", width: 400, attributes: { "class": "text-center" } }                     
+                     //{ field: "Status", title: "Estado", hidden: true, width: 200, attributes: { "class": "text-center" } }                     
+                ]//,
+                //dataBound: function () {
+
+                //    var Grilla = this;
+                //    Grilla.tbody.find("tr[role='row']").each(function () {
+                //        var model = Grilla.dataItem(this);
+                //        //console.log(model);
+                //        if (model.RegistrationStatus == "I") {
+                //            $(this).find("td > button.BtnEditarEstadoCC > i").removeClass("fa-check");
+                //            $(this).find("td > button.BtnEditarEstadoCC > i").addClass("fa-ban");
+                //            $(this).find("td > button.BtnEditarEstadoCC").addClass("Color-gris");
+                //            $(this).find("td > button.BtnEditarEstadoCC").removeClass("bg-color-blueDark");
+
+                //        } else if (model.RegistrationStatus == "A") {
+                //            $(this).find("td > button.BtnEditarEstadoCC > i").removeClass("fa-ban");
+                //            $(this).find("td > button.BtnEditarEstadoCC > i").addClass("fa-check");
+                //        }
+                //    });
+                //}
+            });
+
+        }
+
+        /*----------------------------------------------------------------------------------------------- ASIGNAR FUNCIONES RESTRICCION*/
+        $('#ButtonHiddenBoxUp').click(function () {
+            $("#HiddenBox").slideUp();
+            $('#ButtonHiddenBoxUp').css("display", "none");
+            $('#ButtonHiddenBoxDown').css("display", "block");
+        });
+
+        $('#ButtonHiddenBoxDown').click(function () {
+            $("#HiddenBox").slideDown();
+            $('#ButtonHiddenBoxUp').css("display", "block");
+            $('#ButtonHiddenBoxDown').css("display", "none");
+        });
+
+        $('#ModalRestriccion').on('shown.bs.modal', function () {
+            $(document).off('focusin.modal');
+        });
+
+        $.validator.addMethod("regx", function (value, element, regexpr) {
+
+            return regexpr.test(value);
+
+        }, "");
+
+        $("#btnGrabar").click(function () {
+
+            var $registerForm = $("#FrmRestriccion").validate({
+                rules: {
+                    txtRestriccion: {
+                        required: true,
+                        maxlength: 100,
+                        minlength: 5,
+                        regx: ReSoloAlfanumericosConEspacio ///^[A-Za-z0-9.]*$/
+                    }//,
+                    //txtColumnaClave: {
+                    //    required: true,
+                    //    maxlength: 50,
+                    //    minlength: 5,
+                    //    regx: ReSoloLetras // /^[A-Za-z0-9]*$/
+                    //}
+                },
+                messages: {
+                    txtRestriccion: {
+                        required: tCampoRequerido,
+                        minlength: tMinLength,
+                        maxlength: tMaxLength,
+                        regx: tCaracteresNoValido
+                    }//,
+                    //txtColumnaClave: {
+                    //    required: tCampoRequerido,
+                    //    minlength: tMinLength,
+                    //    maxlength: tMaxLength,
+                    //    regx: tCaracteresNoValido
+                    //}
+                },
+                submitHandler: function (form) {
+
+                    if (idRestriccion == 0) {
+                        CrearRestriccion();
+                    } else {
+                        EditarRestriccion();
+                    }
+
+                },
+                errorPlacement: function (error, element) {
+                    error.insertAfter(element.parent());
+                }
+            });
+        });
+
+        $("#btnCancelar").click(function () {
+            $('#ModalRestriccion').modal('hide');
+        });
+
+        $("#btnNuevaRestriccion").click(function () {
+            idRestriccion = 0;
+            LimpiarEtiquetas();
+
+            $("#ComboTipo").data("kendoDropDownList").enable(true);
+            $('#ModalRestriccion').modal('show');
+        });
+
+        $("#btnBuscar").click(function () {
+
+            var valorAnalizar = $('#txtBuscarValor').val();
+            if (ValidarCaracter(valorAnalizar) == true) {
+                toastr.options.timeOut = nTiempoLargo;
+                toastr.options.extendedTimeOut = nTiempoLargo;
+                /*success - info - warning - error*/
+                var $toast = toastr["error"](tCaracteresNoValido, tTituloError); $toastlast = $toast;
+            } else {
+                $("#BtnExportarExcel").prop('disabled', true);
+                $("#btnBuscar").prop('disabled', true);
+                $("#btnNuevaRestriccion").prop('disabled', true);
+                $("#RrbActivos").prop('disabled', true);
+                $("#RrbInactivos").prop('disabled', true);
+
+                $("#ImagenCarga").removeClass("hidden");
+                $("#GrillaRestriccion").addClass("hidden");
+                $("#MensajeError").addClass("hidden");
+                $("#MensajeErrorListar").addClass("hidden");
+                $("#MensajeVacio").addClass("hidden");
+
+                var Grilla = $("#GrillaRestriccion").data("kendoGrid");
+                Grilla.one("dataBound", function () {
+                    this.dataSource.page(1);
+                });
+
+                $("#GrillaRestriccion").data("kendoGrid").dataSource.read();
+                //GrillaListadoRestriccion();
+            }
+
+        });
+
+        $("#BtnExportarExcel").click(function () {
+            ExportarExcel("GrillaRestriccion");
+        });
+
+        /*----------------------------------------------------------------------------------------------- ASIGNAR FUNCIONES RESTRICCION MAPA*/
+
+        $("#btnCancelarRestriccionMapa").click(function () {
+            $('#ModalRestriccionMapa').modal('hide');
+        });
+
+        $("#BtnExportarExcelRestricción").click(function () {
+            ExportarExcel("GrillaRestriccionesMapa");
+        });
+        
+        /*----------------------------------------------------------------------------------------------- ASIGNAR FUNCIONES GRILLA*/
+
+        $('input[type=radio][name=RrbTipo]').change(function (e) {
+
+            if (e.target.id == 'RrbActivos') {
+
+                EstadoRegistro = '1';
+                htmlBody = "";
+                htmlBody = "<button class='btn-grid btn-xs BtnEditarRestriction' type='button' title='Editar'><i class='fa fa-lg fa-fw fa-edit'></i></button>" + " " +
+                                "<button class='btn-grid btn-xs BtnEditarEstadoRestriction' type='button' title='Desactivar'><i class='fa fa-lg fa-fw fa-check'></i></button>";
+
+                var valorAnalizar = $('#txtBuscarValor').val();
+                if (ValidarCaracter(valorAnalizar) == true) {
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tCaracteresNoValido, tTituloError); $toastlast = $toast;
+                } else {
+
+                    $("#BtnExportarExcel").prop('disabled', true);
+                    $("#btnBuscar").prop('disabled', true);
+                    $("#btnNuevaRestriccion").prop('disabled', true);
+                    $("#RrbActivos").prop('disabled', true);
+                    $("#RrbInactivos").prop('disabled', true);
+
+                    $("#ImagenCarga").removeClass("hidden");
+                    $("#GrillaRestriccion").addClass("hidden");
+                    $("#MensajeError").addClass("hidden");
+                    $("#MensajeErrorListar").addClass("hidden");
+                    $("#MensajeVacio").addClass("hidden");
+
+
+                    GrillaListadoRestriccion();
+                }
+
+            } else {
+
+                htmlBody = "";
+                EstadoRegistro = '2';
+                htmlBody = "<button class='btn-grid btn-xs BtnEditarEstadoRestriction' type='button' title='Activar'><i class='fa fa-lg fa-fw fa-check'></i></button>" + " " +
+                "<button class='btn-grid btn-xs BtnEliminarRestriction' type='button' title='Eliminar'><i class='fa fa-lg fa-fw fa-trash-o'></i></button>";
+
+                var valorAnalizar = $('#txtBuscarValor').val();
+                if (ValidarCaracter(valorAnalizar) == true) {
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tCaracteresNoValido, tTituloError); $toastlast = $toast;
+                } else {
+
+                    $("#BtnExportarExcel").prop('disabled', true);
+                    $("#btnBuscar").prop('disabled', true);
+                    $("#btnNuevaRestriccion").prop('disabled', true);
+                    $("#RrbActivos").prop('disabled', true);
+                    $("#RrbInactivos").prop('disabled', true);
+
+                    $("#ImagenCarga").removeClass("hidden");
+                    $("#GrillaRestriccion").addClass("hidden");
+                    $("#MensajeError").addClass("hidden");
+                    $("#MensajeErrorListar").addClass("hidden");
+                    $("#MensajeVacio").addClass("hidden");
+
+
+                    GrillaListadoRestriccion();
+                }
+
+            }
+        });
+
+        $("#GrillaRestriccion").delegate(".BtnEditarRestriction", "click", function (e) {
+
+            var grid = $("#GrillaRestriccion").data("kendoGrid");
+            var myVar = grid.dataItem($(this).closest("tr"));            
+            idRestriccion = myVar.IdRestriction;
+            oldRestrinccionColumn = myVar.RestrictionColumn;
+
+            $("#ComboTipo").data("kendoDropDownList").value(myVar.RestrictionTable);
+            $("#ComboTipo").data("kendoDropDownList").enable(false);
+            $("#txtRestriccion").val(myVar.RestrictionName);
+            $("#txtColumnaClave").val(myVar.RestrictionColumn);
+            $('#ModalRestriccion').modal('show');
+        });
+
+        $("#GrillaRestriccion").delegate(".BtnEditarEstadoRestriction", "click", function (e) {
+
+            var grid = $("#GrillaRestriccion").data("kendoGrid");
+            var myVar = grid.dataItem($(this).closest("tr"));            
+            idRestriccion = myVar.IdRestriction;
+            restriccionTable = myVar.RestrictionTable;
+            restrictionColumn = myVar.RestrictionColumn;
+            
+            ValidarRelacionRestriccionMapa();
+            //EditarEstadoRestriccion();
+
+        });
+
+        $("#GrillaRestriccion").delegate(".BtnEliminarRestriction", "click", function (e) {
+
+            var grid = $("#GrillaRestriccion").data("kendoGrid");
+            var myVar = grid.dataItem($(this).closest("tr"));
+            idRestriccion = myVar.IdRestriction;
+
+            swal({
+                title: tTituloConfirmacion,
+                text: tMensajeConfirmacion,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: tColorBoton,
+                confirmButtonText: tNombreBotonSi,
+                cancelButtonText: tNombreBotonNo,
+                closeOnConfirm: true
+            }, function () {
+                EliminarRestriccion();
+            });
+
+        });
+
+        /*----------------------------------------------------------------------------------------------- OTRAS*/
+
+        function LimpiarEtiquetas() {
+            $("#txtRestriccion").val("");
+            $("#txtColumnaClave").val("");
+        }
+
+        function ExportarExcel(Etiqueta) {
+            var Grilla = $("#" + Etiqueta).data("kendoGrid");
+            swal({
+                title: tTituloExportarExcel,
+                text: tMensajeExportarExcel,
+                type: "warning"
+            });
+            Grilla.saveAsExcel();
+        };
+
+        function ComboTipoRestriccion() {
+
+            var TipoRestriccion = [{
+                "RestrictionTable": "TB_DRIVER_VALIDATION_MAP",
+                "valor": "CONDUCTOR"
+            }, {
+                "RestrictionTable": "TB_OPERATOR_VALIDATION_MAP",
+                "valor": "OPERADOR"
+            }, {
+                "RestrictionTable": "TB_VEHICLE_VALIDATION_MAP",
+                "valor": "VEHÍCULO"
+            }];
+
+            $("#ComboTipo").kendoDropDownList({
+                dataTextField: "valor",
+                dataValueField: "RestrictionTable",
+                filter: "contains",
+                autoBind: true,
+                minLength: 1,
+                dataSource: {
+                    data: TipoRestriccion
+                }
+            });
+        }
+
+        ComboTipoRestriccion();
+        GrillaListadoRestriccion();
+
+    });
+
+</script>
+
+<style>
+    .alertaTexto {
+        color: red;
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    .focoTexto {
+        font-weight: bold;
+    }
+</style>

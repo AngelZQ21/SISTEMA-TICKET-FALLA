@@ -1,0 +1,12 @@
+﻿body {
+    float: left;
+    font-size: small;
+}
+
+#Izquierda1 {
+    text-align: right;
+}
+
+#anchoPlaca, #anchoCCosto, #anchokm, #anchoHr {
+    width: 50px;
+}

@@ -1,0 +1,1197 @@
+﻿
+<script src="~/Scripts/util/jsUtilCambioGuardia.js"></script>
+<link href="~/Content/plugin/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet" />
+
+<div id="content">
+
+    <div class="well" style="padding:0px 30px 10px 30px; background-color:white;">
+        <div class="row wrapper">
+            <div style="width: 100%; display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:space-between; text-align:center; align-items:center;">
+                <h2><i class="fa fa-edit fa-fw"></i> Perfil</h2>
+                <button class="btn btn-primary" type="button" id="btnNuevoPerfil" disabled  title="Registra un nuevo Perfil"><i class="fa fa-plus"></i> Nuevo Perfil</button>
+            </div>
+            <p>[Listado de Perfiles]</p>
+        </div>
+
+        <div class="row" style="margin-top: 10px;">
+
+            <section class="col-xs-12 col-sm-5 col-md-5 col-lg-5" style="margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                <div class="input-group">
+                    <input class="form-control" id="txtBuscarValor" type="text" maxlength="150" placeholder="Buscar...">
+                    <div class="input-group-btn">
+                        <button class="btn btn-primary" type="button" id="btnBuscar" disabled><i class="icon-append fa fa-search"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="col-xs-12 col-sm-5 col-md-4 col-lg-4" style="margin-left:0px; padding-left:20px; margin-right:0px; padding-right:0px; padding-top:5px;">
+                <div class="input-group">
+                    <section class="radio radio-info radio-inline">
+                        <input tabindex="7" type="radio" name="RrbTipo" id="RrbActivos" disabled checked="checked">
+                        <label for="RrbActivos"> Activos </label>
+                    </section>
+                    <section class="radio radio-info radio-inline">
+                        <input tabindex="7" type="radio" name="RrbTipo" disabled id="RrbInactivos">
+                        <label for="RrbInactivos"> Inactivos </label>
+                    </section>
+                </div>
+            </section>
+
+            <section class="col-xs-12 col-sm-2 col-md-3 col-lg-3" style="margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                <button class="btn btn-success pull-right" type="button" id="BtnExportarExcel" disabled title="Exportar listado a Excel"><i class="fa fa-file-excel-o"></i> Excel</button>
+            </section>
+        </div>
+    </div>
+   
+
+    <div id="widget-grid">
+
+        <div class="row">
+            <article class="col-xs-12">
+
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-perfil" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-list"></i> </span>
+                        <h2>Listado de Perfiles </h2>
+                    </header>
+                    <div style="border:none;">
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                        </div>
+                        <div class="widget-body no-padding">
+                            <div id="GrillaPerfil" class="hidden"></div>
+
+                            <div class="spiner-example" id="ImagenCarga">
+                                @Html.Partial("../MensajesParciales/_MensajeCargando")
+                            </div>
+
+                            <div class="hidden" id="MensajeError" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeError")
+                            </div>
+
+                            <div class="hidden" id="MensajeVacio" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeVacio")
+                            </div>
+
+                            <div class="hidden" id="MensajeErrorListar" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+</div>
+
+<div id="ModalPerfil" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Datos del Perfil</h4>
+            </div>
+            <div class="modal-body clearfix" style="padding-left:10px; padding-right:10px;">
+                <form id="FrmPerfil" onsubmit="return false">
+
+                    <section class="col-xs-12">
+                        <label style="color: #2F4050">Nombre: <strong class="CampoRequerido">*</strong></label>
+                        <div class="input-group">
+                            <input type="text" tabindex="1" class="form-control" name="txtNombre" id="txtNombre" maxlength="25" style="padding-left:5px;" />
+                            <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                        </div>
+                    </section>
+
+                    <section class="col-xs-12 hidden">
+                        <label style="color: #2F4050">Intentos Máximos <strong class="CampoRequerido">*</strong></label>
+                        <div class="input-group">
+                            <input type="text" tabindex="1" class="form-control" name="txtMaxIntentos" id="txtMaxIntentos" maxlength="3" style="padding-left:5px;" />
+                            <span class="input-group-addon"><i class="icon-prev fa fa-user"></i></span>
+                        </div>
+                    </section>
+
+                    <section class="col-xs-12" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:space-between">
+                        <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-start">
+                            @Html.Partial("../MensajesParciales/_MensajeLeyendaCampoRequerido")
+                        </div>
+                        <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-end">
+                            <button style="margin:3px;" tabindex="8" class="btn btn-danger" type="button" id="btnCancelar"><i class="fa fa-times-circle"></i> Cancelar</button>
+                            <button style="margin:3px;" tabindex="9" class="btn btn-primary" type="submit" id="btnGrabar"><i class="fa fa-save"></i> Grabar</button>
+                        </div>
+                    </section>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Usuario-->
+<div id="ModalUsuario" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:80%;">
+        <div class="modal-content animated">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Listado</h4>
+            </div>
+            <div class="modal-body clearfix" style="padding-left:10px; padding-right:10px;">
+
+                <div class="row">
+                    <article class="col-xs-12">
+                        <section>
+                            <section class="col-xs-12" style="margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                                <p style="color:red; font-size:16px;"><span style="font-weight:bold">(*) </span>Los siguientes usuarios están relacionados al perfil: <span style="font-weight:bold" id="txtModalUsuario"></span></p>
+                                <p style="color: red; font-size: 16px;">Favor de actualizar todas los usuarios a un nuevo perfil para poder inhabilitar este registro.</p>
+                            </section>
+                        </section>
+                        <section class="col-xs-12" style="margin-bottom:10px;">
+                            <button class="btn btn-success pull-right" type="button" id="BtnExportarExcelUsuario" title="Exportar listado a Excel"><i class="fa fa-file-excel-o"></i> Excel</button>
+                            <a target="_blank" href="@Url.Action("VUser", "User")" class="btn btn-info pull-right" style="margin-right:10px;" type="button" title="Abrir una pestaña del Mantenimiento Usuario"><i class="fa fa-forward"></i> Ir a Usuario</a>
+                        </section>
+
+                    </article>
+                </div>
+
+                <div class="row">
+                    <article class="col-xs-12">
+
+                        <div class="jarviswidget jarviswidget-color-blue" id="wid-id-compania" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050">
+                            <header>
+                                <span class="widget-icon"> <i class="fa fa-list"></i> </span>
+                                <h2>Listado de Usuarios </h2>
+                            </header>
+                            <div style="border:none;">
+                                <div class="jarviswidget-editbox">
+                                    <!-- This area used as dropdown edit box -->
+                                </div>
+                                <div class="widget-body no-padding">
+                                    <div id="GrillaUsuario" class="hidden"></div>
+                                    <div class="spiner-example" id="ImagenCargaUsuario">
+                                        @Html.Partial("../MensajesParciales/_MensajeCargando")
+                                    </div>
+                                    <div class="hidden" id="MensajeErrorUsuario" style="margin:30px;">
+                                        @Html.Partial("../MensajesParciales/_MensajeError")
+                                    </div>
+                                    <div class="hidden" id="MensajeVacioUsuario" style="margin:30px;">
+                                        @Html.Partial("../MensajesParciales/_MensajeVacio")
+                                    </div>
+                                    <div class="hidden" id="MensajeErrorListarUsuario" style="margin:30px;">
+                                        @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="row">
+                    <article class="col-xs-12">
+                        <button style="margin:3px;" tabindex="8" class="btn btn-danger pull-right" type="button" id="btnCancelarUsuario"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    </article>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        function ValidarCaracter(cadenaAnalizar) {
+            var flag = false;
+            var CampoNoValidos = "<>";
+            for (var i = 0; i < cadenaAnalizar.length; i++) {
+
+                var caracter = cadenaAnalizar.charAt(i);
+                flag = false;
+                for (var y = 0; y < CampoNoValidos.length; y++) {
+                    var CaracterValido = CampoNoValidos.charAt(y);
+                    if (caracter == CaracterValido) {
+                        flag = true;
+                        break;
+                    }
+                }
+
+                if (flag == true) {
+                    flag = true;
+                    break;
+                }
+            }
+            return flag;
+        }
+
+        /*----------------------------------------------------------------------------------------------- VARIABLES*/
+        var idPerfil = 0;
+        var EtiquetaFocus = '';
+
+        var EstadoRegistro = '1';
+        var htmlBody = "<button class='btn-grid btn-xs BtnEditarPerfil' type='button' title='Editar'><i class='fa fa-lg fa-fw fa-edit'></i></button>" + " " +
+                                "<button class='btn-grid btn-xs BtnEditarEstadoPerfil' type='button' title='Activar / Desactivar'><i class='fa fa-lg fa-fw fa-check'></i></button>";
+        /*----------------------------------------------------------------------------------------------- GRILLAS*/
+        function GrillaListadoPerfil() {
+
+            if ($.session.get("vbi_SearchValue") != null && $.session.get("vbi_RegistrationStatus") != null) {
+
+                var vbi_SearchValue = "";
+                var vbi_RegistrationStatus = "";
+                vbi_SearchValue = $.session.get("vbi_SearchValue");
+                vbi_RegistrationStatus = $.session.get("vbi_RegistrationStatus");
+
+                $("#txtBuscarValor").val(vbi_SearchValue);
+
+                if (vbi_RegistrationStatus == 'A') {
+                    EstadoRegistro = 1;
+                    $('#RrbActivos').prop('checked', true);
+                } else if (vbi_RegistrationStatus == 'I') {
+                    $('#RrbInactivos').prop('checked', true);
+                    EstadoRegistro = 2;
+                }
+
+                $.session.remove("vbi_SearchValue");
+                $.session.remove("vbi_RegistrationStatus");
+            }
+
+            var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: function (options) {
+                        $.ajax({
+                            type: "GET",
+                            url: tRutaServidor + "/Profile/ListarPerfil",
+                            contentType: "application/json; charset=utf-8",
+                            data: "valorBusqueda=" + $("#txtBuscarValor").val().trim() + "&valorConsulta=" + EstadoRegistro,
+                            dataType: "json",
+                            /*async: false,*/
+                            success: function (resultado) {
+                                /*exitosamente*/
+                                if (resultado.length > 0) {
+                                    /* proceso exitoso con datos*/
+                                    if (resultado[0].ValorConsulta == "1") {
+                                        $("#ImagenCarga").addClass("hidden");
+                                        $("#GrillaPerfil").removeClass("hidden");
+                                        $("#MensajeError").addClass("hidden");
+                                        $("#MensajeErrorListar").addClass("hidden");
+                                        $("#MensajeVacio").addClass("hidden");
+
+                                        $("#BtnExportarExcel").prop('disabled', false);
+                                        $("#btnBuscar").prop('disabled', false);
+                                        $("#btnNuevoPerfil").prop('disabled', false);
+                                        $("#RrbActivos").prop('disabled', false);
+                                        $("#RrbInactivos").prop('disabled', false);
+                                    } else {
+                                        /* proceso fallido catch listado datos*/
+                                        $("#ImagenCarga").addClass("hidden");
+                                        $("#GrillaPerfil").addClass("hidden");
+                                        $("#MensajeError").addClass("hidden");
+                                        $("#MensajeErrorListar").removeClass("hidden");
+                                        $("#MensajeVacio").addClass("hidden");
+                                        console.log(resultado);
+
+                                        $("#BtnExportarExcel").prop('disabled', true);
+                                        $("#btnBuscar").prop('disabled', true);
+                                        $("#btnNuevoPerfil").prop('disabled', true);
+                                        $("#RrbActivos").prop('disabled', true);
+                                        $("#RrbInactivos").prop('disabled', true);
+                                    }
+
+                                } else {
+                                    $("#ImagenCarga").addClass("hidden");
+                                    $("#GrillaPerfil").addClass("hidden");
+                                    $("#MensajeError").addClass("hidden");
+                                    $("#MensajeVacio").removeClass("hidden");
+                                    $("#MensajeErrorListar").addClass("hidden");
+
+                                    $("#BtnExportarExcel").prop('disabled', true);
+                                    $("#btnBuscar").prop('disabled', false);
+                                    $("#btnNuevoPerfil").prop('disabled', false);
+                                    $("#RrbActivos").prop('disabled', false);
+                                    $("#RrbInactivos").prop('disabled', false);
+
+                                }
+                                options.success(resultado);
+
+                                var grid = $("#GrillaPerfil").data("kendoGrid");
+                                if (grid.dataSource.total() > 0) {
+                                    grid.setDataSource(dataSource);
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                /*fallo al llamar a la funcion ajax*/
+                                $("#ImagenCarga").addClass("hidden");
+                                $("#GrillaPerfil").addClass("hidden");
+                                $("#MensajeError").removeClass("hidden");
+                                $("#MensajeVacio").addClass("hidden");
+                                $("#MensajeErrorListar").addClass("hidden");
+
+                                $("#BtnExportarExcel").prop('disabled', true);
+                                $("#btnBuscar").prop('disabled', true);
+                                $("#btnNuevoPerfil").prop('disabled', true);
+                                $("#RrbActivos").prop('disabled', true);
+                                $("#RrbInactivos").prop('disabled', true);
+
+                                console.log("ERROR AJAX : " + ajaxOptions);
+                                console.log("ERROR AJAX : " + thrownError);
+                                console.log(xhr.responseText);
+                                console.log(xhr);
+
+                            }
+                        });
+                    }
+                },
+                error: function (e) {
+                    alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+                },
+                batch: false,
+                pageSize: PaginationKendoGrid,
+                schema: {
+                    model: {
+                        fields: {
+                            IdProfile: { type: "number" },
+                            ProfileName: { type: "string" },
+                            MaxAttempts: { type: "number" },
+                            RegistrationStatus: { type: "string" },
+                            RegistrationStatusDesc: { type: "string" },
+                            UpdateDate: { type: "date" }, //FECHA ACTUALIZACION
+                            UserDesc: { type: "string" }, //USUARIO ACTUALIZACION
+                            RegistrationDate: { type: "date" }, //FECHA REGISTRO
+                            UserRegistrationDesc: { type: "string" } //USUARIO REGISTRO
+
+                        }
+                    }
+                }
+            });
+
+            $("#GrillaPerfil").kendoGrid({
+                dataSource: dataSource,
+                sortable: true,
+                pageable: true,
+                columnMenu: true,
+                columnMenu: {
+                    columns: true,
+                    filterable: true,
+                    sortable: true,
+                    messages: {
+                        columns: KendoMsjColumnMenuColumns,
+                        filter: KendoMsjColumnMenuFilter,
+                        sortAscending: KendoMsjColumnMenuSortAscending,
+                        sortDescending: KendoMsjColumnMenuSortDescending,
+                        settings: KendoMsjSettings
+                    }
+                },
+                columnMenuInit: function (e) {
+                    var menu = e.container.find(".k-menu").data("kendoMenu");
+                    menu.bind("select", function (e) {
+                        var EtiquetaInput = $(".k-animation-container > .k-menu-group > .k-item > .k-content > .k-filter-menu > .k-textbox :input");
+                        EtiquetaInput.focus();
+                    });
+                },
+                groupable: false,
+                reorderable: true,
+                selectable: "row",
+                scrollable: true,
+                resizable: true,
+                filterable: {
+                    multi: true,
+                    checkAll: true,
+                    search: true,
+                    messages: {
+                        clear: KendoMsjClear,
+                        filter: KendoMsjFilter,
+                        selectedItemsFormat: KendoMsjSelectedItemsFormat,
+                        checkAll: KendoMsjCheckAll,
+                        search: KendoMsjSearch
+                    }
+                },
+                pageable: {
+                    refresh: false,
+                    pageSize: 10,
+                    pageSizes: true,
+                    pageSizes: [5, 10, 15],
+                    buttonCount: 5,
+                    messages: {
+                        empty: KendoMsjEmpty,
+                        page: kendoMsjPage,
+                        of: KendoMsjOf,
+                        itemsPerPage: KendoMsjItemsPerPage,
+                        first: KendoMsjFirst,
+                        last: KendoMsjLast,
+                        next: KendoMsjNext,
+                        previous: KendoMsjPrevious,
+                        refresh: KendoMsjRefresh,
+                        morePages: KendoMsjMorePages,
+                        display: KendoMsjDisplay
+                    }
+                },
+                excel: { fileName: "Listado de Perfiles.xlsx", filterable: true, allPages: true },
+                columns: [
+                    {
+                        width: 130,
+                        command: {
+                            template: htmlBody,
+                        },
+                        attributes: { "class": "text-center" },
+                        title: ""
+                    },
+                    //{ field: "IdProfile", title: "Id", width: 120, hidden: true, attributes: { "class": "text-center" } },
+                    { field: "ProfileName", title: "Nombre", width: 600, attributes: { "class": "text-center" } },
+                    { field: "RegistrationStatusDesc", title: "Estado", width: 350, attributes: { "class": "text-center" } },
+                    { field: "UpdateDate", title: "Fecha de Actualización", hidden: true, width: 250, format: "{0:dd/MM/yyyy HH:mm:ss}", attributes: { "class": "text-center" } },
+                    { field: "UserDesc", title: "Usuario de Actualización", hidden: true, width: 250, attributes: { "class": "text-center" } },
+                    { field: "RegistrationDate", title: "Fecha de Registro", hidden: true, width: 250, format: "{0:dd/MM/yyyy HH:mm:ss}", attributes: { "class": "text-center" } },
+                    { field: "UserRegistrationDesc", title: "Usuario de Registro", hidden: true, width: 250, attributes: { "class": "text-center" } }
+                ],
+                dataBound: function () {
+
+                    var Grilla = this;
+                    Grilla.tbody.find("tr[role='row']").each(function () {
+                        var model = Grilla.dataItem(this);
+                        //console.log(model);
+                        if (model.RegistrationStatus == "I") {
+                            $(this).find("td > button.BtnEditarEstadoPerfil > i").removeClass("fa-ban");
+                            $(this).find("td > button.BtnEditarEstadoPerfil > i").addClass("fa-check");
+                            $(this).find("td > button.BtnEditarEstadoPerfil").addClass("Color-gris");
+                            $(this).find("td > button.BtnEditarEstadoPerfil").removeClass("bg-color-blueDark");
+
+                        } else if (model.RegistrationStatus == "A") {
+                            $(this).find("td > button.BtnEditarEstadoPerfil > i").removeClass("fa-check");
+                            $(this).find("td > button.BtnEditarEstadoPerfil > i").addClass("fa-ban");
+                        }
+                    });
+                }
+            });
+
+        }
+
+        function ValidarRelacionUsuario() {
+            $("#CargaTemporal").removeClass("hidden");
+            var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: function (options) {
+                        $.ajax({
+                            type: "GET", /*Puede ser post*/
+                            url: tRutaServidor + "/Profile/ValidarRelacionPerfil", /* es importante poner los .. delante*/
+                            contentType: "application/json; charset=utf-8",
+                            data: "idPerfil=" + idPerfil,
+                            //data: "valorBusqueda=" + $("#txtBuscarValorCC").val(),
+                            /*async: false,*/
+                            success: function (resultado) {
+                             
+                                /*exitosamente*/
+                                if (resultado.length > 0) {
+                                    /* proceso exitoso con datos*/
+                                    if (resultado[0].ValorConsulta == "1") {
+
+                                        $("#ModalUsuario").modal("show");
+
+                                        $("#ImagenCargaUsuario").addClass("hidden");
+                                        $("#GrillaUsuario").removeClass("hidden");
+                                        $("#MensajeErrorUsuario").addClass("hidden");
+                                        $("#MensajeErrorListarUsuario").addClass("hidden");
+                                        $("#MensajeVacioUsuario").addClass("hidden");
+
+                                        $("#CargaTemporal").addClass("hidden");
+                                    } else {
+                                        /* proceso fallido catch listado datos*/
+
+                                        $("#ImagenCargaUsuario").addClass("hidden");
+                                        $("#GrillaUsuario").addClass("hidden");
+                                        $("#MensajeErrorUsuario").addClass("hidden");
+                                        $("#MensajeErrorListarUsuario").removeClass("hidden");
+                                        $("#MensajeVacioUsuario").addClass("hidden");
+
+                                        console.log(tMensajeLogError + resultado[0].MensajeConsulta);
+                                        $("#CargaTemporal").addClass("hidden");
+                                    }
+
+                                } else {
+
+                                    EditarEstadoPerfil();
+                                    /*$("#ImagenCargaVehiculo").addClass("hidden");
+                                    $("#GrillaVehiculo").addClass("hidden");
+                                    $("#MensajeErrorVehiculo").addClass("hidden");
+                                    $("#MensajeVacioVehiculo").removeClass("hidden");
+                                    $("#MensajeErrorListarVehiculo").addClass("hidden");*/
+                                }
+                                options.success(resultado);
+                                var grid = $("#GrillaUsuario").data("kendoGrid");
+                                if (grid.dataSource.total() > 0) {
+                                    grid.setDataSource(dataSource);
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                $("#CargaTemporal").addClass("hidden");
+                                /*fallo al llamar a la funcion ajax*/
+                                $("#ImagenCargaUsuario").addClass("hidden");
+                                $("#GrillaUsuario").addClass("hidden");
+                                $("#MensajeErrorUsuario").removeClass("hidden");
+                                $("#MensajeVacioUsuario").addClass("hidden");
+                                $("#MensajeErrorListarUsuario").addClass("hidden");
+
+
+                                console.log("ERROR AJAX : " + ajaxOptions);
+                                console.log("ERROR AJAX : " + thrownError);
+                                console.log(xhr.responseText);
+                                console.log(xhr);
+
+                            }
+                        });
+                    },
+                    parameterMap: function (data, operation) {
+                        if (operation !== "read" && data.models) {
+                            return JSON.stringify({ JSONparam: data.models });
+                        }
+                    }
+                },
+                error: function (e) {
+                    alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+                },
+                batch: false,
+                pageSize: PaginationKendoGrid,
+                schema: {
+                    model: {
+                        fields: {
+                            IdUser: { type: "number" },
+                            UUser: { type: "string" },
+                            IdProfile: { type: "number" },
+                            ProfileName: { type: "string" },
+                            RegistrationDateString: { type: "string" },
+                            UpdateDateString: { type: "string" }
+                        }
+                    }
+                }
+            });
+
+            $("#GrillaUsuario").kendoGrid({
+                dataSource: dataSource,
+                sortable: true,
+                pageable: true,
+                columnMenu: true,
+                columnMenuInit: function (e) {
+                    var menu = e.container.find(".k-menu").data("kendoMenu");
+                    menu.bind("select", function (e) {
+                        var EtiquetaInput = $(".k-animation-container > .k-menu-group > .k-item > .k-content > .k-filter-menu > .k-textbox :input");
+                        EtiquetaInput.focus();
+                    });
+                },
+                groupable: false,
+                reorderable: true,
+                selectable: "row",
+                scrollable: true,
+                resizable: true,
+                filterable: {
+                    multi: true,
+                    checkAll: true,
+                    search: true,
+                    messages: {
+                        clear: "Limpiar",
+                        filter: "Filtrar",
+                        selectedItemsFormat: "Hay {0} items seleccionados",
+                        checkAll: "Seleccionar todo"
+                    }
+                },
+                pageable: {
+                    refresh: false,
+                    pageSize: 10,
+                    pageSizes: true,
+                    pageSizes: [5, 10, 15],
+                    buttonCount: 5,
+                    messages: {
+                        empty: KendoMsjEmpty,
+                        page: kendoMsjPage,
+                        of: KendoMsjOf,
+                        itemsPerPage: KendoMsjItemsPerPage,
+                        first: KendoMsjFirst,
+                        last: KendoMsjLast,
+                        next: KendoMsjNext,
+                        previous: KendoMsjPrevious,
+                        refresh: KendoMsjRefresh,
+                        morePages: KendoMsjMorePages,
+                        display: KendoMsjDisplay
+                    }
+                },
+                excel: { fileName: "Listado de Usuarios.xlsx", filterable: true, allPages: true },
+                columns: [
+
+                    //{ field: "Role.IdRole", title: "Id Rol", width: 120, hidden: true, attributes: { "class": "text-center" } },
+                     { field: "UUser", title: "Nombre de Usuario", width: 400, attributes: { "class": "text-center" } },
+                     { field: "bE_Profile.ProfileName", title: "Perfil", width: 400, attributes: { "class": "text-center" } },
+                     //{ field: "IdPerson", title: "Fecha Expiración Contrato", width: 350, attributes: { "class": "text-center" } },
+                    { field: "RegistrationDateString", title: "Fecha de Registro de la Persona", hidden: true, width: 200, attributes: { "class": "text-center" } },
+                    { field: "UpdateDateString", title: "Fecha de Actualización de la Persona", hidden: true, width: 200, attributes: { "class": "text-center" } }
+                ]
+            });
+
+        }
+
+        /*----------------------------------------------------------------------------------------------- FUNCIONES GUARDAR/ACTUALIZAR/ELIMINAR ETC*/
+        function CrearPerfil() {
+
+            var txtnombre = $("#txtNombre").val().trim();
+            //var txtMaxIntentos = $("#txtMaxIntentos").val().trim();
+            var txtMaxIntentos = 999;
+            $("#CargaTemporal").removeClass("hidden");
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Profile/CrearPerfil",
+                dataType: "json",
+                data: "txtNombre=" + txtnombre + "&MaxIntentos=" + txtMaxIntentos,
+                success: function (resultado) {
+
+                    if (resultado == "1") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["success"](tMensajeCreadoExito, tTituloExito); $toastlast = $toast;
+                        $("#ImagenCarga").removeClass("hidden");
+                        $("#GrillaPerfil").addClass("hidden");
+                        $("#MensajeError").addClass("hidden");
+                        $("#MensajeErrorListar").addClass("hidden");
+                        $("#MensajeVacio").addClass("hidden");
+
+                        $("#BtnExportarExcel").prop('disabled', true);
+                        $("#btnBuscar").prop('disabled', true);
+                        $("#btnNuevoPerfil").prop('disabled', true);
+                        $("#RrbActivos").prop('disabled', true);
+                        $("#RrbInactivos").prop('disabled', true);
+
+                        $("#txtBuscarValor").val("");
+
+                        $("#GrillaPerfil").data("kendoGrid").dataSource.read();
+                        $('#ModalPerfil').modal('hide');
+                    } else if (resultado == "2") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorYaExiste, tTituloError); $toastlast = $toast;
+                    } else if (resultado == "0") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    } else {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+        }
+
+        function EditarPerfil() {
+
+            var txtNombre = $("#txtNombre").val().trim();
+            var txtMaxIntentos = $("#txtMaxIntentos").val().trim();
+
+            $("#CargaTemporal").removeClass("hidden");
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Profile/EditarPerfil",
+                dataType: "json",
+                data: "idProfile=" + idPerfil + "&txtNombre=" + txtNombre + "&MaxIntentos=" + txtMaxIntentos,
+                success: function (resultado) {
+
+                    if (resultado == "1") {
+                        $("#CargaTemporal").addClass("hidden");
+                        $('#ModalPerfil').modal('hide');
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["success"](tMensajeActualizadoExito, tTituloExito); $toastlast = $toast;
+                        $("#ImagenCarga").removeClass("hidden");
+                        $("#GrillaPerfil").addClass("hidden");
+                        $("#MensajeError").addClass("hidden");
+                        $("#MensajeErrorListar").addClass("hidden");
+                        $("#MensajeVacio").addClass("hidden");
+
+                        $("#BtnExportarExcel").prop('disabled', true);
+                        $("#btnBuscar").prop('disabled', true);
+                        $("#btnNuevoPerfil").prop('disabled', true);
+                        $("#RrbActivos").prop('disabled', true);
+                        $("#RrbInactivos").prop('disabled', true);
+
+                        $("#txtBuscarValor").val("");
+
+                        $("#GrillaPerfil").data("kendoGrid").dataSource.read();
+
+                    } else if (resultado == "2") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorYaExiste, tTituloError); $toastlast = $toast;
+                    } else if (resultado == "0") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    } else if (resultado == "3") {
+
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValidacionPerfilInactivo, tTituloError); $toastlast = $toast;
+                    } else {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+        }
+
+        function EditarEstadoPerfil() {
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Profile/EditarEstadoPerfil",
+                dataType: "json",
+                data: "idProfile=" + idPerfil,
+                success: function (resultado) {
+
+                    if (resultado == "1") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["success"](tMensajeActualizadoExito, tTituloExito); $toastlast = $toast;
+                        $("#ImagenCarga").removeClass("hidden");
+                        $("#GrillaPerfil").addClass("hidden");
+                        $("#MensajeError").addClass("hidden");
+                        $("#MensajeErrorListar").addClass("hidden");
+                        $("#MensajeVacio").addClass("hidden");
+
+                        $("#BtnExportarExcel").prop('disabled', true);
+                        $("#btnBuscar").prop('disabled', true);
+                        $("#btnNuevoPerfil").prop('disabled', true);
+                        $("#RrbActivos").prop('disabled', true);
+                        $("#RrbInactivos").prop('disabled', true);
+
+                        $("#GrillaPerfil").data("kendoGrid").dataSource.read();
+                        $('#ModalPerfil').modal('hide');
+                    } else if (resultado == "0") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    } else if (resultado == "3") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorNoExiste, tTituloError); $toastlast = $toast;
+                    } else {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+
+        }
+
+        function EliminarPerfil() {
+
+            $("#CargaTemporal").removeClass("hidden");
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Profile/EliminarPerfil",
+                dataType: "json",
+                data: "idProfile=" + idPerfil,
+                success: function (resultado) {
+
+                    if (resultado == "1") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["success"](tMensajeEliminadoExito, tTituloExito); $toastlast = $toast;
+                        $("#ImagenCarga").removeClass("hidden");
+                        $("#GrillaPerfil").addClass("hidden");
+                        $("#MensajeError").addClass("hidden");
+                        $("#MensajeErrorListar").addClass("hidden");
+                        $("#MensajeVacio").addClass("hidden");
+
+                        $("#BtnExportarExcel").prop('disabled', true);
+                        $("#btnBuscar").prop('disabled', true);
+                        $("#btnNuevoPerfil").prop('disabled', true);
+                        $("#RrbActivos").prop('disabled', true);
+                        $("#RrbInactivos").prop('disabled', true);
+                        $("#GrillaPerfil").data("kendoGrid").dataSource.read();
+
+                    } else if (resultado == "0") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    } else if (resultado == "2") {
+                        $("#CargaTemporal").addClass("hidden");
+
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorRegistroNoInactivo, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+
+                    } else if (resultado == "3") {
+                        $("#CargaTemporal").addClass("hidden");
+
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorNoExiste, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    } else {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+
+        }
+
+        /*----------------------------------------------------------------------------------------------- ADICIONALES*/
+        function LimpiarEtiquetas() {
+            $("#txtNombre").val("");
+            $("#txtMaxIntentos").val("");
+        }
+
+        function ExportarExcel(Etiqueta) {
+            var Grilla = $("#" + Etiqueta).data("kendoGrid");
+            swal({
+                title: tTituloExportarExcel,
+                text: tMensajeExportarExcel,
+                type: "warning"
+            });
+            Grilla.saveAsExcel();
+        };
+
+        $('#ButtonHiddenBox').click(function () {
+            var x = document.getElementById("HiddenBox");
+            if (x.style.display === "none") {
+                $('#HiddenBox').slideDown();
+                document.getElementById("ButtonHiddenBox").innerHTML = '<i class="fa fa-chevron-up"></i>';
+            } else {
+                $('#HiddenBox').slideUp();
+                document.getElementById("ButtonHiddenBox").innerHTML = '<i class="fa fa-chevron-down"></i>';
+            }
+        });
+        /*----------------------------------------------------------------------------------------------- ASIGNAR FUNCIONES*/
+
+        $.validator.addMethod("regx", function (value, element, regexpr) {
+            return regexpr.test(value);
+        }, "");
+
+        $("#btnGrabar").click(function () {
+
+            var $registerForm = $("#FrmPerfil").validate({
+                rules: {
+                    txtNombre: {
+                        required: true,
+                        maxlength: 25,
+                        minlength: 2,
+                        regx: /^[A-Za-z0-9ÁÉÍÓÚáéíóúñÑ&. ]*$/
+                    },
+                    /*txtMaxIntentos: {
+                        required: true,
+                        digits: true,
+                        range: [3, 100],
+                        regx: /^[A-Za-z0-9ÁÉÍÓÚáéíóúñÑ&. ]*$/
+                    }*/
+                },
+                messages: {
+                    txtNombre: {
+                        required: tCampoRequerido,
+                        minlength: tMinLength,
+                        maxlength: tMaxLength,
+                        regx: tCaracteresNoValido
+                    },
+                    /*txtMaxIntentos: {
+                        required: tCampoRequerido,
+                        range: tRange,
+                        regx: tCaracteresNoValido
+                    }*/
+                },
+                submitHandler: function (form) {
+
+                    if ($("#txtNombre").val().trim() == "" /*|| $("#txtMaxIntentos").val().trim() == ""*/) {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValoresVacios, tTituloError); $toastlast = $toast;
+                        return;
+                    }
+
+                    if (idPerfil == 0) {
+                        CrearPerfil();
+                    } else {
+                        EditarPerfil();
+                    }
+                                     
+                },
+
+                errorPlacement: function (error, element) {
+                    error.insertAfter(element.parent());
+                }
+            });
+        });
+
+        $("#btnNuevoPerfil").click(function () {
+            EtiquetaFocus = 'txtNombre';
+            idPerfil = 0;
+            $('#ModalPerfil').modal('show');
+            LimpiarEtiquetas();
+        });
+
+        $("#btnBuscar").click(function () {
+
+            var valorAnalizar = $('#txtBuscarValor').val();
+            if (ValidarCaracter(valorAnalizar) == true) {
+                toastr.options.timeOut = nTiempoLargo;
+                toastr.options.extendedTimeOut = nTiempoLargo;
+                /*success - info - warning - error*/
+                var $toast = toastr["error"](tCaracteresNoValido, tTituloError); $toastlast = $toast;
+            } else {
+                $("#BtnExportarExcel").prop('disabled', true);
+                $("#btnBuscar").prop('disabled', true);
+                $("#btnNuevoPerfil").prop('disabled', true);
+                $("#RrbActivos").prop('disabled', true);
+                $("#RrbInactivos").prop('disabled', true);
+
+                $("#ImagenCarga").removeClass("hidden");
+                $("#GrillaPerfil").addClass("hidden");
+                $("#MensajeError").addClass("hidden");
+                $("#MensajeErrorListar").addClass("hidden");
+                $("#MensajeVacio").addClass("hidden");
+
+                var Grilla = $("#GrillaPerfil").data("kendoGrid");
+                Grilla.one("dataBound", function () {
+                    this.dataSource.page(1);
+                });
+
+               // $("#GrillaPerfil").data("kendoGrid").dataSource.read();
+                GrillaListadoPerfil();
+            }
+        });
+
+        $("#BtnExportarExcel").click(function () {
+            ExportarExcel("GrillaPerfil");
+        });
+
+        $("#btnCancelar").click(function () {
+            //$("#ModalPerfil").data("kendoWindow").close();
+            $('#ModalPerfil').modal('hide');
+        });
+
+        $("#BtnExportarExcelUsuario").click(function () {
+            ExportarExcel("GrillaUsuario");
+        });
+
+        $("#btnCancelarUsuario").click(function () {
+            //$("#ModalPerfil").data("kendoWindow").close();
+            $('#ModalUsuario').modal('hide');
+        });
+
+        /*----------------------------------------------------------------------------------------------- ASIGNAR FUNCIONES GRILLA*/
+
+        $("#GrillaPerfil").delegate(".BtnEditarPerfil", "click", function (e) {
+
+            var grid = $("#GrillaPerfil").data("kendoGrid");
+            var myVar = grid.dataItem($(this).closest("tr"));
+
+            idPerfil = myVar.IdProfile;
+            $("#txtNombre").val(myVar.ProfileName);
+            $("#txtMaxIntentos").val(myVar.MaxAttempts);
+
+            EtiquetaFocus = 'txtNombre';
+            $('#ModalPerfil').modal('show');
+        });
+
+        $("#GrillaPerfil").delegate(".BtnEditarEstadoPerfil", "click", function (e) {
+
+            var grid = $("#GrillaPerfil").data("kendoGrid");
+            var myVar = grid.dataItem($(this).closest("tr"));
+
+            idPerfil = myVar.IdProfile;
+            $("#txtModalUsuario").html("[ " + myVar.ProfileName + " ].");
+            ValidarRelacionUsuario();
+
+        });
+
+        $("#GrillaPerfil").delegate(".BtnEliminarPerfil", "click", function (e) {
+
+            var grid = $("#GrillaPerfil").data("kendoGrid");
+            var myVar = grid.dataItem($(this).closest("tr"));
+            idPerfil = myVar.IdProfile;
+
+            swal({
+                title: tTituloConfirmacion,
+                text: tMensajeConfirmacion,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: tColorBoton,
+                confirmButtonText: tNombreBotonSi,
+                cancelButtonText: tNombreBotonNo,
+                closeOnConfirm: true
+            }, function () {
+                EliminarPerfil();
+            });
+
+        });
+
+        $('input[type=radio][name=RrbTipo]').change(function (e) {
+
+            if (e.target.id == 'RrbActivos') {
+
+                EstadoRegistro = '1';
+                htmlBody = "<button class='btn-grid btn-xs BtnEditarPerfil' type='button' title='Editar'><i class='fa fa-lg fa-fw fa-edit'></i></button>" + " " +
+                                "<button class='btn-grid btn-xs BtnEditarEstadoPerfil' type='button' title='Activar / Desactivar'><i class='fa fa-lg fa-fw fa-check'></i></button>";
+
+                var valorAnalizar = $('#txtBuscarValor').val();
+                if (ValidarCaracter(valorAnalizar) == true) {
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tCaracteresNoValido, tTituloError); $toastlast = $toast;
+                } else {
+
+                    $("#BtnExportarExcel").prop('disabled', true);
+                    $("#btnBuscar").prop('disabled', true);
+                    $("#btnNuevoPerfil").prop('disabled', true);
+                    $("#RrbActivos").prop('disabled', true);
+                    $("#RrbInactivos").prop('disabled', true);
+
+                    $("#ImagenCarga").removeClass("hidden");
+                    $("#GrillaPerfil").addClass("hidden");
+                    $("#MensajeError").addClass("hidden");
+                    $("#MensajeErrorListar").addClass("hidden");
+                    $("#MensajeVacio").addClass("hidden");
+
+                    GrillaListadoPerfil();
+                }
+
+            } else {
+
+                EstadoRegistro = '2';
+                htmlBody = "<button class='btn-grid btn-xs BtnEditarEstadoPerfil' type='button' title='Activar / Desactivar'><i class='fa fa-lg fa-fw fa-check'></i></button>" + " " +
+                "<button class='btn-grid btn-xs BtnEliminarPerfil' type='button' title='Eliminar'><i class='fa fa-lg fa-fw fa-trash-o'></i></button>";
+
+                var valorAnalizar = $('#txtBuscarValor').val();
+                if (ValidarCaracter(valorAnalizar) == true) {
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tCaracteresNoValido, tTituloError); $toastlast = $toast;
+                } else {
+                    $("#BtnExportarExcel").prop('disabled', true);
+                    $("#btnBuscar").prop('disabled', true);
+                    $("#btnNuevoPerfil").prop('disabled', true);
+                    $("#RrbActivos").prop('disabled', true);
+                    $("#RrbInactivos").prop('disabled', true);
+
+                    $("#ImagenCarga").removeClass("hidden");
+                    $("#GrillaPerfil").addClass("hidden");
+                    $("#MensajeError").addClass("hidden");
+                    $("#MensajeErrorListar").addClass("hidden");
+                    $("#MensajeVacio").addClass("hidden");
+                    GrillaListadoPerfil();
+                }
+            }
+        });
+        /*----------------------------------------------------------------------------------------------- METODOS INICIALES*/
+        GrillaListadoPerfil();
+    });
+
+</script>
+
+<style>
+    .alertaTexto {
+        color: red;
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    .focoTexto {
+        font-weight: bold;
+    }
+</style>

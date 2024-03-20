@@ -1,0 +1,514 @@
+﻿
+<script src="~/Scripts/jquery.session.js"></script>
+<!-- HEADER -->
+<header id="header">
+    <div id="logo-group">
+
+        <!-- PLACE YOUR LOGO HERE -->
+        <span id="logo"> <a href="http://www.assac.com.pe/" target="_blank" title="Sitio Web ASSAC"> <img style="width:55px; height:30px;" src="~/Content/img/logo-assac-A.png" /></a> </span>
+        <!-- END LOGO PLACEHOLDER -->
+        @if (Request.IsAuthenticated)
+        {
+            <!-- Note: The activity badge color changes when clicked and resets the number to 0
+            Suggestion: You may want to set a flag when this happens to tick off all checked messages / notifications -->
+            <span id="activity" class="activity-dropdown"> <i class="fa fa-user"></i> <b class="badge bounceIn animated" id="IndicatorTotalQuantity"> 0 </b> </span>
+
+        <!-- AJAX-DROPDOWN : control this dropdown height, look and feel from the LESS variable file -->
+            <div class="ajax-dropdown">
+
+                <!-- the ID links are fetched via AJAX to the ajax container "ajax-notifications" -->
+                <div class="btn-group btn-group-justified" data-toggle="buttons">
+                    <label class="btn btn-default active" id="BtnNotificaciones">
+                        <input type="radio">
+                        <strong id="TabNotificaciones">Notificaciones últimos 3 dias</strong>
+                    </label>
+                </div>
+
+                <!-- notification content -->
+                <div class="ajax-notifications custom-scroll">
+
+                    <ul class="notification-body hidden" id="lstnotificaciones"></ul>
+
+                    <ul class="estIndicadorMensaje hidden" id="msjCargando">
+                        @Html.Partial("../MensajesParciales/_MensajeCargando")
+                    </ul>
+
+                    <ul class="estIndicadorMensaje hidden" id="msjError">
+                        @Html.Partial("../MensajesParciales/_MensajeError")
+                    </ul>
+
+                    <ul class="estIndicadorMensaje" id="msjVacio">
+                        @Html.Partial("../MensajesParciales/_MensajeVacio")
+                    </ul>
+
+                    <ul class="estIndicadorMensaje hidden" id="msjErrorListar">
+                        @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                    </ul>
+
+                </div>
+                <!-- end notification content -->
+                <!-- footer: refresh area -->
+                <span>
+                    Actualizado al : @DateTime.Now.ToLongDateString()
+                    <button type="button" class="pull-right btn-xs" id="BtnRefrescarAlertas" title="Actualizar">
+                        <i class="fa fa-refresh"></i>
+                    </button>
+                    <button type="button" class="pull-right btn-xs hidden" id="btnRegresar" title="Regresar">
+                        <i class="fa fa-arrow-left"></i>
+                    </button>
+                </span>
+                <!-- end footer -->
+
+            </div>
+            <!-- END AJAX-DROPDOWN -->
+        }
+    </div>
+    @if (Request.IsAuthenticated)
+    {
+    <!-- projects dropdown -->
+        <div class="project-context hidden-xs">
+
+            <span class="label">Proyecto:</span>
+            <span class="project-selector dropdown-toggle" data-toggle="dropdown">Cronos NET - Sistema de Gestión Operacional</span>
+        </div>
+    <!-- end projects dropdown -->
+    }
+    else { 
+     <!-- projects dropdown -->
+        <div class="hidden-xs" style="display:flex; height:100%; flex-flow: column nowrap; align-items:center; justify-content:space-between;">
+            <div><p style="color:#18A689; font-size:25px; margin-top:4px;">Cronos NET - Sistema de Gestión Operacional v 2.0</p></div>
+            <div><p style="color:black; font-size:12px;">Sistema de Control de Lubricantes y Combustible</p></div>
+            
+            
+        </div>
+    <!-- end projects dropdown -->
+    }
+    <section id="top-right">
+        @if (@Model is HelperResult)
+        {
+            @Model
+        }
+        else
+        {
+            <div class="pull-right">
+                @Html.Partial("_TopRight")
+            </div>
+        }
+    </section>
+
+</header>
+
+
+<script>    
+
+    /*----------------------------------------------------------------------------------------------- VARIABLES*/
+    var cuerpoNotificacion = ""; //llena el html del notificacion
+    var respuestaIndicador = ""; //Guarda N o A dependiendo si es notificación o alerta para utilizarlo en la lista detalle indicador.
+    var incrementadorN = 0; //incrementador utilizado para saber la cantidad de etiquetas li's de las notificaciones que hay en la vista actual.
+    var idIndicadorRegistro = 0; //guarda el id del indicador seleccionado para utilizarlo en el modal detalle indicador
+
+    //Función que lista los indicadores y discrimina si son notificaciones o alertas para llenarlos en su respectivo cuerpo HTML
+    function ListarIndicadores() {
+
+        cuerpoNotificacion = "";
+        $("#lstnotificaciones").html("");
+
+        $.ajax({
+            type: "GET",
+            url: tRutaServidor + "/Indicator/ListarIndicadorBarraSuperior",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            /*async: false,*/
+            success: function (resultado) {
+                /*exitosamente*/
+                if (resultado.length > 0) {
+                    /* proceso exitoso con datos*/
+                    if (resultado[0].ValorConsulta == "1") {
+
+                        $("#msjCargando").addClass("hidden");
+                        $("#msjError").addClass("hidden");
+                        $("#msjVacio").addClass("hidden");
+                        $("#msjErrorListar").addClass("hidden");
+
+                        $("#lstnotificaciones").removeClass("hidden");
+
+                        for (i = 0; i < resultado.length; i++) {
+                            cuerpoNotificacion +=
+                            '<li>' +
+                                    '<span class="padding-10" title="' + resultado[i].bE_Indicator_Type.IndicatorTypeDescription + '">' +
+                                            '<i class="fa fa-envelope fa-fw fa-3x" style="color:#F8AC59"></i>' +
+                                        resultado[i].bE_Indicator_Type.IndicatorTypeDescription + ' ...' +
+                                        '<span class="pull-right text-muted small" style="margin-right:15px" onclick="listarDetalleNotificacion(' + resultado[i].bE_Indicator_Type.IdIndicatorType + ')"><i class="fa fa-chevron-right" style="color:#1AB394; cursor:pointer;"></i></span>' +
+                                        '<span class="pull-right text-muted small" title="' + resultado[i].IndicatorsQuantity + ' incidencias ' + resultado[i].bE_Indicator_Type.IndicatorTypeDescription + '" style="margin-right:15px" ><b>(' + resultado[i].IndicatorsQuantity + ')</b></span>' +
+                                    '</span>' +
+                                '</li>';
+                        }
+
+                        $("#btnRegresar").addClass("hidden");
+
+                        if (cuerpoNotificacion == "") {
+                            $("#msjCargando").addClass("hidden");
+                            $("#lstnotificaciones").addClass("hidden");
+                            $("#msjError").addClass("hidden");
+                            $("#msjVacio").removeClass("hidden");
+                            $("#msjErrorListar").addClass("hidden");
+                        } else {
+                            $("#lstnotificaciones").append(cuerpoNotificacion);
+                        }
+
+                        $('#TabNotificaciones').html("Notificaciones últimos 3 dias (" + resultado[0].bE_Indicator_Navigation.totalIndicatorQuantity + ")");
+                        $('#IndicatorTotalQuantity').html(resultado[0].bE_Indicator_Navigation.totalIndicatorQuantity);
+
+                    } else {
+                        /* proceso fallido catch listado datos*/
+                        $("#msjCargando").addClass("hidden");
+                        $("#lstnotificaciones").addClass("hidden");
+                        $("#msjError").addClass("hidden");
+                        $("#msjErrorListar").removeClass("hidden");
+                        $("#msjVacio").addClass("hidden");
+
+                        console.log(resultado);
+                    }
+                } else {
+                    /*Retorno de Lista  vacia*/
+
+                    $("#msjCargandoNotificacion").addClass("hidden");
+                    $("#lstnotificaciones").addClass("hidden");
+                    $("#msjErrorNotificacion").addClass("hidden");
+                    $("#msjVacioNotificacion").removeClass("hidden");
+                    $("#msjErrorListarNotificacion").addClass("hidden");
+
+                    $("#msjCargando").addClass("hidden");
+                    $("#lstnotificaciones").addClass("hidden");
+                    $("#msjError").addClass("hidden");
+                    $("#msjVacio").removeClass("hidden");
+                    $("#msjErrorListar").addClass("hidden");
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                /*fallo al llamar a la funcion ajax*/
+                $("#msjCargando").addClass("hidden");
+                $("#lstnotificaciones").addClass("hidden");
+                $("#msjError").removeClass("hidden");
+                $("#msjVacio").addClass("hidden");
+                $("#msjErrorListar").addClass("hidden");
+
+                console.log("ERROR AJAX : " + ajaxOptions);
+                console.log("ERROR AJAX : " + thrownError);
+                console.log(xhr.responseText);
+                console.log(xhr);
+            }
+        });
+    };
+
+    //Función invocada al presionar el icono ver detalle y lista todas las notificaciones.
+    function listarDetalleNotificacion(IdIndicatorType) {
+        cuerpoNotificacion = "";
+        tipoIndicador = "";
+        $("#lstnotificaciones").html("");
+
+        $("#msjCargando").removeClass("hidden");
+        $("#lstnotificaciones").addClass("hidden");
+        $("#msjError").addClass("hidden");
+        $("#msjVacio").addClass("hidden");
+        $("#msjErrorListar").addClass("hidden");
+
+        $.ajax({
+            type: "GET",
+            url: tRutaServidor + "/Indicator/ListarIndicadorDetalleBarraSuperior",
+            contentType: "application/json; charset=utf-8",
+            data: "IdIndicatorType=" + IdIndicatorType,
+            dataType: "json",
+            /*async: false,*/
+            success: function (resultado) {
+                console.log(1);
+                console.log(resultado);
+                /*exitosamente*/
+                if (resultado.length > 0) {
+                    /* proceso exitoso con datos*/
+                    if (resultado[0].ValorConsulta == "1") {
+
+                        $("#msjCargando").addClass("hidden");
+                        $("#lstnotificaciones").removeClass("hidden");
+                        $("#msjError").addClass("hidden");
+                        $("#msjVacio").addClass("hidden");
+                        $("#msjErrorListar").addClass("hidden");
+
+                        for (i = 0; i < resultado.length; i++) {
+                            cuerpoNotificacion +=
+                            '<li class="liN li' + resultado[i].IndicatorCode + '">' +
+                                 '<span class="padding-10" title="' + resultado[i].IndicatorCode + " - " + resultado[i].IndicatorDescription + '">' +
+                                    '<i class="fa fa-envelope fa-fw fa-3x" style="color:#F8AC59"></i>' +
+                                   ' <strong >' + resultado[i].IndicatorCode + '</strong> - <span title="' + resultado[i].IndicatorDescription + '">' + resultado[i].IndicatorDescription.substring(0, 18) + '... </span>' +
+                                    '<span class="pull-right text-muted small"  title="' + resultado[i].IndicatorDescription + '" style="margin-right:15px" onclick="responderDetalleNotificacion(' + resultado[i].IdIndicator + ',' + IdIndicatorType + ',' + "'" + resultado[i].BackDay + "'" + ',' + "'" + resultado[i].CurrentDay + "'" + ')" ><i class="fa fa-check" style="color:#1AB394; cursor:pointer;"></i></span>' +
+                                     '<span class="pull-right text-muted small" title="' + resultado[i].IndicatorsCodeQuantity + ' incidencias" style="margin-right:15px" ><b>(' + resultado[i].IndicatorsCodeQuantity + ')</b></span>' +
+
+                                '</span>' +
+                            '</li>';
+                            console.log(resultado[i].BackDay);
+                        }
+                        $('#lstnotificaciones').append(cuerpoNotificacion);
+                        $("#btnRegresar").removeClass("hidden");
+
+                    } else {
+
+                        $("#msjCargando").addClass("hidden");
+                        $("#lstnotificaciones").addClass("hidden");
+                        $("#msjError").addClass("hidden");
+                        $("#msjVacio").addClass("hidden");
+                        $("#msjErrorListar").removeClass("hidden");
+                    }
+                } else {
+
+                    $("#msjCargando").addClass("hidden");
+                    $("#lstnotificaciones").addClass("hidden");
+                    $("#msjError").addClass("hidden");
+                    $("#msjVacio").removeClass("hidden");
+                    $("#msjErrorListar").addClass("hidden");
+                }
+
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                /*fallo al llamar a la funcion ajax*/
+                $("#msjCargando").addClass("hidden");
+                $("#lstnotificaciones").addClass("hidden");
+                $("#msjError").removeClass("hidden");
+                $("#msjVacio").addClass("hidden");
+                $("#msjErrorListar").addClass("hidden");
+
+                console.log("ERROR AJAX : " + ajaxOptions);
+                console.log("ERROR AJAX : " + thrownError);
+                console.log(xhr.responseText);
+                console.log(xhr);
+
+            }
+        });
+    };
+    
+    //Función invocada al presionar el icono check de cada notificación y atiende rápidamente la misma sin realizar algún otro paso.
+    function responderDetalleNotificacion(idIndicatorRegister, idIndicatorType, backDay, currentDay) {
+
+        var datosIncidencias = [];
+        datosIncidencias = [idIndicatorRegister, idIndicatorType, backDay, currentDay];
+
+        $.session.set("DatosIncidencias", datosIncidencias);
+
+        var url = '@Url.Action("vIndicatorReport", "IndicatorReport")';
+        window.location.href = url;
+    }
+
+    //Función invocada al presionar el icono ver detalle de cada notificación y muestra un modal para ver a detalle la información del indicador
+    function verDetalleNotificacion(idIndicatorRegister) {
+        idIndicadorRegistro = idIndicatorRegister;
+        tipoIndicador = 'N';
+        verDetalleIndicador(idIndicatorRegister);
+    }
+
+    //Función que inserta un nuevo registro en la tabla tb_indicator_answer en base a un idregistroIndicador
+    function enviarRespuestaIndicador(idIndicatorRegister) {
+
+        incrementadorN = 0;
+        incrementadorA = 0;
+
+        $("#CargaTemporal").removeClass("hidden");
+
+        $.ajax({
+            type: "POST",
+            url: tRutaServidor + "/IndicatorAnswer/CrearRespuestaIndicador",
+            dataType: "json",
+            data: "idIndicatorRegister=" + idIndicatorRegister + "&answerDetail=" + respuestaIndicador,
+            success: function (resultado) {
+
+                if (resultado == "1") {
+                    $("#CargaTemporal").addClass("hidden");
+                    toastr.options.timeOut = 800;
+                    toastr.options.extendedTimeOut = 800;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["success"]('Indicador atendido correctamente', '¡Éxito!'); $toastlast = $toast;
+                    $('.li' + idIndicatorRegister + '').remove();
+                    if (tipoIndicador == 'N') {
+                        $(".liN").each(function () {
+                            incrementadorN++;
+                        });
+                        if (incrementadorN == 0) {
+                            $("#msjCargando").addClass("hidden");
+                            $("#lstnotificaciones").addClass("hidden");
+                            $("#msjError").addClass("hidden");
+                            $("#msjVacio").removeClass("hidden");
+                            $("#msjErrorListar").addClass("hidden");
+                        }
+                    } else if (tipoIndicador == 'A') {
+                        $(".liA").each(function () {
+                            incrementadorA++;
+                        });
+
+                        if (incrementadorA == 0) {
+                            $("#msjCargando").addClass("hidden");
+                            $("#lstAlertas").addClass("hidden");
+                            $("#msjError").addClass("hidden");
+                            $("#msjVacio").removeClass("hidden");
+                            $("#msjErrorListar").addClass("hidden");
+                        }
+                    }
+                } else if (resultado == "0") {
+                    $("#CargaTemporal").addClass("hidden");
+                    toastr.options.timeOut = 1600;
+                    toastr.options.extendedTimeOut = 1600;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"]('No se pudo realizar el proceso. Verifique los datos y vuelva a intentarlo.', '¡Error!'); $toastlast = $toast;
+                    console.log("Mensaje del error : " + resultado)
+                } else {
+                    $("#CargaTemporal").addClass("hidden");
+                    toastr.options.timeOut = 1600;
+                    toastr.options.extendedTimeOut = 1600;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"]('No se pudo realizar el proceso. Verifique los datos y vuelva a intentarlo.', '¡Error!'); $toastlast = $toast;
+                    console.log("Mensaje del error : " + resultado)
+                }
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                $("#CargaTemporal").addClass("hidden");
+                /*fallo al llamar a la funcion ajax*/
+                toastr.options.timeOut = 3200;
+                toastr.options.extendedTimeOut = 3200;
+                /*success - info - warning - error*/
+                var $toast = toastr["error"]('Error de conexión. Favor de actualizar la página e intentar nuevamente. <br> Si el error persiste, contacte al administrador del sistema.', '¡Error de Conexion!'); $toastlast = $toast;
+                console.log("ERROR AJAX : " + ajaxOptions);
+                console.log("ERROR AJAX : " + thrownError);
+                console.log(xhr.responseText);
+                console.log(xhr);
+            }
+        });
+
+    }
+
+    //Función que muestra el modal para ver a detalle el indicador.
+    function verDetalleIndicador(idIndicatorRegister) {
+
+        $('#lblTipoIndicador').html('');
+        $('#lblCodigoIndicador').html('');
+        $('#lblDescripcionIndicador').html('');
+        $('#lblFechaRegistroIndicador').html('');
+        $('#lblDetalleIndicador').html('');
+
+        $.ajax({
+            type: "GET",
+            url: tRutaServidor + "/Indicator/listarIndicadorModalBarraSuperior",
+            contentType: "application/json; charset=utf-8",
+            data: "IdIndicatorRegister=" + idIndicatorRegister,
+            dataType: "json",
+            /*async: false,*/
+            success: function (resultado) {
+                console.log(resultado);
+                $('#ModalIndicador').modal('show');
+                /*exitosamente*/
+                if (resultado.length > 0) {
+                    /* proceso exitoso con datos*/
+                    if (resultado[0].ValorConsulta == "1") {
+                        if (tipoIndicador == 'N') {
+                            //document.getElementById("lblTipoIndicador").innerHTML = 'Notificación';
+                            $('#lblTipoIndicador').append('Notificación');
+                        } else {
+                            //document.getElementById("lblTipoIndicador").innerHTML = 'Alerta';
+                            $('#lblTipoIndicador').append('Alerta');
+                        }
+
+                        $('#lblCodigoIndicador').append('Código: <strong style="color:red;">' + resultado[0].bE_indicator.IndicatorCode + '</strong></br>');
+                        $('#lblDescripcionIndicador').append('Descripción: ' + resultado[0].bE_indicator.IndicatorDescription + '');
+                        $('#lblFechaRegistroIndicador').append('Fecha de registro : ' + resultado[0].bE_Indicator_Answer.bE_Indicator_Register.RegistrationDateString + '');
+                        $('#lblDetalleIndicador').append('Detalle del registro: ' + resultado[0].bE_Indicator_Answer.AnswerDetail + '');
+
+                    } else {
+
+                        $('#lblTipoIndicador').append('Notificación');
+                        $('#lblCodigoIndicador').append('-');
+                        $('#lblDescripcionIndicador').append('Error: ' + resultado[0].MensajeConsulta + '');
+                        $('#lblFechaRegistroIndicador').append('-');
+                        $('#lblDetalleIndicador').append('-');
+                    }
+                } else {
+
+                    $('#lblTipoIndicador').append('Notificación');
+                    $('#lblCodigoIndicador').append('-');
+                    $('#lblDescripcionIndicador').append('Mensaje: Lista vacia.');
+                    $('#lblFechaRegistroIndicador').append('-');
+                    $('#lblDetalleIndicador').append('-');
+                }
+
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                /*fallo al llamar a la funcion ajax*/
+
+                $('#lblTipoIndicador').append('Notificación');
+                $('#lblCodigoIndicador').append('-');
+                $('#lblDescripcionIndicador').append('Error al momento de traer los datos');
+                $('#lblFechaRegistroIndicador').append('-');
+                $('#lblDetalleIndicador').append('-');
+
+                console.log("ERROR AJAX : " + ajaxOptions);
+                console.log("ERROR AJAX : " + thrownError);
+                console.log(xhr.responseText);
+                console.log(xhr);
+
+            }
+        });
+
+    }
+
+    $("#BtnNotificaciones").click(function () {
+        $("#PanelNotificaciones").removeClass("hidden");
+        //tipoIndicador = 'N';
+        ListarIndicadores();
+    });
+
+    $("#btnRegresar").click(function () {
+        ListarIndicadores();
+    });
+
+    $("#BtnRefrescarAlertas").click(function () {
+        ListarIndicadores();
+    });
+
+    $('#PanelAlertas').click(function (event) {
+        event.stopPropagation();
+    });
+    $('#PanelNotificaciones').click(function (event) {
+        event.stopPropagation();
+    });
+
+
+
+    /*----------------------------------------------------------------------------------------------- METODOS INICIALES*/
+
+</script>
+<style>
+    .estIndicador {
+        height: 300px;
+        overflow-y: scroll;
+    }
+
+        .estIndicador::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .estIndicador::-webkit-scrollbar-track {
+            background-color: #F3F3F4;
+        }
+
+        .estIndicador::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+    .estIndicadorMensaje {
+        height: 300px;
+        display: flex;
+        flex-flow: column wrap;
+        align-items: center;
+        justify-content: center;
+        margin-right: 35px;
+    }
+</style>
+<!-- END HEADER -->

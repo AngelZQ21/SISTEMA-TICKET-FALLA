@@ -1,0 +1,390 @@
+﻿
+<script src="~/Scripts/util/jsUtilCambioGuardia.js"></script>
+<link href="~/Content/plugin/datapicker/datepicker3.css" rel="stylesheet" />
+<script src="~/Scripts/plugin/datapicker/bootstrap-datepicker.js"></script>
+
+
+<div id="content">
+
+    <div class="well" style="padding:0px 30px 10px 30px; background-color:white;">
+        <div class="row wrapper">
+            <div style="width: 100%; display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:space-between; text-align:center; align-items:center;">
+                <h2><i class="fa fa-edit fa-fw"></i>Reporte - Indicadores</h2>
+            </div>
+            <p><i class="fa fa-angle-right" style="margin-right:5px"></i>[Realice la búsqueda a detalle de todas las Alertas / Notificaciones en un periodo de fecha determinado]</p>
+        </div>
+
+        <div class="row" style="margin-top: 10px;">
+
+            <div class="col-xs-12 col-sm-12 col-md-12" style="margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                <form id="FrmFiltros" onsubmit="return false">
+
+                    <div class="col-xs-12 col-sm-4 col-md-4">
+                        <label style="color: #2F4050">Desde :</label>
+                        <div class="input-group date">
+                            <input type="text" class="form-control hasDatepicker" id="startDate" name="startDate" value="" data-dateformat="dd/mm/yy">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4">
+                        <label style="color: #2F4050">Hasta :</label>
+                        <div class="input-group date">
+                            <input type="text" class="form-control hasDatepicker" id="endDate" name="endDate" value="" data-dateformat="dd/mm/yy">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4">
+                        <label></label>
+                        <div style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-end">
+                            <button style="margin:3px;" tabindex="9" class="btn btn-primary" type="submit" id="btnBuscar"><i class="fa fa-search"></i> Buscar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="widget-grid" class="PanelPerfil">
+
+        <div class="row">
+            <!--Alertas-->
+            <article class="col-xs-12">
+
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-MenuPerfil" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050;">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+                        <h2>Alertas</h2>
+                    </header>
+                    <div style="border: none; padding: 30px 30px 10px 30px;">
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                        </div>
+                        <div class="widget-body no-padding">
+
+                            <div id="GrillaIndicador" class="hidden"></div>
+
+                            <div class="spiner-example" id="ImagenCargaIndicador">
+                                @Html.Partial("../MensajesParciales/_MensajeCargando")
+                            </div>
+
+                            <div class="hidden" id="MensajeErrorIndicador" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeError")
+                            </div>
+
+                            <div class="hidden" id="MensajeVacioIndicador" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeVacio")
+                            </div>
+
+                            <div class="hidden" id="MensajeErrorListarIndicador" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+</div>
+
+
+
+<script type="text/javascript">
+    /*----------------------------------------------------------------------------------------------- VARIABLES*/
+    var starDate = "";
+    var endDate = "";
+
+    $("#btnBuscar").click(function () {
+        $.validator.addMethod(
+            "australianDate",
+            function (value, element) {
+                // put your own logic here, this is just a (crappy) example
+                return value.match(/^\d\d?\/\d\d?\/\d\d\d\d$/);
+            },
+            "Please enter a date in the format dd/mm/yyyy."
+        );
+
+        var $registerForm = $("#FrmFiltros").validate({
+            rules: {
+                startDate: {
+                    required: true,
+                    australianDate: true
+                },
+                endDate: {
+                    required: true,
+                    australianDate: true
+                }
+            },
+            messages: {
+                startDate: {
+                    required: tCampoRequerido,
+                    australianDate: tFormatoFechaNoValido
+                },
+                endDate: {
+                    required: tCampoRequerido,
+                    australianDate: tFormatoFechaNoValido
+                }
+            },
+            submitHandler: function (form) {
+
+                starDate = $('#startDate').val();
+                endDate = $('#endDate').val();
+
+                var Grilla = $("#GrillaIndicador").data("kendoGrid");
+                Grilla.one("dataBound", function () {
+                    this.dataSource.page(1);
+                });
+
+                $("#GrillaIndicador").data("kendoGrid").dataSource.read();
+
+            },
+            errorPlacement: function (error, element) {
+                error.insertAfter(element.parent());
+            }
+        });
+
+    });
+
+    function FormatoFechas() {
+
+        var FechaHoy = new Date();
+        var FechaMañana = new Date(FechaHoy.getFullYear(), FechaHoy.getMonth(), FechaHoy.getDate() + 1);
+
+        $('#startDate').datepicker({
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            format: 'dd/mm/yyyy',
+            endDate: FechaMañana,
+        });
+
+
+        $('#endDate').datepicker({
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            format: 'dd/mm/yyyy',
+            endDate: FechaMañana,
+        });
+
+        $("#startDate").datepicker("setDate", FechaInicialReporte);
+        $("#endDate").datepicker("setDate", FechaFinalReporte);
+    }
+
+/*----------------------------------------------------------------------------------------------- GRILLAS*/
+function GrillaListadoIndicadores() {
+    starDate = $('#startDate').val();
+    endDate = $('#endDate').val();
+    
+
+    var dataSource = new kendo.data.DataSource({
+        transport: {
+            read: function (options) {
+                $.ajax({
+                    type: "GET",
+                    url: tRutaServidor + "/IndicatorAdminReport/ListarRegistroIndicador",
+                    contentType: "application/json; charset=utf-8",
+                    data: "starDate=" + starDate + "&endDate=" + endDate,
+                    dataType: "json",
+                    /*async: false,*/
+                    success: function (resultado) {
+                        console.log;
+                        /*exitosamente*/
+                        if (resultado.length > 0) {
+                            /* proceso exitoso con datos*/
+                            if (resultado[0].ValorConsulta == "1") {
+                                $("#ImagenCargaIndicador").addClass("hidden");
+                                $("#GrillaIndicador").removeClass("hidden");
+                                $("#MensajeErrorIndicador").addClass("hidden");
+                                $("#MensajeErrorListarIndicador").addClass("hidden");
+                                $("#MensajeVacioIndicador").addClass("hidden");
+                            } else {
+                                /* proceso fallido catch listado datos*/
+                                $("#ImagenCargaIndicador").addClass("hidden");
+                                $("#GrillaIndicador").addClass("hidden");
+                                $("#MensajeErrorIndicador").addClass("hidden");
+                                $("#MensajeErrorListarIndicador").removeClass("hidden");
+                                $("#MensajeVacioIndicador").addClass("hidden");
+                                console.log(resultado);
+                            }
+
+                        } else {
+                            $("#ImagenCargaIndicador").addClass("hidden");
+                            $("#GrillaIndicador").addClass("hidden");
+                            $("#MensajeErrorIndicador").addClass("hidden");
+                            $("#MensajeVacioIndicador").removeClass("hidden");
+                            $("#MensajeErrorListarIndicador").addClass("hidden");
+                        }
+                        options.success(resultado);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        /*fallo al llamar a la funcion ajax*/
+                        $("#ImagenCargaIndicador").addClass("hidden");
+                        $("#GrillaPerfil").addClass("hidden");
+                        $("#MensajeErrorIndicador").removeClass("hidden");
+                        $("#MensajeVacioIndicador").addClass("hidden");
+                        $("#MensajeErrorListarIndicador").addClass("hidden");
+
+
+                        console.log("ERROR AJAX : " + ajaxOptions);
+                        console.log("ERROR AJAX : " + thrownError);
+                        console.log(xhr.responseText);
+                        console.log(xhr);
+
+                    }
+                });
+            }
+        },
+        error: function (e) {
+            alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+        },
+        batch: false,
+        pageSize: PaginationKendoGrid,
+        schema: {
+            model: {
+                fields: {
+                    IdIndicatorRegister: { type: "number" },
+                    IndicatorTypeDescription: { type: "string" },
+                    IndicatorCode: { type: "number" },
+                    IndicatorDescription: { type: "string" },
+                    RegisterDetail: { type: "string" },
+                    RegistrationDate: { type: "string" },
+                    UUser: { type: "string" }
+                }
+            }
+        }
+    });
+
+    $("#GrillaIndicador").kendoGrid({
+        dataSource: dataSource,
+        sortable: true,
+        pageable: true,
+        columnMenu: true,
+        columnMenu: {
+            columns: true,
+            filterable: true,
+            sortable: true,
+            messages: {
+                columns: KendoMsjColumnMenuColumns,
+                filter: KendoMsjColumnMenuFilter,
+                sortAscending: KendoMsjColumnMenuSortAscending,
+                sortDescending: KendoMsjColumnMenuSortDescending,
+                settings: KendoMsjSettings
+            }
+        },
+        columnMenuInit: function (e) {
+            var menu = e.container.find(".k-menu").data("kendoMenu");
+            menu.bind("select", function (e) {
+                var EtiquetaInput = $(".k-animation-container > .k-menu-group > .k-item > .k-content > .k-filter-menu > .k-textbox :input");
+                EtiquetaInput.focus();
+            });
+        },
+        groupable: false,
+        reorderable: true,
+        selectable: "row",
+        scrollable: true,
+        resizable: true,
+        filterable: {
+            multi: true,
+            checkAll: true,
+            search: true,
+            messages: {
+                clear: KendoMsjClear,
+                filter: KendoMsjFilter,
+                selectedItemsFormat: KendoMsjSelectedItemsFormat,
+                checkAll: KendoMsjCheckAll,
+                search: KendoMsjSearch
+            }
+        },
+        pageable: {
+            refresh: true,
+            pageSizes: true,
+            pageSizes: [5, 10, 15, "Todos"],
+            buttonCount: 5,
+            messages: {
+                empty: KendoMsjEmpty,
+                page: kendoMsjPage,
+                of: KendoMsjOf,
+                itemsPerPage: KendoMsjItemsPerPage,
+                first: KendoMsjFirst,
+                last: KendoMsjLast,
+                next: KendoMsjNext,
+                previous: KendoMsjPrevious,
+                refresh: KendoMsjRefresh,
+                morePages: KendoMsjMorePages,
+                display: KendoMsjDisplay
+            }
+        },
+        excel: { fileName: "Listado_Registro_Indicador.xlsx", filterable: true, allPages: true },
+        columns: [
+            {
+                width: 130,
+                command: {
+                    template: "<button class='btn-grid btn-xs BtnDesplegar' type='button' title='desplegar'><i class='fa fa-lg fa-fw fa-minus-square-o'></i></button>"
+                },
+                attributes: { "class": "text-center" },
+                title: ""
+            },
+            { field: "IdIndicatorRegister", title: "Id", width: 120, hidden: true, attributes: { "class": "text-center" } },
+            { field: "IndicatorTypeDescription", title: "Tipo de Indicador", width: 120, attributes: { "class": "text-center" } },
+            { field: "bE_Indicator.IndicatorCode", title: "Código", width: 150, attributes: { "class": "text-center" } },
+            { field: "bE_Indicator.IndicatorDescription", title: "Descripción", hidden: true, width: 150, attributes: { "class": "text-center" } },
+            { field: "RegisterDetail", title: "Detalle", hidden: true, width: 150, attributes: { "class": "text-center" } },
+            { field: "RegistrationDate", title: "Fecha Registro", hidden: true, width: 150, format: "{0:dd/MM/yyyy HH:mm:ss}", attributes: { "class": "text-center" } },
+            { field: "UUser", title: "Usuario", hidden: true, width: 150,  attributes: { "class": "text-center" } }
+        ],
+        dataBound: function () {
+
+            var Grilla = this;
+            Grilla.tbody.find("tr[role='row']").each(function () {
+                var model = Grilla.dataItem(this);
+                //console.log(model);
+                /*if (model.RegistrationStatus == "I") {
+                    $(this).find("td > button.BtnEditarEstadoPerfil > i").removeClass("fa-check");
+                    $(this).find("td > button.BtnEditarEstadoPerfil > i").addClass("fa-ban");
+                    $(this).find("td > button.BtnEditarEstadoPerfil").addClass("Color-gris");
+                    $(this).find("td > button.BtnEditarEstadoPerfil").removeClass("bg-color-blueDark");
+
+                } else if (model.RegistrationStatus == "A") {
+                    $(this).find("td > button.BtnEditarEstadoPerfil > i").removeClass("fa-ban");
+                    $(this).find("td > button.BtnEditarEstadoPerfil > i").addClass("fa-check");
+                }*/
+            });
+        }
+    });
+
+}
+
+    /*------------------------------------------------------------------------------------------------ADICIONALES*/
+    function IndicatorToogle() {
+        var x = document.getElementById("HiddenBoxIndicator");
+    if (x.style.display === "none") {
+        $('#HiddenBoxIndicator').slideDown();
+        document.getElementById("ButtonHiddenBoxIndicator").innerHTML = '<i class="fa fa-chevron-up"></i>';
+    } else {
+        $('#HiddenBoxIndicator').slideUp();
+        document.getElementById("ButtonHiddenBoxIndicator").innerHTML = '<i class="fa fa-chevron-down"></i>';
+    }
+}
+    /*----------------------------------------------------------------------------------------------- METODOS INICIALES*/
+    FormatoFechas();
+    GrillaListadoIndicadores();
+    
+</script>
+<style>
+
+    .spanTo {
+    padding:5px;
+    border:solid 1px #E5E6E7; 
+    background-color:#EEEEEE;
+    }
+    .btnBuscar {
+    background-color:#1BB394; 
+    border:0; 
+
+    }
+    .btnBuscar:hover {
+    background-color:#18A689;
+    }
+ 
+</style>

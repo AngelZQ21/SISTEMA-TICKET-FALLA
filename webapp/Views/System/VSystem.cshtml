@@ -1,0 +1,1720 @@
+﻿
+
+<script src="~/Scripts/util/jsUtilCambioGuardia.js"></script>
+
+<!--LIBRERIA PARA BOOSTRAP TOOGLE-->
+<link href="~/Scripts/plugin/bootstrap-toggle-master/css/bootstrap-toggle.css" rel="stylesheet" />
+<script src="~/Scripts/plugin/bootstrap-toggle-master/js/bootstrap-toggle.min.js"></script>
+
+<div id="content">
+
+    <div class="well" style="padding:0px 30px 10px 30px; background-color:white;">
+        <div class="row wrapper">
+
+
+            <div style="width: 100%; display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:space-between; text-align:center; align-items:center;">
+                <h2><i class="fa fa-edit fa-fw"></i> Configuración</h2>
+            </div>
+
+
+
+            <p>[Parámetros de Configuración del Sistema]</p>
+        </div>
+
+        
+            <form id="frmConfiguracion" onsubmit="return false">
+                <section class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:10px;">
+                    <header>
+                        <strong class="text-info">Sección 1</strong>
+                    </header>
+                    <hr />
+                </section>
+                <div class="row">
+                    <!--Tiempo de Sincronización Zeus Comm-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Tiempo de Sincronización Zeus Comm:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtZCSyncTime" id="txtZCSyncTime" maxlength="8" placeholder="Tiempo de Sincronización Zeus Comm" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--Cantidad de Días Embedded-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Cantidad de Dias Embedded:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtEmbeddedQuantityDays" id="txtEmbeddedQuantityDays" maxlength="8" placeholder="Cantidad de Dias Embedded" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--Cantidad máxima de días Actualización de datos-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Cantidad de días - Actualización de datos:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtMinDate" id="txtMinDate" maxlength="8" placeholder="Cantidad de días - Actualización de datos" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--Configuración de Prefix-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Configuración de Prefix:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtPrefixSetting" id="txtPrefixSetting" maxlength="10" placeholder="Configuración de Prefix" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+ 
+                </div>
+
+                <div class="row">
+                    <!--Cantidad de Decimales 1-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Cantidad de Decimales 1:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtDecimalQuantity" id="txtDecimalQuantity" maxlength="8" placeholder="Cantidad de Decimales 1" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--Cantidad de Decimales 2-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Cantidad de Decimales 2:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtDecimalQuantity2" id="txtDecimalQuantity2" maxlength="8" placeholder="Cantidad de Decimales 2" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--Máximo de Filas en reportes-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Máximo de Filas en Reporte:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtMaxRowsReport" id="txtMaxRowsReport" maxlength="8" placeholder="Máximo de Filas en Reporte" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--Máximo de Filas en resumenes-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Máximo de Filas en Resumenes:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtMaxRowsSummary" id="txtMaxRowsSummary" maxlength="8" placeholder="Máximo de Filas en Resumenes" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="row">
+                    <!--Máximo de Filas en gráficos-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Máximo de Filas en Gráficos:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtMaxRowsGraphic" id="txtMaxRowsGraphic" maxlength="8" placeholder="Máximo de Filas en Gráficos" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--Máximo de datos en gráficos-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Máximo de Datos en Gráficos:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtMaxDataGraphic" id="txtMaxDataGraphic" maxlength="8" placeholder="Máximo de Datos en Gráficos" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--Ruta de Archivos-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Ruta de Archivos:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtPathFile" id="txtPathFile" maxlength="200" placeholder="Ruta de Archivos" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--Ruta de Archivos de entrada-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Ruta de Archivos de Entrada:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtPathFileInput" id="txtPathFileInput" maxlength="200" placeholder="Ruta de Archivos de Entrada" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="row">
+                    <!--Ruta de Archivos de salida-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Ruta de Archivos de Salida:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtPathFileOutput" id="txtPathFileOutput" maxlength="200" placeholder="Ruta de Archivos de Salida" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--Ruta de Archivos de Encriptado-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Ruta de Archivos de Encriptado:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtPathFileDencrypt" id="txtPathFileDencrypt" maxlength="200" placeholder="Ruta de Archivos de Encriptado" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--Ruta de Archivos Temporales-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Ruta de Archivos Temporales:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtPathFileTemp" id="txtPathFileTemp" maxlength="200" placeholder="Ruta de Archivos Temporales" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--Ruta del Sistema-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Ruta del Sistema:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtPathSystem" id="txtPathSystem" maxlength="200" placeholder="Ruta del Sistema" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="row">
+                    <!--Ruta de archivos de despachos Exitosos-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Ruta de archivos de despachos Exitosos:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtPathFileDispatchOk" id="txtPathFileDispatchOk" maxlength="200" placeholder="Ruta de archivos de despachos Exitosos" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!--Ruta de archivos de despachos con error-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Ruta de archivos de despachos con Error:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtPathFileDispatchError" id="txtPathFileDispatchError" maxlength="200" placeholder="Ruta de archivos de despachos con Error" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--Tipo de Logeo en Zeus-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Tipo de Logueo - Sistema Zeus:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtTypeLoginZeus" id="txtTypeLoginZeus" maxlength="8" placeholder="Tipo de Logueo - Sistema Zeus" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--Estación por Defecto-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Estación por defecto:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtDefaultStation" id="txtDefaultStation" maxlength="8" placeholder="Estación por defecto" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="row">
+                    <!--Porcentaje Vims-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Porcentaje VIMS:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtPercentVIMS" id="txtPercentVIMS" maxlength="8" placeholder="Porcentaje VIMS" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--Tipo de Bloqueo-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <label style="color: #2F4050">Tipo de Bloqueo:</label>
+                        <div style="width: 100%;">
+                            <input id="cboNumberLockType" style="width:100%;" />
+                        </div>
+                    </section>
+                    <!--Máximo Tiempo de Bombas-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Máximo Tiempo de Bombas:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtMaxTimeBombas" id="txtMaxTimeBombas" maxlength="8" placeholder="Máximo Tiempo de Bombas" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--Máximo Tiempo de No Flujo-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Máximo Tiempo de no Flujo:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtMaxTimeNoFujo" id="txtMaxTimeNoFujo" maxlength="8" placeholder="Máximo Tiempo de no Flujo" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="row">
+                    <!--Restricción maximo de columnas-->
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Restricción máximo de columnas:</label>
+                            <div class="inputGroupContainer inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                                    <input name="txtMaxColumnRestriction" id="txtMaxColumnRestriction" maxlength="8" placeholder="Restricción máximo de columnas" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <section class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:10px;">
+                    <header>
+                        <strong class="text-info">Sección 2</strong>
+                    </header>
+                    <hr />
+                </section>
+
+                <div class="row">
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="checkbox" style="margin-top:24px;">
+                            <label>
+                                <input type="checkbox" data-toggle="toggle" id="tgStockRestriction">
+                                Validar Restricción de Stock
+                            </label>
+                        </div>
+                    </section>
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="checkbox" style="margin-top:24px;">
+                            <label>
+                                <input type="checkbox" data-toggle="toggle" id="tgLogBus">
+                                Validar Log Error
+                            </label>
+                        </div>
+                    </section>
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="checkbox" style="margin-top:24px;">
+                            <label>
+                                <input type="checkbox" data-toggle="toggle" id="tgLogDispatch">
+                                Validar Log Despachos
+                            </label>
+                        </div>
+                    </section>
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="checkbox" style="margin-top:24px;">
+                            <label>
+                                <input type="checkbox" data-toggle="toggle" id="tgLogProtocol">
+                                Validar Log Protocolo
+                            </label>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="row">
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="checkbox" style="margin-top:24px;">
+                            <label>
+                                <input type="checkbox" data-toggle="toggle" id="tgLogError">
+                                Validar Log Error
+                            </label>
+                        </div>
+                    </section>
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="checkbox" style="margin-top:24px;">
+                            <label>
+                                <input type="checkbox" data-toggle="toggle" id="tgMigration_BlackList_Driver">
+                                Validar Migración Lista Negra Conductor
+                            </label>
+                        </div>
+                    </section>
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="checkbox" style="margin-top:24px;">
+                            <label>
+                                <input type="checkbox" data-toggle="toggle" id="tgMigration_BlackList_Vehicle">
+                                Validar Migración Lista Negra Vehículo
+                            </label>
+                        </div>
+                    </section>
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="checkbox" style="margin-top:24px;">
+                            <label>
+                                <input type="checkbox" data-toggle="toggle" id="tgMigration_Driver">
+                                Validar Migración Conductor
+                            </label>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="row">
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="checkbox" style="margin-top:24px;">
+                            <label>
+                                <input type="checkbox" data-toggle="toggle" id="tgMigration_Operator">
+                                Validar Migración Operador
+                            </label>
+                        </div>
+                    </section>
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="checkbox" style="margin-top:24px;">
+                            <label>
+                                <input type="checkbox" data-toggle="toggle" id="tgMigration_Vehicle">
+                                Validar Migración Vehículo
+                            </label>
+                        </div>
+                    </section>
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="checkbox" style="margin-top:24px;">
+                            <label>
+                                <input type="checkbox" data-toggle="toggle" id="tgValidateVehicle">
+                                Validar Vehículo
+                            </label>
+                        </div>
+                    </section>
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="checkbox" style="margin-top:24px;">
+                            <label>
+                                <input type="checkbox" data-toggle="toggle" id="tgValidateOperator">
+                                Validar Operador
+                            </label>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="row">
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="checkbox" style="margin-top:24px;">
+                            <label>
+                                <input type="checkbox" data-toggle="toggle" id="tgValidateDriver">
+                                Validar Conductor
+                            </label>
+                        </div>
+                    </section>
+                    <section class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                        <div class="checkbox" style="margin-top:24px;">
+                            <label>
+                                <input type="checkbox" data-toggle="toggle" id="tgSound">
+                                Activar Sonido
+                            </label>
+                        </div>
+                    </section>
+                   
+                </div>
+                <div class="row">
+                    <section class="col-xs-12">
+                        <div class="row" style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-end">
+                            <button style="margin:3px;" tabindex="9" class="btn btn-primary" type="submit" id="btnGrabar"><i class="fa fa-save"></i> Grabar</button>
+                        </div>
+                    </section>
+                </div>
+               
+               
+            </form>
+
+
+        </div>
+
+
+</div>
+
+
+
+<script type="text/javascript">
+
+    //Debe estar fuera del Document.Ready
+    $('#tgStockRestriction').bootstrapToggle({
+        on: 'Si',
+        off: 'No',
+        size: 'normal', //large,normal,small,mini
+        onstyle: 'primary', //default,primary,success,info,warning,danger
+        offstyle: 'default', //default,primary,success,info,warning,danger
+        width: null,//type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+        height: null, //type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+    });
+
+  
+    $('#tgLogBus').bootstrapToggle({
+        on: 'Si',
+        off: 'No',
+        size: 'normal', //large,normal,small,mini
+        onstyle: 'primary', //default,primary,success,info,warning,danger
+        offstyle: 'default', //default,primary,success,info,warning,danger
+        width: null,//type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+        height: null, //type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+    });
+
+    $('#tgLogDispatch').bootstrapToggle({
+        on: 'Si',
+        off: 'No',
+        size: 'normal', //large,normal,small,mini
+        onstyle: 'primary', //default,primary,success,info,warning,danger
+        offstyle: 'default', //default,primary,success,info,warning,danger
+        width: null,//type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+        height: null, //type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+    });
+
+    $('#tgLogProtocol').bootstrapToggle({
+        on: 'Si',
+        off: 'No',
+        size: 'normal', //large,normal,small,mini
+        onstyle: 'primary', //default,primary,success,info,warning,danger
+        offstyle: 'default', //default,primary,success,info,warning,danger
+        width: null,//type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+        height: null, //type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+    });
+
+    $('#tgLogError').bootstrapToggle({
+        on: 'Si',
+        off: 'No',
+        size: 'normal', //large,normal,small,mini
+        onstyle: 'primary', //default,primary,success,info,warning,danger
+        offstyle: 'default', //default,primary,success,info,warning,danger
+        width: null,//type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+        height: null, //type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+    });
+    $('#tgMigration_BlackList_Driver').bootstrapToggle({
+        on: 'Si',
+        off: 'No',
+        size: 'normal', //large,normal,small,mini
+        onstyle: 'primary', //default,primary,success,info,warning,danger
+        offstyle: 'default', //default,primary,success,info,warning,danger
+        width: null,//type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+        height: null, //type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+    });
+    $('#tgMigration_BlackList_Vehicle').bootstrapToggle({
+        on: 'Si',
+        off: 'No',
+        size: 'normal', //large,normal,small,mini
+        onstyle: 'primary', //default,primary,success,info,warning,danger
+        offstyle: 'default', //default,primary,success,info,warning,danger
+        width: null,//type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+        height: null, //type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+    });
+    $('#tgMigration_Driver').bootstrapToggle({
+        on: 'Si',
+        off: 'No',
+        size: 'normal', //large,normal,small,mini
+        onstyle: 'primary', //default,primary,success,info,warning,danger
+        offstyle: 'default', //default,primary,success,info,warning,danger
+        width: null,//type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+        height: null, //type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+    });
+    $('#tgMigration_Operator').bootstrapToggle({
+        on: 'Si',
+        off: 'No',
+        size: 'normal', //large,normal,small,mini
+        onstyle: 'primary', //default,primary,success,info,warning,danger
+        offstyle: 'default', //default,primary,success,info,warning,danger
+        width: null,//type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+        height: null, //type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+    });
+    $('#tgMigration_Vehicle').bootstrapToggle({
+        on: 'Si',
+        off: 'No',
+        size: 'normal', //large,normal,small,mini
+        onstyle: 'primary', //default,primary,success,info,warning,danger
+        offstyle: 'default', //default,primary,success,info,warning,danger
+        width: null,//type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+        height: null, //type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+    });
+    $('#tgValidateVehicle').bootstrapToggle({
+        on: 'Si',
+        off: 'No',
+        size: 'normal', //large,normal,small,mini
+        onstyle: 'primary', //default,primary,success,info,warning,danger
+        offstyle: 'default', //default,primary,success,info,warning,danger
+        width: null,//type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+        height: null, //type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+    });
+    $('#tgValidateOperator').bootstrapToggle({
+        on: 'Si',
+        off: 'No',
+        size: 'normal', //large,normal,small,mini
+        onstyle: 'primary', //default,primary,success,info,warning,danger
+        offstyle: 'default', //default,primary,success,info,warning,danger
+        width: null,//type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+        height: null, //type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+    });
+    $('#tgValidateDriver').bootstrapToggle({
+        on: 'Si',
+        off: 'No',
+        size: 'normal', //large,normal,small,mini
+        onstyle: 'primary', //default,primary,success,info,warning,danger
+        offstyle: 'default', //default,primary,success,info,warning,danger
+        width: null,//type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+        height: null, //type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+    });
+    $('#tgSound').bootstrapToggle({
+        on: 'Si',
+        off: 'No',
+        size: 'normal', //large,normal,small,mini
+        onstyle: 'primary', //default,primary,success,info,warning,danger
+        offstyle: 'default', //default,primary,success,info,warning,danger
+        width: null,//type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+        height: null, //type: integer	default: null	/ Sets the width of the toggle. if set to null, width will be calculated.
+    });
+
+        $(document).ready(function () {
+
+
+            function ValidarCaracter(cadenaAnalizar) {
+                var flag = false;
+                var CampoNoValidos = "<>";
+                for (var i = 0; i < cadenaAnalizar.length; i++) {
+
+                    var caracter = cadenaAnalizar.charAt(i);
+                    flag = false;
+                    for (var y = 0; y < CampoNoValidos.length; y++) {
+                        var CaracterValido = CampoNoValidos.charAt(y);
+                        if (caracter == CaracterValido) {
+                            flag = true;
+                            break;
+                        }
+                    }
+
+                    if (flag == true) {
+                        flag = true;
+                        break;
+                    }
+                }
+                return flag;
+            }
+
+            /*----------------------------------------------------------------------------------------------- VARIABLES*/
+            var tgStockRestriction = "N";
+            var tgLogBus = 0;
+            var tgLogDispatch = 0;
+            var tgLogProtocol = 0;
+            var tgLogError = 0;
+            var tgMigration_BlackList_Driver = 0;
+            var tgMigration_BlackList_Vehicle = 0;
+            var tgMigration_Driver = 0;
+            var tgMigration_Operator = 0;
+            var tgMigration_Vehicle = 0;
+            var tgValidateVehicle = false;
+            var tgValidateOperator = false;
+            var tgValidateDriver = false;
+            var tgSound = false;
+
+            var idConfiguracion = 0;
+            var EtiquetaFocus = '';
+            var RoleType = '';
+            var EstadoRegistro = '1';
+            var htmlBody = "<button class='btn-grid btn-xs BtnEditarRole' type='button' title='Editar'><i class='fa fa-lg fa-fw fa-edit'></i></button>" + " " +
+                           "<button class='btn-grid btn-xs BtnEditarEstadoRole' type='button' title='Activar / Desactivar'><i class='fa fa-lg fa-fw fa-check'></i></button>"
+            var idNumberLockType = 0;
+            /*----------------------------------------------------------------------------------------------- GRILLAS*/
+
+            function listarDatosConfiguracion() {
+
+                $.ajax({
+                    type: "GET", /*Puede ser post*/
+                    url: tRutaServidor + "/System/ListarConfiguracion", /* es importante poner los .. delante*/
+                    contentType: "application/json; charset=utf-8",
+                    data: "valorBusqueda=&valorConsulta=0",
+                    dataType: "json",
+                    /*async: false,*/
+                    success: function (resultado) {
+                        /*exitosamente*/
+
+                        if (resultado.length > 0) {
+                            /* proceso exitoso con datos*/
+                            if (resultado[0].ValorConsulta == "1") {
+                                console.log(resultado);
+                                idConfiguracion = resultado[0].IdConfiguration;
+                                $("#txtZCSyncTime").val(resultado[0].ZCSyncTime);
+                                $("#txtEmbeddedQuantityDays").val(resultado[0].EmbeddedQuantityDays);
+                                $("#txtMinDate").val(resultado[0].MinDate);
+                                $("#txtPrefixSetting").val(resultado[0].PrefixSetting);
+                                $("#txtDecimalQuantity").val(resultado[0].DecimalQuantity);
+                                $("#txtDecimalQuantity2").val(resultado[0].DecimalQuantity2);
+                                $("#txtMaxRowsReport").val(resultado[0].MaxRowsReport);
+                                $("#txtMaxRowsSummary").val(resultado[0].MaxRowsSummary);
+                                $("#txtMaxRowsGraphic").val(resultado[0].MaxRowsGraphic);
+                                $("#txtMaxDataGraphic").val(resultado[0].MaxDataGraphic);
+                                $("#txtPathFile").val(resultado[0].PathFile);
+                                $("#txtPathFileInput").val(resultado[0].PathFileInput);
+                                $("#txtPathFileOutput").val(resultado[0].PathFileOut);
+                                $("#txtPathFileDencrypt").val(resultado[0].PathFileDencrypt);
+                                $("#txtPathFileTemp").val(resultado[0].PathFileTemp);
+                                $("#txtPathSystem").val(resultado[0].PathSystem);
+                                $("#txtPathFileDispatchOk").val(resultado[0].PathFileDispatchOk);
+                                $("#txtPathFileDispatchError").val(resultado[0].PathFileDispatchError);
+                                $("#txtTypeLoginZeus").val(resultado[0].TypeLoginZeus);
+                                $("#txtDefaultStation").val(resultado[0].DefaultStation);
+                                $("#txtPercentVIMS").val(resultado[0].PercentVIMS);
+                                idNumberLockType = resultado[0].NumberLockType;
+                                comboTipoBloqueoListaNegra();
+                                $("#txtMaxTimeBombas").val(resultado[0].MaxTimeBombas);
+                                $("#txtMaxTimeNoFujo").val(resultado[0].MaxTimeNoFujo);
+                                $("#txtMaxColumnRestriction").val(resultado[0].MaxColumnRestriction);
+
+                                if (resultado[0].StockRestriction == 'S') {
+                                    $('#tgStockRestriction').prop('checked', true).change();
+                                } else {
+                                    $('#tgStockRestriction').prop('checked', false).change();
+                                }
+                               
+                                if (resultado[0].LogBus == 1) {
+                                    $('#tgLogBus').prop('checked', true).change();
+                                } else {
+                                    $('#tgLogBus').prop('checked', false).change();
+                                }
+
+                                if (resultado[0].LogDispatch == 1) {
+                                    $('#tgLogDispatch').prop('checked', true).change();
+                                } else {
+                                    $('#tgLogDispatch').prop('checked', false).change();
+                                }
+
+                                if (resultado[0].LogProtocol == 1) {
+                                    $('#tgLogProtocol').prop('checked', true).change();
+                                } else {
+                                    $('#tgLogProtocol').prop('checked', false).change();
+                                }
+
+                                if (resultado[0].logError == 1) {
+
+                                    $('#tgLogError').prop('checked', true).change();
+                                } else {
+                                    $('#tgLogError').prop('checked', false).change();
+                                }
+
+                                if (resultado[0].Migration_BlackList_Driver == 1) {
+                                    $('#tgMigration_BlackList_Driver').prop('checked', true).change();
+                                } else {
+                                    $('#tgMigration_BlackList_Driver').prop('checked', false).change();
+                                }
+
+                                if (resultado[0].Migration_BlackList_Vehicle == 1) {
+                                    $('#tgMigration_BlackList_Vehicle').prop('checked', true).change();
+                                } else {
+                                    $('#tgMigration_BlackList_Vehicle').prop('checked', false).change();
+                                }
+
+                                if (resultado[0].Migration_Driver == 1) {
+                                    $('#tgMigration_Driver').prop('checked', true).change();
+                                } else {
+                                    $('#tgMigration_Driver').prop('checked', false).change();
+                                }
+
+                                if (resultado[0].Migration_Operator == 1) {
+                                    $('#tgMigration_Operator').prop('checked', true).change();
+                                } else {
+                                    $('#tgMigration_Operator').prop('checked', false).change();
+                                }
+
+                                if (resultado[0].Migration_Vehicle == 1) {
+                                    $('#tgMigration_Vehicle').prop('checked', true).change();
+                                } else {
+                                    $('#tgMigration_Vehicle').prop('checked', false).change();
+                                }
+
+   
+                                $('#tgValidateVehicle').prop('checked', resultado[0].ValidateVehicle).change();
+                                $('#tgValidateOperator').prop('checked', resultado[0].ValidateOperator).change();
+                                $('#tgValidateDriver').prop('checked', resultado[0].ValidateDriver).change();
+                                $('#tgSound').prop('checked', resultado[0].Sound).change();
+
+                            } else {
+                                /* proceso fallido catch listado datos*/
+                                toastr.options.timeOut = nTiempoMedio;
+                                toastr.options.extendedTimeOut = nTiempoMedio;
+                                /*success - info - warning - error*/
+                                var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                                console.log(resultado);
+                            }
+
+                        } else {
+                           
+                            ///* proceso fallido catch listado datos*/
+                            //toastr.options.timeOut = nTiempoMedio;
+                            //toastr.options.extendedTimeOut = nTiempoMedio;
+                            ///*success - info - warning - error*/
+                            //var $toast = toastr["error"]("No existen datos de configuración", tTituloError); $toastlast = $toast;
+
+                            limpiarDatosConfiguracion();
+                        }
+                        
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        /*fallo al llamar a la funcion ajax*/
+                        /* proceso fallido catch listado datos*/
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+
+                        console.log("ERROR AJAX : " + ajaxOptions);
+                        console.log("ERROR AJAX : " + thrownError);
+                        console.log(xhr.responseText);
+                        console.log(xhr);
+
+                    }
+                });
+            }
+
+
+            /*----------------------------------------------------------------------------------------------- FUNCIONES GUARDAR/ACTUALIZAR/ELIMINAR ETC ROL*/
+          
+            $('#tgStockRestriction').change(function () {
+                if ($('#tgStockRestriction').prop('checked')) {
+                    tgStockRestriction = "S";
+                } else {
+                    tgStockRestriction = "N";
+                }
+
+            });
+
+            $('#tgLogBus').change(function () {
+                if ($('#tgLogBus').prop('checked')) {
+                    tgLogBus = 1;
+                } else {
+                    tgLogBus = 0;
+                }
+
+            });
+
+            $('#tgLogDispatch').change(function () {
+                if ($('#tgLogDispatch').prop('checked')) {
+                    tgLogDispatch = 1;
+                } else {
+                    tgLogDispatch = 0;
+                }
+
+            });
+
+            $('#tgLogProtocol').change(function () {
+                if ($('#tgLogProtocol').prop('checked')) {
+                    tgLogProtocol = 1;
+                } else {
+                    tgLogProtocol = 0;
+                }
+
+            });
+
+            $('#tgLogError').change(function () {
+                if ($('#tgLogError').prop('checked')) {
+                    tgLogError = 1;
+                } else {
+                    tgLogError = 0;
+                }
+
+            });
+
+            $('#tgMigration_BlackList_Driver').change(function () {
+                if ($('#tgMigration_BlackList_Driver').prop('checked')) {
+                    tgMigration_BlackList_Driver = 1;
+                } else {
+                    tgMigration_BlackList_Driver = 0;
+                }
+
+            });
+
+            $('#tgMigration_BlackList_Vehicle').change(function () {
+                if ($('#tgMigration_BlackList_Vehicle').prop('checked')) {
+                    tgMigration_BlackList_Vehicle = 1;
+                } else {
+                    tgMigration_BlackList_Vehicle = 0;
+                }
+
+            });
+
+            $('#tgMigration_Driver').change(function () {
+                if ($('#tgMigration_Driver').prop('checked')) {
+                    tgMigration_Driver = 1;
+                } else {
+                    tgMigration_Driver = 0;
+                }
+
+            });
+
+            $('#tgMigration_Operator').change(function () {
+                if ($('#tgMigration_Operator').prop('checked')) {
+                    tgMigration_Operator = 1;
+                } else {
+                    tgMigration_Operator = 0;
+                }
+
+            });
+
+            $('#tgMigration_Vehicle').change(function () {
+                if ($('#tgMigration_Vehicle').prop('checked')) {
+                    tgMigration_Vehicle = 1;
+                } else {
+                    tgMigration_Vehicle = 0;
+                }
+
+            });
+
+            $('#tgValidateVehicle').change(function () {
+                if ($('#tgValidateVehicle').prop('checked')) {
+                    tgValidateVehicle = true;
+                } else {
+                    tgValidateVehicle = false;
+                }
+
+            });
+
+            $('#tgValidateOperator').change(function () {
+                if ($('#tgValidateOperator').prop('checked')) {
+                    tgValidateOperator = true;
+                } else {
+                    tgValidateOperator = false;
+                }
+
+            });
+
+            $('#tgValidateDriver').change(function () {
+                if ($('#tgValidateDriver').prop('checked')) {
+                    tgValidateDriver = true;
+                } else {
+                    tgValidateDriver = false;
+                }
+
+            });
+
+            $('#tgSound').change(function () {
+                if ($('#tgSound').prop('checked')) {
+                    tgSound = true;
+                } else {
+                    tgSound = false;
+                }
+
+            });
+
+
+            function comboTipoBloqueoListaNegra() {
+
+                var arrayTipoBloqueo = [];
+                arrayTipoBloqueo.push({ id: 1, value: "Vehículo" });
+                arrayTipoBloqueo.push({ id: 2, value: "Vehículo y Conductor" });
+
+                $("#cboNumberLockType").kendoDropDownList({
+                    dataTextField: "value",
+                    dataValueField: "id",
+                    filter: "contains",
+                    autoBind: true,
+                    minLength: 1,
+                    dataSource: {
+                        data: arrayTipoBloqueo
+                    },
+                    select: onSelectTipoBloqueoListaNegra
+                });
+
+                if (idNumberLockType != 0) {
+                    $("#cboNumberLockType").data("kendoDropDownList").value(idNumberLockType);
+                } else {
+                    $("#cboNumberLockType").data("kendoDropDownList").value(arrayTipoBloqueo[0].id);
+                }
+
+                idNumberLockType = $("#cboNumberLockType").data("kendoDropDownList").value();
+
+
+            };
+
+            function onSelectTipoBloqueoListaNegra(e) {
+                var dataItem = this.dataItem(e.item.index());
+                idNumberLockType = dataItem.id;
+            };
+
+            function EditarConfiguracion() {
+
+                var txtZCSyncTime = $("#txtZCSyncTime").val();
+                var txtEmbeddedQuantityDays = $("#txtEmbeddedQuantityDays").val();
+                var txtMinDate = $("#txtMinDate").val();
+                var txtPrefixSetting = $("#txtPrefixSetting").val();
+                var txtDecimalQuantity = $("#txtDecimalQuantity").val();
+                var txtDecimalQuantity2 = $("#txtDecimalQuantity2").val();
+                var txtMaxRowsReport = $("#txtMaxRowsReport").val();
+                var txtMaxRowsSummary = $("#txtMaxRowsSummary").val();
+                var txtMaxRowsGraphic = $("#txtMaxRowsGraphic").val();
+                var txtMaxDataGraphic = $("#txtMaxDataGraphic").val();
+                var txtPathFile = $("#txtPathFile").val();
+                var txtPathFileInput = $("#txtPathFileInput").val();
+                var txtPathFileOutput = $("#txtPathFileOutput").val();
+                var txtPathFileDencrypt = $("#txtPathFileDencrypt").val();
+                var txtPathFileTemp = $("#txtPathFileTemp").val();
+                var txtPathSystem = $("#txtPathSystem").val();
+                var txtPathFileDispatchOk = $("#txtPathFileDispatchOk").val();
+                var txtPathFileDispatchError = $("#txtPathFileDispatchError").val();
+                var txtTypeLoginZeus = $("#txtTypeLoginZeus").val();
+                var txtDefaultStation = $("#txtDefaultStation").val();
+                var txtPercentVIMS = $("#txtPercentVIMS").val();
+                var txtMaxTimeBombas = $("#txtMaxTimeBombas").val();
+                var txtMaxTimeNoFujo = $("#txtMaxTimeNoFujo").val();
+                var txtMaxColumnRestriction = $("#txtMaxColumnRestriction").val();
+
+
+                $("#CargaTemporal").removeClass("hidden");
+
+                $.ajax({
+                    type: "POST",
+                    url: tRutaServidor + "/System/EditarConfiguracion",
+                    dataType: "json",
+                    data: {
+                        IdConfiguration: idConfiguracion,
+                        ZCSyncTime: txtZCSyncTime,
+                        EmbeddedQuantityDays: txtEmbeddedQuantityDays,
+                        MinDate: txtMinDate,
+                        StockRestriction: tgStockRestriction,
+                        PrefixSetting: txtPrefixSetting,
+                        DecimalQuantity: txtDecimalQuantity,
+                        DecimalQuantity2: txtDecimalQuantity2,
+                        MaxRowsReport: txtMaxRowsReport,
+                        MaxRowsSummary: txtMaxRowsSummary,
+                        MaxRowsGraphic: txtMaxRowsGraphic,
+                        MaxDataGraphic: txtMaxDataGraphic,
+                        PathFile: txtPathFile,
+                        PathFileInput: txtPathFileInput,
+                        PathFileOut: txtPathFileOutput,
+                        PathFileDencrypt: txtPathFileDencrypt,
+                        PathFileTemp: txtPathFileTemp,
+                        PathSystem: txtPathSystem,
+                        PathFileDispatchOk: txtPathFileDispatchOk,
+                        PathFileDispatchError: txtPathFileDispatchError,
+                        TypeLoginZeus: txtTypeLoginZeus,
+                        LogBus: tgLogBus,
+                        LogDispatch: tgLogDispatch,
+                        LogProtocol: tgLogProtocol,
+                        logError: tgLogError,
+                        Migration_BlackList_Driver: tgMigration_BlackList_Driver,
+                        Migration_BlackList_Vehicle: tgMigration_BlackList_Vehicle,
+                        Migration_Driver: tgMigration_Driver,
+                        Migration_Operator: tgMigration_Operator,
+                        Migration_Vehicle: tgMigration_Vehicle,
+                        DefaultStation: txtDefaultStation,
+                        PercentVIMS: txtPercentVIMS,
+                        ValidateVehicle: tgValidateVehicle,
+                        ValidateOperator: tgValidateOperator,
+                        ValidateDriver: tgValidateDriver,
+                        Sound: tgSound,
+                        MaxColumnRestriction: txtMaxColumnRestriction,
+                        NumberLockType: idNumberLockType,
+                        MaxTimeBombas: txtMaxTimeBombas,
+                        MaxTimeNoFujo: txtMaxTimeNoFujo,
+                    },
+                    success: function (resultado) {
+
+                        if (resultado == "1") {
+                            $("#CargaTemporal").addClass("hidden");
+
+                            toastr.options.timeOut = nTiempoCorto;
+                            toastr.options.extendedTimeOut = nTiempoCorto;
+                            /*success - info - warning - error*/
+                            var $toast = toastr["success"](tMensajeActualizadoExito, tTituloExito); $toastlast = $toast;
+
+                        } else if (resultado == "0") {
+                            $("#CargaTemporal").addClass("hidden");
+
+                            toastr.options.timeOut = nTiempoMedio;
+                            toastr.options.extendedTimeOut = nTiempoMedio;
+                            /*success - info - warning - error*/
+                            var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                            console.log("Mensaje del error : " + resultado)
+
+                        } else if (resultado == "2") {
+                            $("#CargaTemporal").addClass("hidden");
+
+                            toastr.options.timeOut = nTiempoMedio;
+                            toastr.options.extendedTimeOut = nTiempoMedio;
+                            /*success - info - warning - error*/
+                            var $toast = toastr["error"]("El registro de configuración que se intenta actualizar ha sido eliminado, favor de actualizar la página.", tTituloError); $toastlast = $toast;
+                            console.log("Mensaje del error : " + resultado)
+
+
+                        } else if (resultado == "3") {
+                            $("#CargaTemporal").addClass("hidden");
+
+                            toastr.options.timeOut = nTiempoMedio;
+                            toastr.options.extendedTimeOut = nTiempoMedio;
+                            /*success - info - warning - error*/
+                            var $toast = toastr["error"]("Debe actualizar la página para que se apliquen los cambios.", tTituloError); $toastlast = $toast;
+                            console.log("Mensaje del error : " + resultado)
+
+                        } else {
+
+                            $("#CargaTemporal").addClass("hidden");
+                            toastr.options.timeOut = nTiempoMedio;
+                            toastr.options.extendedTimeOut = nTiempoMedio;
+                            /*success - info - warning - error*/
+                            var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                            console.log("Mensaje del error : " + resultado)
+
+                        }
+
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        $("#CargaTemporal").addClass("hidden");
+
+                        /*fallo al llamar a la funcion ajax*/
+                        toastr.options.timeOut = nTiempoLargo;
+                        toastr.options.extendedTimeOut = nTiempoLargo;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                        console.log("ERROR AJAX : " + ajaxOptions);
+                        console.log("ERROR AJAX : " + thrownError);
+                        console.log(xhr.responseText);
+                        console.log(xhr);
+                    }
+                });
+            }
+
+            function limpiarDatosConfiguracion() {
+
+                idConfiguracion = 0;
+                $("#txtZCSyncTime").val(10);
+                $("#txtEmbeddedQuantityDays").val(10);
+                $("#txtMinDate").val(15);
+                $("#txtPrefixSetting").val(" / ");
+                $("#txtDecimalQuantity").val(1);
+                $("#txtDecimalQuantity2").val(1);
+                $("#txtMaxRowsReport").val(15000);
+                $("#txtMaxRowsSummary").val(30000);
+                $("#txtMaxRowsGraphic").val(30000);
+                $("#txtMaxDataGraphic").val(20);
+                $("#txtPathFile").val("C:\ZeusNET\ZeusLog");
+                $("#txtPathFileInput").val("C:\ZeusNET\ZeusInput");
+                $("#txtPathFileOutput").val("C:\ZeusNET\ZeusOutput");
+                $("#txtPathFileDencrypt").val("C:\ZeusNET\ZeusOutput");
+                $("#txtPathFileTemp").val("C:\ZeusNET\ZeusOutput");
+                $("#txtPathSystem").val("C:\ZeusNET\ZeusOutput");
+                $("#txtPathFileDispatchOk").val("C:\ZeusNET\ZeusOutput");
+                $("#txtPathFileDispatchError").val("C:\ZeusNET\ZeusOutput");
+                $("#txtTypeLoginZeus").val(0);
+                $("#txtDefaultStation").val(1);
+                $("#txtPercentVIMS").val(0);
+                $("#txtMaxColumnRestriction").val(10);
+
+                idNumberLockType = 0;
+                comboTipoBloqueoListaNegra();
+                $("#txtMaxTimeBombas").val(1);
+                $("#txtMaxTimeNoFujo").val(10);
+
+                $('#tgStockRestriction').prop('checked', false).change();
+                $('#tgLogBus').prop('checked', true).change();
+                $('#tgLogDispatch').prop('checked', true).change();
+                $('#tgLogProtocol').prop('checked', true).change();
+                $('#tgLogError').prop('checked', true).change();
+                $('#tgMigration_BlackList_Driver').prop('checked', false).change();
+                $('#tgMigration_BlackList_Vehicle').prop('checked', false).change();
+                $('#tgMigration_Driver').prop('checked', false).change();
+                $('#tgMigration_Operator').prop('checked', false).change();
+                $('#tgMigration_Vehicle').prop('checked', false).change();
+                $('#tgValidateVehicle').prop('checked', true).change();
+                $('#tgValidateOperator').prop('checked', false).change();
+                $('#tgValidateDriver').prop('checked', false).change();
+                $('#tgSound').prop('checked', false).change();
+                
+            }
+
+
+            /*----------------------------------------------------------------------------------------------- OTRAS*/
+
+
+            /*----------------------------------------------------------------------------------------------- ASIGNAR FUNCIONES*/
+           
+            $('#frmConfiguracion').bootstrapValidator({
+                excluded: [':disabled'],
+                // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
+                feedbackIcons: {
+                    //valid: 'glyphicon glyphicon-ok',
+                    //invalid: 'glyphicon glyphicon-remove',
+                    //validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    //------------------
+                    txtZCSyncTime: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 8,
+                                message: "Rango de caracteres [1-8]",
+                            },
+                            digits: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: 'Ingrese sólo digitos'
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            }
+                        }
+                    },
+                    txtEmbeddedQuantityDays: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 8,
+                                message: "Rango de caracteres [1-8]",
+                            },
+                            digits: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: 'Ingrese sólo digitos'
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            }
+                        }
+                    },
+                    txtMinDate: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 8,
+                                message: "Rango de caracteres [1-8]",
+                            },
+                            digits: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: 'Ingrese sólo digitos'
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            }
+                        }
+                    },
+                    txtPrefixSetting: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 10,
+                                message: "Rango de caracteres [1-10]",
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            },
+                            regexp: {
+                                enabled: false, //puedes activar/desactivar la validación
+                                regexp: /^[A-Za-z0-9& _-ÁÉÍÓÚáéíóúñÑ\"'º/.-:,()+\n=& -]*$/,
+                                message: tCaracteresNoValido
+                            }
+                        }
+                    },
+                    txtDecimalQuantity: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 8,
+                                message: "Rango de caracteres [1-8]",
+                            },
+                            digits: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: 'Ingrese sólo digitos'
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            }
+                        }
+                    },
+                    txtDecimalQuantity2: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 8,
+                                message: "Rango de caracteres [1-8]",
+                            },
+                            digits: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: 'Ingrese sólo digitos'
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            }
+                        }
+                    },
+                    txtMaxRowsReport: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 8,
+                                message: "Rango de caracteres [1-8]",
+                            },
+                            digits: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: 'Ingrese sólo digitos'
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            }
+                        }
+                    },
+                    txtMaxRowsSummary: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 8,
+                                message: "Rango de caracteres [1-8]",
+                            },
+                            digits: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: 'Ingrese sólo digitos'
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            }
+                        }
+                    },
+                    txtMaxRowsGraphic: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 8,
+                                message: "Rango de caracteres [1-8]",
+                            },
+                            digits: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: 'Ingrese sólo digitos'
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            }
+                        }
+                    },
+                    txtMaxDataGraphic: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 8,
+                                message: "Rango de caracteres [1-8]",
+                            },
+                            digits: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: 'Ingrese sólo digitos'
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            }
+                        }
+                    },
+                    txtPathFile: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 200,
+                                message: "Rango de caracteres [1-200]",
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            },
+                            regexp: {
+                                enabled: false, //puedes activar/desactivar la validación
+                                regexp: /^[A-Za-z0-9& _-ÁÉÍÓÚáéíóúñÑ"'º/.-:,()+\n=&\ -]*$/,
+                                message: tCaracteresNoValido
+                            }
+                        }
+                    },
+                    txtPathFileInput: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 200,
+                                message: "Rango de caracteres [1-200]",
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            },
+                            regexp: {
+                                enabled: false, //puedes activar/desactivar la validación
+                                regexp: /^[A-Za-z0-9& _-ÁÉÍÓÚáéíóúñÑ"'º\/.-:,()+\n=& -]*$/,
+                                message: tCaracteresNoValido
+                            }
+                        }
+                    },
+                    txtPathFileOutput: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 200,
+                                message: "Rango de caracteres [1-200]",
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            },
+                            regexp: {
+                                enabled: false, //puedes activar/desactivar la validación
+                                regexp: /^[A-Za-z0-9& _-ÁÉÍÓÚáéíóúñÑ"'º\/.-:,()+\n=& -]*$/,
+                                message: tCaracteresNoValido
+                            }
+                        }
+                    },
+                    txtPathFileDencrypt: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 200,
+                                message: "Rango de caracteres [1-200]",
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            },
+                            regexp: {
+                                enabled: false, //puedes activar/desactivar la validación
+                                regexp: /^[A-Za-z0-9& _-ÁÉÍÓÚáéíóúñÑ"'º\/.-:,()+\n=& -]*$/,
+                                message: tCaracteresNoValido
+                            }
+                        }
+                    },
+                    txtPathFileTemp: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 200,
+                                message: "Rango de caracteres [1-200]",
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            },
+                            regexp: {
+                                enabled: false, //puedes activar/desactivar la validación
+                                regexp: /^[A-Za-z0-9& _-ÁÉÍÓÚáéíóúñÑ"'º\/.-:,()+\n=& -]*$/,
+                                message: tCaracteresNoValido
+                            }
+                        }
+                    },
+                    txtPathSystem: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 200,
+                                message: "Rango de caracteres [1-200]",
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            },
+                            regexp: {
+                                enabled: false, //puedes activar/desactivar la validación
+                                regexp: /^[A-Za-z0-9& _-ÁÉÍÓÚáéíóúñÑ"'º\/.-:,()+\n=& -]*$/,
+                                message: tCaracteresNoValido
+                            }
+                        }
+                    },
+                    txtPathFileDispatchOk: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 200,
+                                message: "Rango de caracteres [1-200]",
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            },
+                            regexp: {
+                                enabled: false, //puedes activar/desactivar la validación
+                                regexp: /^[A-Za-z0-9& _-ÁÉÍÓÚáéíóúñÑ"'º\/.-:,()+\n=& -]*$/,
+                                message: tCaracteresNoValido
+                            }
+                        }
+                    },
+                    txtPathFileDispatchError: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 200,
+                                message: "Rango de caracteres [1-200]",
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            },
+                            regexp: {
+                                enabled: false, //puedes activar/desactivar la validación
+                                regexp: /^[A-Za-z0-9& _-ÁÉÍÓÚáéíóúñÑ"'º\/.-:,()+\n=& -]*$/,
+                                message: tCaracteresNoValido
+                            }
+                        }
+                    },
+                    txtTypeLoginZeus: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 8,
+                                message: "Rango de caracteres [1-8]",
+                            },
+                            digits: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: 'Ingrese sólo digitos'
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            }
+                        }
+                    },
+                    txtDefaultStation: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 8,
+                                message: "Rango de caracteres [1-8]",
+                            },
+                            digits: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: 'Ingrese sólo digitos'
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            }
+                        }
+                    },
+                    txtPercentVIMS: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 8,
+                                message: "Rango de caracteres [1-8]",
+                            },
+                            regexp: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                regexp: /^[0-9]\d*(\.\d+)?$/, //decimal con punto
+                                //regexp: / ^[1-8]\d*(,\d+)?$/, //decimal con coma
+                                message: 'Sólo números, decimales con punto'
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            }
+                        }
+                    },
+                    txtMaxTimeBombas: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 8,
+                                message: "Rango de caracteres [1-8]",
+                            },
+                            digits: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: 'Ingrese sólo digitos'
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            }
+                        }
+                    },
+                    txtMaxTimeNoFujo: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 8,
+                                message: "Rango de caracteres [1-8]",
+                            },
+                            digits: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: 'Ingrese sólo digitos'
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            }
+                        }
+                    },
+                    txtMaxColumnRestriction: {
+                        validators: {
+                            stringLength: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                min: 1,
+                                max: 8,
+                                message: "Rango de caracteres [1-8]",
+                            },
+                            digits: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: 'Ingrese sólo digitos'
+                            },
+                            notEmpty: {
+                                enabled: true, //puedes activar/desactivar la validación
+                                message: tCampoRequerido
+                            }
+                        }
+                    },
+
+
+                }
+            }).on('success.form.bv', function (e) {
+                $('#frmConfiguracion').data('bootstrapValidator').resetForm();
+                //$('#success_message').slideDown({ opacity: "show" }, "slow") // Do something ...
+
+                // Prevent form submission
+                //e.preventDefault();
+
+                // Get the form instance
+                //var $form = $(e.target);
+
+                // Get the BootstrapValidator instance
+                //var bv = $form.data('bootstrapValidator');
+
+                // Use Ajax to submit form data
+                //$.post($form.attr('action'), $form.serialize(), function (result) {
+                //    console.log(result);
+                //}, 'json');
+
+                //WRITE SUCCESS CODE HERE /////////////////////////////////////
+
+                if (idNumberLockType == 0) {
+
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"]("Debe seleccionar un tipo de bloqueo", tTituloError); $toastlast = $toast;
+
+                } else {
+
+                    EditarConfiguracion();
+                }
+
+            }).on('error.form.bv', function (e) {
+                // $(e.target) --> The form instance
+                // $(e.target).data('bootstrapValidator')
+                //             --> The BootstrapValidator instance
+
+                // Do something ...
+            }).on('error.field.bv', function (e, data) {
+                // The e and data parameters are the same
+                // as one in the init.field.bv event above
+
+                // Do something ...
+            }).on('status.field.bv', function (e, data) {
+                // The e and data parameters are the same
+                // as one in the init.field.bv event above
+
+                // data.status --> New field status
+
+                // Do something ...
+            });
+
+
+
+            //======================
+            listarDatosConfiguracion();
+        });
+
+</script>
+
+<style>
+    .alertaTexto {
+        color: red;
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    .focoTexto {
+        font-weight: bold;
+    }
+</style>

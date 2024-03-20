@@ -1,0 +1,797 @@
+﻿<script src="~/Scripts/util/jsUtilCambioGuardia.js"></script>
+@*<script src="~/Scripts/util/ColoresPersonalizados.js"></script>
+    <script src="~/Scripts/plugin/dygraphs/dygraph-combined.min.js"></script>*@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
+<!--LIBRERIA PARA DATEPICKER-->
+<link href="~/Content/plugin/datapicker/datepicker3.css" rel="stylesheet" />
+<script src="~/Scripts/plugin/datapicker/bootstrap-datepicker.js"></script>
+@*<script src="~/Scripts/plugin/bootstrap-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>*@
+<!--LIBRERIA PARA CARGA DE ARCHIVOS-->
+<script src="~/Scripts/plugin/jsPDF/html2canvas.js"></script>
+<script src="~/Scripts/plugin/jsPDF/canvas2image.js"></script>
+
+<script src="~/Scripts/bootstrap-filestyle.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link href="~/Content/GraficoLineaTiempo/FindTicketStyles.css" rel="stylesheet" />
+<link href="~/Content/Autocomplete/Autocomplete.css" rel="stylesheet" />
+
+<script type="text/javascript">
+    function anular(e) {
+
+        tecla = (document.all) ? e.keyCode : e.which;
+        return (tecla != 13);
+    }
+</script>
+
+<style>
+
+    .panel-group {
+        margin-bottom: 0;
+    }
+
+        .panel-group .panel {
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+            .panel-group .panel .panel-heading {
+                padding: 0;
+            }
+
+                .panel-group .panel .panel-heading h4 a {
+                    background: #e0e0e0;
+                    display: block;
+                    font-size: 12px;
+                    font-weight: bold;
+                    padding: 15px;
+                    text-decoration: none;
+                    transition: 0.15s all ease-in-out;
+                }
+
+                    .panel-group .panel .panel-heading h4 a:hover, .panel-group .panel .panel-heading h4 a:not(.collapsed) {
+                        background: #fff;
+                        transition: 0.15s all ease-in-out;
+                    }
+
+                        .panel-group .panel .panel-heading h4 a:not(.collapsed) i:before {
+                            content: "‾";
+                        }
+
+                    .panel-group .panel .panel-heading h4 a i {
+                        color: #999;
+                    }
+
+            .panel-group .panel .panel-body {
+                padding-top: 0;
+            }
+
+            .panel-group .panel .panel-heading + .panel-collapse > .list-group,
+            .panel-group .panel .panel-heading + .panel-collapse > .panel-body {
+                border-top: none;
+            }
+
+            .panel-group .panel + .panel {
+                border-top: none;
+                margin-top: 0;
+            }
+
+
+    .colorAzul {
+        background-color: #C2E1F8 !important;
+        font-weight: bold !important;
+    }
+
+    .colorVerde {
+        background-color: #ced !important;
+    }
+
+    .colorRojo {
+        background-color: #FE8475;
+    }
+
+    .colorAmarillo {
+        background-color: #FFDF6A;
+    }
+
+    .swal2-popup {
+        font-size: 1em !important;
+    }
+
+    textarea {
+        resize: vertical;
+    }
+
+    .content-template {
+        display: none
+    }
+</style>
+
+<div id="content">
+
+    <div class="well" style="padding:0px 30px 10px 30px; background-color:white;">
+        <div class="row wrapper">
+            <div style="width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            text-align: center;
+            align-items: center;
+            ">
+                <h2 title="Listado de Ticket Generado"><i class="fa fa-bar-chart-o fa-fw"></i> [Listado Vigencia de Ticket]</h2>
+                @*<button class="btn btn-primary" type="button" id="btnNuevoCambioDeGuardia" disabled title="Registrar nueva Acta de Reunión"><i class="fa fa-plus"></i> Nueva Acta de Reunión</button>*@
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 10px;">
+            <form id="FrmFiltrosTicket" onsubmit="return false" onkeypress="return anular(event)">
+
+                <div class="row">
+                    <section class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+                        @*<label style="color: #2F4050"><strong>: </strong><strong class="CampoRequerido">*</strong></label>*@
+                        <div style="width: 100%;">
+                            <input tabindex="7" type="radio" name="rdoRadioTicketPorFecha" id="rdoPorFecha" checked="checked">
+                            <label style="color: #2F4050"><strong>Por Fecha </strong></label>
+                            <input tabindex="7" type="radio" name="rdoRadioTicketPorFecha" id="rdoTicket" style="margin-left:30px">
+                            <label style="color: #2F4050;"><strong>Por Ticket </strong></label>
+                            <input tabindex="7" type="radio" name="rdoRadioTicketPorFecha" id="rdoPorResponsable" style="margin-left:30px">
+                            <label style="color: #2F4050"><strong>Por Reponsable </strong></label>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="row">
+                    <!--FECHA INICIO-->
+                    <section class="col-xs-12 col-sm-12 col-md-2 col-lg-2 ContainerFechaInicio">
+                        <label style="color: #2F4050"><strong>Desde: </strong><strong class="CampoRequerido">*</strong></label>
+                        <div class="input-group date">
+                            <input type="text" class="form-control hasDatepicker" id="txtFechaInicioTicket" name="txtFechaInicioTicket" value="" data-dateformat="dd/mm/yy">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </section>
+
+                    <!--FECHA FIN-->
+                    <section class="col-xs-12 col-sm-12 col-md-2 col-lg-2 ContainerFechaFin">
+                        <label style="color: #2F4050"><strong>Hasta: </strong><strong class="CampoRequerido">*</strong></label>
+                        <div class="input-group date">
+                            <input type="text" class="form-control hasDatepicker" id="txtFechaFinalTicket" name="txtFechaFinalTicket" value="" data-dateformat="dd/mm/yy">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </section>
+
+                    <section class="col-xs-12 col-sm-12 col-md-3 col-lg-3 ContainerTicket hidden">
+                        <label style="color: #2F4050"><strong>Ticket: </strong><strong class="CampoRequerido">*</strong></label>
+                        <div class="form-group">
+                            <select id="selectorTicket" class="selectpicker" multiple data-selected-text-format="count < 3" data-live-search="true" data-width="100%" data-size="5" title="Selección múltiple" data-actions-box="true"></select>
+                        </div>
+                    </section>
+
+                    <section class="col-xs-12 col-sm-12 col-md-3 col-lg-4 ContainerResponsible hidden">
+                        <label style="color: #2F4050"><strong>Responsable: </strong><strong class="CampoRequerido">*</strong></label>
+                        <div class="form-group">
+                            <select id="selectorResponsibleTicket" class="selectpicker" multiple data-selected-text-format="count < 3" data-live-search="true" data-width="100%" data-size="5" title="Selección múltiple" data-actions-box="true"></select>
+                        </div>
+                    </section>
+
+                    <section class="col-xs-4 col-sm-4 col-md-1 col-lg-2 pull-right">
+                        <div style="margin-top:25px">
+                            <button style="margin:0px;" tabindex="9" disabled class="btn btn-primary pull-right" type="submit" id="btnBuscar"><i class="fa fa-search"></i> Buscar</button>
+                        </div>
+                    </section>
+                    <section class="col-xs-4 col-sm-4 col-md-1 col-lg-1 pull-right" style="margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                        <div style="margin-top:25px">
+                            <button class="btn btn-success pull-right" type="button" id="BtnExportarExcel" disabled title="Exportar listado a Excel"><i class="fa fa-file-excel-o"></i> Excel</button>
+                        </div>
+                    </section>
+                </div>
+               
+
+            </form>
+        </div>
+    </div>
+
+    <div id="widget-grid">
+        <div class="row">
+            <article class="col-xs-12 ContenedoresReportes">
+
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-rga1" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-list"></i> </span>
+                        <h2>Listado de Tickets</h2>
+                    </header>
+                    <div style="border:none;">
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                        </div>
+                        <div class="widget-body no-padding" id="ContenedorgrCreateTicket">
+                            <div id="LstValidityTicket" class="hidden"></div>
+                            <div class="spiner-example" id="imgCargaLstValidityTicket">
+                                @Html.Partial("../MensajesParciales/_MensajeCargando")
+                            </div>
+
+                            <div class="hidden" id="msjErrorLstValidityTicket" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeError")
+                            </div>
+
+                            <div class="hidden" id="msjVacioLstValidityTicket" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeVacio")
+                            </div>
+
+                            <div class="hidden" id="msjErrorListarLstValidityTicket" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                            </div>
+                            <div class="hidden" id="msjSuperaLimiteLstValidityTicket" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeLimiteGraficas")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+       /* ------------------- VALUES ----------------- */
+        var usuarioRegistrador = "@User.Identity.Name.ToUpper().ToString()";
+        usuarioRegistrador = usuarioRegistrador.split(',')[4];
+
+        var TipoRadio = 1;
+        var IdTicketSelect;
+        var IdResponsibleSelect;
+
+        function FormatoFechas() {
+            var FechaHoy = new Date();
+            var FechaActual = new Date(FechaHoy.getFullYear(), FechaHoy.getMonth(), FechaHoy.getDate());
+
+            $('#txtFechaInicioTicket').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                endDate: FechaActual,
+            });
+
+            $('#txtFechaFinalTicket').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                //endDate: FechaHoy,
+            });
+
+            $("#txtFechaInicioTicket").datepicker("setDate", primerDiaMes);
+            $("#txtFechaFinalTicket").datepicker("setDate", FechaFinalReporte);
+
+        }
+
+        function ComboTicket() {
+
+            $.ajax({
+                type: "GET", /*Puede ser post*/
+                url: tRutaServidor + "/Ticket/ListarTicketPendientes", /* es importante poner los .. delante*/
+                contentType: "application/json; charset=utf-8",
+                data:
+                     "StatusCategory=" + 'N',
+                dataType: "json",
+                success: function (resultado) {
+
+                    var opcionesTicket = "";
+
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+
+                        if (resultado[0].ValorConsulta == "1") {
+
+                            /**Llenar el combo con todo las compañías**/
+                            for (i = 0; i < resultado.length; i++) {
+
+                                opcionesTicket += "<option value='" + resultado[i].IdTicket + "'>" + resultado[i].NroTicket + "</option>";
+                            }
+
+                            $("#selectorTicket").empty();
+                            $("#selectorTicket").append(opcionesTicket);
+                            $("#selectorTicket").selectpicker('refresh');
+
+                        }
+                        else {
+                            /*Error al listar*/
+
+                        }
+
+                    } else {
+
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*Fallo al llamar funcion ajax*/
+
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+        }
+
+        function ComboEncargado() {
+
+            $.ajax({
+                type: "GET", /*Puede ser post*/
+                url: tRutaServidor + "/Person/ListarPersonaTicket", /* es importante poner los .. delante*/
+                contentType: "application/json; charset=utf-8",
+                data:
+                    "IdOperation=" + 0,
+                dataType: "json",
+                success: function (resultado) {
+
+                    var opcionesPersonTicket = "";
+
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+
+                        if (resultado[0].ValorConsulta == "1") {
+
+                            /**Llenar el combo con todo las compañías**/
+                            for (i = 0; i < resultado.length; i++) {
+
+                                opcionesPersonTicket += "<option value='" + resultado[i].IdPerson + "'>" + resultado[i].FullNameOperation + "</option>";
+                            }
+
+                            $("#selectorResponsibleTicket").empty();
+                            $("#selectorResponsibleTicket").append(opcionesPersonTicket);
+                            $("#selectorResponsibleTicket").selectpicker('refresh');
+
+
+                        }
+                        else {
+                            /*Error al listar*/
+
+                        }
+
+                    } else {
+
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*Fallo al llamar funcion ajax*/
+
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+        }
+
+        function GrillaListado() {
+
+
+            if ($("#selectorTicket").val() == null || $("#selectorTicket").val() == undefined) {
+
+                IdTicketSelect = "0";
+
+            } else {
+
+                IdTicketSelect = $("#selectorTicket").val().toString();
+
+            }
+
+            if ($("#selectorResponsibleTicket").val() == null || $("#selectorResponsibleTicket").val() == undefined) {
+
+                IdResponsibleSelect = "0";
+
+            } else {
+
+                IdResponsibleSelect = $("#selectorResponsibleTicket").val().toString();
+
+            }
+
+            console.log(IdTicketSelect);
+            console.log(IdResponsibleSelect);
+
+            var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: function (options) {
+                        $.ajax({
+                            type: "GET",
+                            url: tRutaServidor + "/ListTicketValidity/ListarVigenciaFechas", /* es importante poner los .. delante*/
+                            data: {
+                                StartDate: $("#txtFechaInicioTicket").val(),
+                                EndDate: $("#txtFechaFinalTicket").val(),
+                                IdTicket: IdTicketSelect,
+                                IdResponsable: IdResponsibleSelect,
+                                TypeValue: TipoRadio
+                            },
+                            dataType: "json",
+                            /*async: false,*/
+                            success: function (resultado) {
+                                /*exitosamente*/
+                                if (resultado.length > 0) {
+                                    /* proceso exitoso con datos*/
+
+                                    if (resultado[0].ValorConsulta == "1") {
+
+                                        $("#LstValidityTicket").removeClass("hidden");
+                                        $("#imgCargaLstValidityTicket").addClass("hidden");
+                                        $("#msjErrorLstValidityTicket").addClass("hidden");
+                                        $("#msjVacioLstValidityTicket").addClass("hidden");
+                                        $("#msjErrorListarLstValidityTicket").addClass("hidden");
+                                        $("#msjSuperaLimiteLstValidityTicket").addClass("hidden");
+
+                                        $("#btnBuscar").prop('disabled', false);
+                                        $("#BtnExportarExcel").prop('disabled', false);
+
+                                    } else if (resultado[0].ValorConsulta == "-1") {
+
+                                        $("#LstValidityTicket").addClass("hidden");
+                                        $("#imgCargaLstValidityTicket").addClass("hidden");
+                                        $("#msjErrorLstValidityTicket").addClass("hidden");
+                                        $("#msjVacioLstValidityTicket").addClass("hidden");
+                                        $("#msjErrorListarLstValidityTicket").addClass("hidden");
+                                        $("#msjSuperaLimiteLstValidityTicket").removeClass("hidden");
+
+                                        $("#btnBuscar").prop('disabled', false);
+                                        $("#BtnExportarExcel").prop('disabled', true);
+                                    }
+                                    else {
+                                        /* proceso fallido catch listado datos*/
+                                        $("#LstValidityTicket").addClass("hidden");
+                                        $("#imgCargaLstValidityTicket").addClass("hidden");
+                                        $("#msjErrorLstValidityTicket").addClass("hidden");
+                                        $("#msjVacioLstValidityTicket").addClass("hidden");
+                                        $("#msjErrorListarLstValidityTicket").removeClass("hidden");
+                                        $("#msjSuperaLimiteLstValidityTicket").addClass("hidden");
+
+                                        $("#btnBuscar").prop('disabled', true);
+                                        $("#BtnExportarExcel").prop('disabled', true);
+                                        console.log(resultado);
+                                    }
+
+                                } else {
+                                    $("#LstValidityTicket").addClass("hidden");
+                                    $("#imgCargaLstValidityTicket").addClass("hidden");
+                                    $("#msjErrorLstValidityTicket").addClass("hidden");
+                                    $("#msjVacioLstValidityTicket").removeClass("hidden");
+                                    $("#msjErrorListarLstValidityTicket").addClass("hidden");
+                                    $("#msjSuperaLimiteLstValidityTicket").addClass("hidden");
+
+                                    $("#btnBuscar").prop('disabled', false);
+                                    $("#BtnExportarExcel").prop('disabled', true);
+                                }
+
+                                options.success(resultado);
+                                var grid = $("#LstValidityTicket").data("kendoGrid");
+                                if (grid.dataSource.total() > 0) {
+                                    grid.setDataSource(dataSource);
+                                }
+
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                /*fallo al llamar a la funcion ajax*/
+                                $("#LstValidityTicket").addClass("hidden");
+                                $("#imgCargaLstValidityTicket").addClass("hidden");
+                                $("#msjErrorLstValidityTicket").removeClass("hidden");
+                                $("#msjVacioLstValidityTicket").addClass("hidden");
+                                $("#msjErrorListarLstValidityTicket").addClass("hidden");
+                                $("#msjSuperaLimiteLstValidityTicket").addClass("hidden");
+
+                                $("#btnBuscar").prop('disabled', true);
+                                $("#BtnExportarExcel").prop('disabled', true);
+
+                                console.log("ERROR AJAX : " + ajaxOptions);
+                                console.log("ERROR AJAX : " + thrownError);
+                                console.log(xhr.responseText);
+                                console.log(xhr);
+
+                            }
+                        });
+                    },
+                    parameterMap: function (data, operation) {
+                        if (operation !== "read" && data.models) {
+                            return JSON.stringify({ JSONparam: data.models });
+                        }
+                    }
+                },
+                error: function (e) {
+                    alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+                },
+                batch: false,
+                pageSize: PaginationKendoGrid,
+                schema: {
+                    model: {
+                        fields: {
+                            IdTicket: { type: "number" },
+                            NroTicket: { type: "string" },
+                            TitleDescription: { type: "string" },
+                            ResponsibleNameTicket: { type: "string" },
+                            StartDate: { type: "string" },
+                            EndDate: { type: "string" },
+                            DifferenceDate: { type: "string" },
+                            StatusTicket: { type: "string" },
+                        }
+                    }
+                },
+                //aggregate: [
+                //    {
+                //        field: "TicketNumber",
+                //        aggregate: "count"
+                //    },
+                //    {
+                //        field: "FuelQuantity",
+                //        aggregate: "sum"
+                //    }
+                //]
+            });
+
+            $("#LstValidityTicket").kendoGrid({
+                dataSource: dataSource,
+                sortable: true,
+                pageable: true,
+                columnMenu: true,
+                columnMenu: {
+                    sortable: true,
+                    filterable: true,
+                    columns: true,
+                    messages: {
+                        columns: KendoMsjColumnMenuColumns,
+                        filter: KendoMsjColumnMenuFilter,
+                        sortAscending: KendoMsjColumnMenuSortAscending,
+                        sortDescending: KendoMsjColumnMenuSortDescending,
+                        settings: KendoMsjSettings
+                    }
+                },
+                columnMenuInit: function (e) {
+                    var menu = e.container.find(".k-menu").data("kendoMenu");
+                    menu.bind("select", function (e) {
+                        var EtiquetaInput = $(".k-animation-container > .k-menu-group > .k-item > .k-content > .k-filter-menu > .k-textbox :input");
+                        EtiquetaInput.focus();
+                    });
+                },
+                groupable: false,
+                reorderable: true,
+                selectable: "row",
+                scrollable: true,
+                resizable: true,
+                filterable: {
+                    multi: true,
+                    checkAll: true,
+                    search: true,
+                    messages: {
+                        clear: KendoMsjClear,
+                        filter: KendoMsjFilter,
+                        selectedItemsFormat: KendoMsjSelectedItemsFormat,
+                        checkAll: KendoMsjCheckAll,
+                        search: KendoMsjSearch
+                    }
+                },
+                //groupable: {
+                //    info: true,
+                //    messages: {
+                //        empty: "<b style='font-style:italic';>Arrastre una cabecera aquí para agrupar su información por esa columna</b>"
+                //    }
+                //},
+                pageable: {
+                    messages: {
+                        empty: KendoMsjEmpty,
+                        page: kendoMsjPage,
+                        of: KendoMsjOf,
+                        itemsPerPage: KendoMsjItemsPerPage,
+                        first: KendoMsjFirst,
+                        last: KendoMsjLast,
+                        next: KendoMsjNext,
+                        previous: KendoMsjPrevious,
+                        refresh: KendoMsjRefresh,
+                        morePages: KendoMsjMorePages,
+                        display: KendoMsjDisplay
+                    },
+                    refresh: false,
+                    pageSizes: true,
+                    pageSizes: [5, 10, 15],
+                    /*para la cantidad de paginas se sugieren 5*/
+                    buttonCount: 5,
+                    /*Posicion de la pagina*/
+                    pageSize: 5
+                },
+                excel: { fileName: "Listado Vigencia de Tickets.xlsx", filterable: true, allPages: true },
+                columns: [
+                    //{
+                    //    width: 70,
+                    //    command: {
+                    //        template:
+                    //            "<button class='btn-grid btn-xs BtnVerInfo' type='button' title='Ver datos'><i class='fa fa-lg fa-fw fas fa-eye'></i></button>"
+                    //        //+ " " + "<button class='btn-grid btn-xs BtnAnular' type='button' title='Ver datos'><i class='fa fa-lg fa-fw fas fa-ban'></i></button>"
+                    //    },
+                    //    attributes: { "class": "text-center" },
+                    //    title: ""
+                    //},                   
+                    { field: "NroTicket", title: "Nro. Ticket", width: 120, attributes: { "class": "text-center" } }, //hidden: true,
+                    { field: "TitleDescription", title: "Titulo Detalle", width: 150, attributes: { "class": "text-center" } }, 
+                    { field: "ResponsibleNameTicket", title: "Responsable Ticket", width: 150, attributes: { "class": "text-center" } },
+                    { field: "StatusTicket", title: "Estado Ticket", width: 120, attributes: { "class": "text-center" } }, //hidden: true,
+                    { field: "StartDate", title: "Fecha Inicio", width: 120, attributes: { "class": "text-center" } },
+                    { field: "EndDate", title: "Fecha Fin", width: 120, attributes: { "class": "text-center" } },
+                    { field: "DifferenceDate", title: "Diferencia en Dias",  width: 150, attributes: { "class": "text-center" } },                 
+                    /*{ field: "ResponsibleNameTicket", title: "Responsable", width: 150, attributes: { "class": "text-center" } },*/                  
+                ],
+                dataBound: function () {
+
+                    var Grilla = this;
+
+                    for (i = 0; i < Grilla.dataSource._view.length; i++) {
+                        var estadoActual = Grilla.tbody.children()[i].children[3].textContent;
+                        if (estadoActual == 'PENDIENTE') {
+                            $($("#LstValidityTicket").data("kendoGrid").tbody.children()[i]).addClass('colorAmarillo');
+                        }
+                        else if (estadoActual == 'COMPLETADO') {
+                            $($("#LstValidityTicket").data("kendoGrid").tbody.children()[i]).addClass('colorVerde');
+                        }
+                        //else {
+                        //    $($("#LstCreateTicket").data("kendoGrid").tbody.children()[i]).addClass('colorVerde');
+                        //}
+                    }
+
+                }
+            });
+
+
+        }
+
+        function ExportarExcel(Etiqueta) {
+            var Grilla = $("#" + Etiqueta).data("kendoGrid");
+            var count = Grilla.dataSource.total();
+
+            if (count > CantidadRegistrosExportar) {
+
+                new swal({
+                    title: tTituloConfirmacionExportarExcel,
+                    text: tMensajeConfirmacionExportarExcel,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: tColorBoton,
+                    confirmButtonText: tNombreBotonSi,
+                    cancelButtonText: tNombreBotonNo,
+                    closeOnConfirm: true
+                }, function () {
+
+                    setTimeout(function () {
+                        swal({
+                            title: tTituloExportarExcel,
+                            text: tMensajeExportarExcel,
+                            type: "warning"
+                        });
+                    }, 500);
+
+                    setTimeout(function () {
+                        Grilla.saveAsExcel();
+                    }, 2000)
+
+                });
+
+            } else {
+                new swal({
+                    title: tTituloExportarExcel,
+                    text: tMensajeExportarExcel,
+                    type: "warning"
+                });
+
+                setTimeout(function () {
+
+                    Grilla.saveAsExcel();
+                }, 2000)
+            }
+        };
+
+        $("#btnBuscar").click(function () {
+
+            var $registerForm = $("#FrmFiltrosTicket").validate({
+                rules: {
+                    txtFechaInicioTicket: {
+                        required: true,
+                        regx: ReFecha
+                    },
+                    txtFechaFinalTicket: {
+                        required: true,
+                        regx: ReFecha
+                    }
+                },
+                messages: {
+                    txtFechaInicioTicket: {
+                        required: tCampoRequerido,
+                        regx: tFormatoFechaNoValido
+                    },
+                    txtFechaFinalTicket: {
+                        required: tCampoRequerido,
+                        regx: tFormatoFechaNoValido
+                    }
+                },
+
+                submitHandler: function (form) {
+
+                    if ($("#txtFechaInicioTicket").val() > $("#txtFechaFinalTicket").val()) {
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"]("La fecha de inicio no puede ser mayor a la fecha final", tTituloError); $toastlast = $toast;
+                        return;
+                    }
+
+
+                    $("#btnBuscar").prop('disabled', true);
+                    $("#BtnExportarExcel").prop('disabled', true);
+
+                    $("#imgCargaLstValidityTicket").removeClass("hidden");
+                    $("#LstValidityTicket").addClass("hidden");
+                    $("#msjErrorLstValidityTicket").addClass("hidden");
+                    $("#msjErrorListarLstValidityTicket").addClass("hidden");
+                    $("#msjVacioLstValidityTicket").addClass("hidden");
+                    $("#msjSuperaLimiteLstValidityTicket").addClass("hidden");
+
+                    GrillaListado();
+                },
+                errorPlacement: function (error, element) {
+                    error.insertAfter(element.parent());
+                }
+            });
+        });
+
+        $("#BtnExportarExcel").click(function () {
+            ExportarExcel("LstValidityTicket");
+        });
+
+        $('input[type=radio][name=rdoRadioTicketPorFecha]').change(function (e) {
+
+            if (e.target.id == 'rdoPorFecha') {
+
+                $(".ContainerFechaInicio").removeClass("hidden");
+                $(".ContainerFechaFin").removeClass("hidden");
+                $(".ContainerTicket").addClass("hidden");
+                $(".ContainerResponsible").addClass("hidden");
+
+                TipoRadio = 1;
+
+            } else if (e.target.id == 'rdoTicket') {
+
+                $(".ContainerFechaInicio").addClass("hidden");
+                $(".ContainerFechaFin").addClass("hidden");
+                $(".ContainerTicket").removeClass("hidden");
+                $(".ContainerResponsible").addClass("hidden");
+
+                TipoRadio = 2;
+
+            } else if (e.target.id == 'rdoPorResponsable') {
+
+                $(".ContainerFechaInicio").addClass("hidden");
+                $(".ContainerFechaFin").addClass("hidden");
+                $(".ContainerTicket").addClass("hidden");
+                $(".ContainerResponsible").removeClass("hidden");
+
+                TipoRadio = 3;
+            }
+
+        });
+
+        $.validator.addMethod("regx", function (value, element, regexpr) {
+            return regexpr.test(value);
+        }, "");
+
+        FormatoFechas();
+       /* ComboTicket();*/
+        GrillaListado();
+        ComboTicket();
+        ComboEncargado();
+
+    });
+
+</script>

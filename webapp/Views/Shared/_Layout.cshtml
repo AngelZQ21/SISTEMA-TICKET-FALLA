@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html lang="en-us" id="@ViewBag.PageId" class="@Settings.CurrentTheme">
+<head>
+    <meta charset=" utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title> CRONOS NET </title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Basic Styles -->
+    
+    <!-- FAVICONS -->
+    <link rel="shortcut icon" href="~/content/img/favicon/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="~/content/img/favicon/favicon.ico" type="image/x-icon">
+
+    <!-- GOOGLE FONT -->
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
+
+    <!-- Specifying a Webpage Icon for Web Clip
+         Ref: https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html -->
+    <link rel="apple-touch-icon" href="~/content/img/splash/sptouch-icon-iphone.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="~/content/img/splash/touch-icon-ipad.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="~/content/img/splash/touch-icon-iphone-retina.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="~/content/img/splash/touch-icon-ipad-retina.png">
+
+    <!-- iOS web-app metas : hides Safari UI Components and Changes Status Bar Appearance -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!-- Startup image for web apps -->
+    <link rel="apple-touch-startup-image" href="~/content/img/splash/ipad-landscape.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">
+    <link rel="apple-touch-startup-image" href="~/content/img/splash/ipad-portrait.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
+    <link rel="apple-touch-startup-image" href="~/content/img/splash/iphone.png" media="screen and (max-device-width: 320px)">
+
+</head>
+
+<!--Permite Cambiar el Tema del Proyecto-->
+
+@*<body class="smart-style-1">*@
+@*<body class="smart-style-2">*@
+@*<body class="smart-style-3">*@
+@*<body class="smart-style-4">*@
+@*<body class="smart-style-5">*@
+<!--<body class="fixed-header"> -->
+
+<!--$.root_.toggleClass("hidden-menu"); //OCULTA EL NAVIGATION DE MANERA TOTAL
+$.root_.toggleClass("minified"); // OCULTA EL NAVIGATION DE MANERA PARCIAL MOSTRANDO LOS ICONOS
+$.root_.hasClass("menu-on-top"); // MENU ON TOP
+$.root_.toggleClass("fixed-header"); // CABECERA FIJA 
+$.root_.toggleClass("fixed-navigation"); // NAVIGATION FIJO
+$.root_.toggleClass("fixed-page-footer"); // PIE FIJO-->
+
+<body class="@ViewBag.PageClass @Settings.CurrentTheme">
+
+
+    <script src="~/Scripts/libs/jquery-2.1.1.min.js"></script>
+    <script src="~/Scripts/libs/jquery-ui-1.10.3.min.js"></script>
+    <script src="~/Scripts/plugin/smartwidgets/jarvis.widget.min.js"></script>
+
+
+    <script src="~/Scripts/plugin/bootstrapvalidator/bootstrapValidator.min.js"></script>
+    <script src="~/Scripts/ScriptKendo/kendo.all.min.js"></script>
+    <script src="~/Scripts/ScriptKendo/jszip.min.js"></script>
+    <script src="~/Scripts/demo.min.js"></script>
+    <script src="~/Scripts/plugin/notification/SmartNotification.min.js"></script>
+
+    <link href="~/Content/css/bootstrap.css" rel="stylesheet" />
+    @*<link href="~/Content/css/bootstrap4.min.css" rel="stylesheet" />*@
+
+
+    <link href="~/Content/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/css/lockscreen.min.css" rel="stylesheet" />
+    <link href="~/Content/css/smartadmin-production-plugins.min.css" rel="stylesheet" />
+    <link href="~/Content/css/smartadmin-production.css" rel="stylesheet" />
+    <link href="~/Content/css/smartadmin-rtl.min.css" rel="stylesheet" />
+    <link href="~/Content/css/smartadmin-skins.css" rel="stylesheet" />
+    <link href="~/Content/StyleKendo/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/StyleKendo/kendo.silver.min.css" rel="stylesheet" />
+
+    <link href="~/Content/css/bootstrap-glyphicons.css" rel="stylesheet" />
+
+    <link href="~/Content/plugin/sweetalert/sweetalert.css" rel="stylesheet" />
+    <link href="~/Content/plugin/toastr/toastr.min.css" rel="stylesheet" />
+    <script src="~/Scripts/plugin/sweetalert/sweetalert.min.js"></script>
+    <script src="~/Scripts/plugin/toastr/toastr.min.js"></script>
+    <script src="~/Scripts/plugin/validate/jquery.validate.min.js"></script>
+
+    <!--LIBRERIA PARA HERRAMIENTA COMBO MULTISELECT-->
+    <link href="~/Content/css/bootstrap-select.min.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap-select.js"></script>
+
+    <!--LIBRERIA PARA GRÁFICOS GOOGLE CHART-->
+    <script src="~/Scripts/loader.js"></script>
+
+    <!--LIBRERIA PARA EXPORTAR GRÁFICOS-->
+    <script src="~/Scripts/jspdf.debug.js"></script>
+
+
+
+
+    <style>
+        .CampoRequerido {
+            color: red;
+        }
+
+        .ContenedorCargando {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.5);
+            z-index: 999999;
+            top: 0;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+        }
+    </style>
+
+    <div class="ContenedorCargando hidden" id="CargaTemporal">
+        <div class="spiner-example" style="top:40%; left:50%; position:absolute">
+            <div style="font-size:40px; text-align:center">
+                <span class="fa fa-refresh fa-spin"></span>
+            </div>
+        </div>
+    </div>
+
+    @{ Html.RenderPartial("_Header", RenderSection("topright", false)); }
+    @{ Html.RenderPartialIf("_Aside", Request.IsAuthenticated); }
+    <div id="main" role="main">
+        @*@{ Html.RenderPartialIf("_Ribbon", Request.IsAuthenticated); }*@
+
+        @RenderBody()
+    </div>
+    @if (Request.IsAuthenticated)
+    {
+        Html.RenderPartial("_Footer");
+        Html.RenderPartialIf("_Tiles", Settings.EnableTiles);
+    }
+    @{ Html.RenderPartial("_Scripts", RenderSection("pagespecific", false)); }
+</body>
+
+
+</html>

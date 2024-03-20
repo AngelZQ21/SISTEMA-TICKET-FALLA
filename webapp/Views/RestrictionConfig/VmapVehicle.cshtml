@@ -1,0 +1,504 @@
+﻿
+<script src="~/Scripts/util/jsUtilCambioGuardia.js"></script>
+<link href="~/Content/plugin/datapicker/datepicker3.css" rel="stylesheet" />
+<script src="~/Scripts/plugin/datapicker/bootstrap-datepicker.js"></script>
+<link href="~/Content/plugin/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet" />
+<script src="~/Scripts/plugin/bootstrap-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+
+<div id="content">
+
+    <div class="well" style="padding:0px 30px 10px 30px; background-color:white;">
+        <div class="row wrapper">
+            <div style="width: 100%; display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:space-between; text-align:center; align-items:center;">
+                <h2><i class="fa fa-edit fa-fw"></i> Mapa de Vehículos</h2>
+            </div>
+            <p>[Mapa de Vehículos]</p>
+        </div>
+
+        <div class="row" style="margin-top: 10px;">
+
+            <section class="col-xs-12 col-sm-12 col-md-4 col-lg-2" style="margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                <p>Seleccione un Mapa <i class="icon-append fa fa-info-circle" style="color:blue; cursor:pointer; width:15px; height:15px;" id="icLeyenda"></i></p>
+                <div class="input-group" style="width:100%;">
+                    <input id="ComboMapa" />
+                </div>
+            </section>
+        </div>
+    </div>
+    <div id ="widget-grid">
+        <div class="row">
+
+            <article class="col-xs-12">
+
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-usuario" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-list"></i> </span>
+                        <h2>Asignación de Mapas a Vehículos </h2>
+                    </header>
+                    <div style="border:none; overflow-y:scroll;">
+                        <div class="jarviswidget-editbox">
+
+                        </div>
+                        <div class="widget-body no-padding" >
+                            <div class="col-xs-12 ContenedorDualList" style="height:400px;">
+
+                                <div class="col-xs-12 col-md-12 col-lg-12 hidden" id="ContenedorDualListVehiculos">
+                                    <select multiple="multiple" size="10" name="lstVehiculos[]" id="lstVehiculos"></select>
+                                </div>
+
+                                <section class="col-xs-12" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:space-between">
+                                    <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-start">
+                                        
+                                    </div>
+                                    <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-end" id="BotonesAccion" class="hidden">
+                                        @*<button style="margin:3px;" tabindex="24" class="btn btn-danger" type="button" id="btnCancelar"><i class="fa fa-times-circle"></i> Cancelar</button>*@
+                                        <button style="margin:3px;" tabindex="25" class="btn btn-primary" type="submit" id="btnGrabar"><i class="fa fa-save"></i> Grabar</button>
+                                    </div>
+                                </section>
+
+                                <div class="col-xs-12 col-md-12">
+                                    <div class="spiner-example" id="imgCargaMapaLista">
+                                        @Html.Partial("../MensajesParciales/_MensajeCargando")
+                                    </div>
+
+                                    <div class="hidden" id="msjErrorMapaLista" style="margin:30px;">
+                                        @Html.Partial("../MensajesParciales/_MensajeError")
+                                    </div>
+
+                                    <div class="hidden" id="msjVacioMapaLista" style="margin:30px;">
+                                        @Html.Partial("../MensajesParciales/_MensajeVacio")
+                                    </div>
+
+                                    <div class="hidden" id="msjErrorListarMapaLista" style="margin:30px;">
+                                        @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </article>
+
+        </div>
+        
+    </div>
+</div>
+
+
+<div id="ModalLeyenda" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <div class="modal-dialog" style="width:450px;">
+        <div class="modal-content animated">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Información <i class="icon-append fa fa-info-circle" style="color:blue; width:15px; height:15px;" ></i></h4>
+            </div>
+            <div class="modal-body clearfix" style="padding-left:10px; padding-right:10px;">
+                <div id="Leyenda"></div>
+            </div>                
+        </div>            
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        /*----------------------------------------------------------------------------------------------- VARIABLES*/
+
+        var idMapa = 0;
+        var datosCombo;
+        var VehiculosSeleccionados = [];
+        var ListaInicial = [];
+
+        /*----------------------------------------------------------------------------------------------- FUNCIONES MAPA VEHICULO*/
+
+        function GrabarMapa() {
+            CargarSeleccionados();            
+
+            $("#CargaTemporal").removeClass("hidden");
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/RestrictionConfig/GrabarMapaVehiculo", /* es importante poner los .. delante*/
+
+                data: '{ VehiculosSeleccionados: "' + VehiculosSeleccionados + '",IdMap: "' + idMapa + '",ListaInicial: "' + ListaInicial + '" }',
+
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (resultado) {                    
+                   
+                    /* proceso exitoso con datos*/
+                    if (resultado == "1") {
+                           
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["success"](tMensajeCreadoExito, tTituloExito); $toastlast = $toast;
+
+                        $("#imgCargaMapaLista").addClass("hidden");
+                        $("#msjErrorMapaLista").addClass("hidden");
+                        $("#msjVacioMapaLista").addClass("hidden");
+                        $("#msjErrorListarMapaLista").addClass("hidden");
+                        $("#ContenerdorBotonesExportar").removeClass("hidden");
+
+                        VehiculosListado();
+                                                       
+                    } else if (resultado == "3") {
+
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValidacionSeleccionarComboVehiculoB, tTituloError); $toastlast = $toast;
+
+                    } else if (resultado == "2") {
+
+                        $("#CargaTemporal").addClass("hidden");                           
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorYaExisteVehiculoAsignadoOtroMapa, tTituloError); $toastlast = $toast;
+
+                    } else if (resultado == "0") {
+
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+
+                    }
+                    else {
+
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    }                   
+                    
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                   
+                    $("#imgCargaMapaLista").addClass("hidden");
+                    $("#msjErrorMapaLista").removeClass("hidden");
+                    $("#msjVacioMapaLista").addClass("hidden");
+                    $("#msjErrorListarMapaLista").addClass("hidden");
+
+                    toastr.options.timeOut = nTiempoMedio;
+                    toastr.options.extendedTimeOut = nTiempoMedio;
+                    ///*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloError); $toastlast = $toast;
+
+
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+
+        }
+
+        /*----------------------------------------------------------------------------------------------- FUNCIONES OTRAS*/
+        
+        function CargarSeleccionados() {
+            VehiculosSeleccionados = $('[name="lstVehiculos[]"]').val();
+
+            if (VehiculosSeleccionados == null) {
+                VehiculosSeleccionados = "";
+            }
+
+            if (ListaInicial == null) {
+                ListaInicial = "";
+            }
+        }
+
+        function MostrarMapaTitle(datos) {
+                       
+            var cuerpoInicio = "";
+            var cuerpo = "";
+
+            var contador = 0;
+            for (var i = 0; i < datos.length; i++) {
+
+                if (datos[i].ID == idMapa) {
+
+                    contador = 0;
+
+                    for (var columns in datos[i]) {
+
+                        if ((columns.trim() != "ValorConsulta") && (columns.trim() != "MensajeConsulta") &&
+                            (columns.trim() != "Description") && (columns.trim() != "RegistrationStatus") &&
+                            (columns.trim() != "MigrationStatus") && (columns.trim() != "RegistrationUser") &&
+                            (columns.trim() != "RegistrationDate") && (columns.trim() != "UpdateUser") &&
+                            (columns.trim() != "UpdateDate") && (columns.trim() != "ID")) {
+
+                            if (eval("datos[" + [i] + "]." + columns) == 1) {
+                                cuerpo = cuerpo + "<li style='margin:0.3em;'>" + columns + "</li>";
+                                contador += 1;
+                            }
+                        }
+                    }
+
+                    if (contador == 0) {
+                        cuerpoInicio = "El mapa seleccionado no tiene asignado ninguna restricción.";
+                    } else {
+                        cuerpoInicio = "El mapa tiene asignado las siguientes restricciones: </br><ul style='list-style-type: square;list-style-position: outside;list-style-image: none;'>";
+                    }
+
+                    break;
+                }
+            }
+
+            cuerpo = cuerpo + "</ul>";
+
+            $("#Leyenda").html(cuerpoInicio + cuerpo);
+
+            $("#ModalLeyenda").modal("show");
+        }
+
+        /*----------------------------------------------------------------------------------------------- OTRAS*/
+
+        function ComboTipoRestriccion() {
+
+            $("#CargaTemporal").removeClass("hidden");
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/RestrictionConfig/ListarConfiguracionRestriccion", /* es importante poner los .. delante*/
+                data: { RestrictionTable: "TB_VEHICLE_VALIDATION_MAP", Search: "", QueryValue: "6" },
+                dataType: "json",
+                /*async: false,*/
+                success: function (resultado) {                                                    
+
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+                        if (resultado[0].ValorConsulta == "1") {
+
+                            $("#ComboMapa").kendoDropDownList({
+                                dataTextField: "Description",
+                                dataValueField: "ID",
+                                filter: "contains",
+                                autoBind: true,
+                                minLength: 1,
+                                dataSource: {
+                                    data: resultado
+                                },
+                                select: onSelectMapa
+                            });
+
+                            idMapa = $("#ComboMapa").data("kendoDropDownList").value();
+
+                            datosCombo = resultado;
+
+                            VehiculosListado();
+
+                        } else {
+                            /* proceso fallido catch listado datos*/
+                            toastr.options.timeOut = nTiempoMedio;
+                            toastr.options.extendedTimeOut = nTiempoMedio;
+                            /*success - info - warning - error*/
+                            var $toast = toastr["error"](tValidacionListaComboMapa, tTituloError); $toastlast = $toast;
+                            console.log(resultado);
+                            $("#CargaTemporal").addClass("hidden");
+
+                            $("#imgCargaMapaLista").addClass("hidden");
+                            $("#msjErrorListarMapaLista").removeClass("hidden");
+                            $("#msjVacioMapaLista").addClass("hidden");
+                            $("#msjErrorMapaLista").addClass("hidden");
+                        }
+
+                    } else {
+                        /* proceso fallido catch listado datos*/
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValidacionListaComboMapa, tTituloError); $toastlast = $toast;
+                        $("#CargaTemporal").addClass("hidden");
+
+                        $("#imgCargaMapaLista").addClass("hidden");
+                        $("#msjErrorListarMapaLista").addClass("hidden");
+                        $("#msjVacioMapaLista").removeClass("hidden");
+                        $("#msjErrorMapaLista").addClass("hidden");
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                    $("#imgCargaMapaLista").addClass("hidden");
+                    $("#msjErrorListarMapaLista").removeClass("hidden");
+                    $("#msjVacioMapaLista").addClass("hidden");
+                    $("#msjErrorMapaLista").addClass("hidden");
+
+                }
+            });
+        }
+
+        function onSelectMapa(e) {
+            var dataItem = this.dataItem(e.item.index());
+            idMapa = dataItem.ID;                     
+            
+            $("#CargaTemporal").removeClass("hidden");
+
+            VehiculosListado();
+        };
+
+        //----------------------------------------------------------------------------------------------------DUAL LISTBOX
+
+        function VehiculosListado() {
+
+            ListaInicial = [];
+
+            $.ajax({
+                type: "GET",
+                url: tRutaServidor + "/Vehicle/ListarMapaVehiculos",
+                contentType: "application/json; charset=utf-8",                
+                data: "id=" + idMapa,
+                dataType: "json",
+                success: function (resultado) {
+
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+                        if (resultado[0].ValorConsulta == "1") {
+
+                            $("#ContenedorDualListVehiculos").removeClass("hidden");
+                            $("#BotonesAccion").removeClass("hidden");
+                            $("#imgCargaMapaLista").addClass("hidden");
+                            $("#msjErrorMapaLista").addClass("hidden");
+                            $("#msjVacioMapaLista").addClass("hidden");
+                            $("#msjErrorListarMapaLista").addClass("hidden");                            
+
+                            $("#lstVehiculos").remove();
+                            $("#ContenedorDualListVehiculos").html('<select class="clearfix" multiple="multiple" size="10" name="lstVehiculos[]" id="lstVehiculos"></select>')
+
+                            var valores = "";
+                            for (var i = 0; i < resultado.length; i++) {
+                                
+                                if (resultado[i].IdVehicleValidationMap == idMapa) {                                    
+                                    valores = valores + "<option value=" + resultado[i].IdVehicle + " selected='selected'>" + resultado[i].Plate + "</option>"
+                                    ListaInicial.push(resultado[i].IdVehicle);
+                                } else {                                    
+                                    valores = valores + "<option value=" + resultado[i].IdVehicle + ">" + resultado[i].Plate + "</option>"                                    
+                                }
+
+                            }
+
+                            $("#lstVehiculos").html(valores);
+
+                            var initializeDuallistbox = $('#lstVehiculos').bootstrapDualListbox({
+                                nonSelectedListLabel: 'Listado de Vehículos',
+                                selectedListLabel: 'Listado de Vehículos Asignados',
+                                preserveSelectionOnMove: 'moved',
+                                moveOnSelect: true,
+                                nonSelectedFilter: ''
+                            });                            
+
+                            $(".move,.remove").addClass("hidden");
+
+
+                            $(".moveall,.removeall").addClass("ListaFormatoBoton");
+
+                            $(".buttons").addClass("ListaFormato");
+
+
+                            $(".box1").addClass("col-xs-12 col-md-6")
+                            $(".box2").addClass("col-xs-12 col-md-6")
+
+                            $(".box1 > label").addClass("ListaFormatoLabel")
+                            $(".box2 > label").addClass("ListaFormatoLabel")
+
+                            $("#CargaTemporal").addClass("hidden");
+
+                        } else {
+                            toastr.options.timeOut = nTiempoMedio;
+                            toastr.options.extendedTimeOut = nTiempoMedio;
+                            ///*success - info - warning - error*/
+                            var $toast = toastr["error"](tValidacionListaComboVehiculo, tTituloError); $toastlast = $toast;
+                            
+                            /* proceso fallido catch listado datos*/
+                            $("#ContenedorDualListVehiculos").addClass("hidden");
+                            $("#BotonesAccion").addClass("hidden");
+                            $("#imgCargaMapaLista").addClass("hidden");
+                            $("#msjErrorMapaLista").addClass("hidden");
+                            $("#msjVacioMapaLista").addClass("hidden");
+                            $("#msjErrorListarMapaLista").removeClass("hidden");
+
+                            $("#CargaTemporal").addClass("hidden");
+                        }
+
+                    } else {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        ///*success - info - warning - error*/
+                        var $toast = toastr["error"](tValidaListaVehiculoVacia, tTituloError); $toastlast = $toast;
+
+                        $("#ContenedorDualListVehiculos").addClass("hidden");
+                        $("#BotonesAccion").addClass("hidden");
+                        $("#imgCargaMapaLista").addClass("hidden");
+                        $("#msjErrorMapaLista").addClass("hidden");
+                        $("#msjVacioMapaLista").removeClass("hidden");
+                        $("#msjErrorListarMapaLista").addClass("hidden");
+
+                        $("#CargaTemporal").addClass("hidden");
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    idCompania = -1;
+                    /*fallo al llamar a la funcion ajax*/
+                    $("#ContenedorDualListVehiculos").addClass("hidden");
+                    $("#BotonesAccion").addClass("hidden");
+                    $("#imgCargaMapaLista").addClass("hidden");
+                    $("#msjErrorMapaLista").removeClass("hidden");
+                    $("#msjVacioMapaLista").addClass("hidden");
+                    $("#msjErrorListarMapaLista").addClass("hidden");
+                    $("#ContenedorOcultarExportar").addClass("hidden");
+
+                    $("#CargaTemporal").addClass("hidden");
+                  
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+
+        }
+
+        /*----------------------------------------------------------------------------------------------- ASIGNAR FUNCIONES*/
+
+        $("#icLeyenda").click(function () {            
+            MostrarMapaTitle(datosCombo)
+        });
+
+        $("#btnGrabar").click(function () {
+            GrabarMapa();
+        });
+
+        ComboTipoRestriccion();
+
+    });
+
+</script>

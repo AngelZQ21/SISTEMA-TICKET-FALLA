@@ -1,0 +1,392 @@
+CREATE PROCEDURE [dbo].[ZC_CREATE_LOCATION]              
+@Latitud varchar(50) ,           
+@Longitud varchar(50) ,           
+@altitud decimal(10,2),          
+@velocidad decimal(10,2),--10            
+@nivel decimal(10,2),           
+@direccion int,          
+@hor decimal(10,2),           
+@LocationTime time ,           
+@LocationDate  varchar(50) ,           
+@Plate VARCHAR(50) ,              
+@serial VARCHAR(50),            
+@modulo varchar(20),           
+@numero varchar(15) ,           
+@IdHardware INT,           
+@estArr int,          
+@estBat int,           
+@estNivel int,          
+@estPrt int,          
+@estPe int,          
+@flagArr int,          
+@horaOn time,          
+@horaOff time,          
+@numInt int          
+as                
+               
+set dateformat dmy                
+set @hor =@hor/10                
+                
+declare @estado_Arranque_detalle varchar(100)           
+declare @estado_Bateria_detalle varchar(100)             
+declare @estado_Nivel_detalle varchar(100)            
+declare @estado_Puerta_detalle varchar(100)           
+declare @estado_Puerta_Emer_detalle varchar(100)           
+                
+declare @estado_Arr char(1)      
+set @estado_Arr = '0'      
+      
+declare @estado_ArrAu char(1)      
+set @estado_ArrAu = '0'      
+      
+declare @estado_ApaAu char(1)      
+set @estado_ApaAu = '0'      
+      
+set @estado_Arranque_detalle = case @estArr                
+ when 0 then 'LUMINARIA APAGADA'                
+ when 1 then 'ENCENDIDO DE SIRENA'                
+ when 2 then 'CALENTAMIENTO'                
+ when 3 then 'CALENTAMIENTO E IGNICION'                
+ when 4 then 'PRIMER ARRANQUE'                
+ when 5 then 'SEGUNDO ARRANQUE'                
+ when 6 then 'EN PROCESO'                
+ when 7 then 'FOCO 1 ENCENDIDO'                
+ when 8 then 'LUMINARIA ENCENDIDA POR SISTEMA'                
+ when 9 then 'FOCO 1 APAGADO'             
+ when 10 then 'FOCO 2 APAGADO'           
+ when 11 then 'LUMINARIA ENCENDIDA MANUALMENTE'             
+end           
+          
+set @estado_Bateria_detalle = case @estBat                
+ when 0 then 'BATERIA CONECTADA'                
+ when 1 then 'BATERIA DESCONECTADA'                   
+end           
+          
+set @estado_Nivel_detalle = case @estNivel                
+ when 0 then 'DATO VALIDO'                
+ when 1 then 'DATO INVALIDO'                   
+end           
+                
+set @estado_Puerta_detalle = case @estPrt                
+ when 0 then 'PUERTA CERRADA'                
+ when 1 then 'PUERTA LEVANTADA'                   
+end           
+          
+set @estado_Puerta_Emer_detalle = case @estPe                
+ when 0 then 'PARADA DE EMERGENCIA NO ACTIVA'                
+ when 1 then 'PARADA DE EMERGENCIA ACTIVA'                   
+end           
+ -- select @LocationDate                
+if exists(select a.* from TB_VEHICLE a inner join [dbo].[TB_JOB] b on a.[IdVehicle]=b.[IdVehicle] where Plate =@Plate and codeGPS=@serial)                
+ begin                
+   --SELECT 'PASO' AS 'AWA'          
+   declare  @IdVehicle int                
+   set @IdVehicle =(select top 1 a.IdVehicle  from TB_VEHICLE  a inner join [dbo].[TB_JOB] b on a.[IdVehicle]=b.[IdVehicle]                
+   where Plate =@Plate and codeGPS=@serial)                
+   set dateformat dmy                
+                  
+   update TB_VEHICLE set [Horometro] =(@hor) where Plate =@Plate                 
+                    
+   INSERT INTO  [TB_LOCATIONS] (IdVehicle ,IdHardware ,LocationTime ,LocationDate ,Longitud ,Latitud,Horometro,[RegistrationStatus],[MigrationStatus] ,[RegistrationUser]      ,[RegistrationDate]      ,[UpdateUser]                
+      ,[UpdateDate],serial,altitud   ,velocidad   ,numero   ,nivel   ,direccion   ,modulo,EstArr,EstBat,EstNivel,EstPrt,EstPe,Estado_Arranque_detalle          
+   ,Estado_Bateria_detalle,Estado_Nivel_detalle,Estado_Prta_detalle,Estado_Prd_Emrgc_detalle,HorOn ,HorOff,NumIn          
+   )                
+   VALUES (@IdVehicle ,@IdHardware ,@LocationTime ,@LocationDate ,@Longitud ,@Latitud,@hor,'A','P',1,getdate(),0,getdate(),  @serial,@altitud           
+          ,@velocidad ,@numero ,@nivel ,@direccion ,@modulo,@estArr,@estBat,@estNivel,@estPrt,@estPe,@estado_Arranque_detalle          
+    ,@estado_Bateria_detalle,@estado_Nivel_detalle,@estado_Puerta_detalle,@estado_Puerta_Emer_detalle,@horaOn,@horaOff,@numInt)                 
+         
+        
+    if((select b.FlagArr from TB_VEHICLE a inner join [dbo].[TB_JOB] b on a.[IdVehicle]=b.[IdVehicle] where a.Plate =@Plate and a.codeGPS=@serial) = 1)        
+      begin        
+          if((select a.StatusModeGenerator from TB_VEHICLE a inner join [dbo].[TB_JOB] b on a.[IdVehicle]=b.[IdVehicle] where a.Plate =@Plate and a.codeGPS=@serial)= 'H' )  
+       begin  
+       
+         update TB_VEHICLE  set StatusModeGenerator ='D' where Plate =@Plate and StatusModeGenerator = 'H'          
+              
+                      select        
+                         a.Plate,      
+                          convert(varchar(8),b.[OnceAtTimeDailyFrequency]) as 'HoraEncendido' ,                 
+                          convert(varchar(8), b.[OnceAtTimeDailyFrequency2]) as 'HoraApagado',       
+                         'ModeGenerator' as 'resultado',      
+                          b.FlagArr as 'FlagArr',      
+                          '0'  as 'FlagArrAu',       
+                          '0'  as 'FlagApaAu',  
+        b.ModeGenerator as 'ModeGenerator'   
+                      from TB_VEHICLE a           
+                         inner join TB_JOB b on a.[IdVehicle]=b.[IdVehicle] where a.Plate = @Plate and a.codeGPS= @serial          
+  
+       end  
+          else if((select a.MigrationStatus from TB_VEHICLE a inner join [dbo].[TB_JOB] b on a.[IdVehicle]=b.[IdVehicle] where a.Plate =@Plate and a.codeGPS=@serial)= 'P' )                
+            begin     
+      
+              update TB_VEHICLE  set MigrationStatus ='C' where Plate =@Plate and MigrationStatus ='P'          
+      
+                   select        
+                      a.Plate,      
+                      convert(varchar(8),b.[OnceAtTimeDailyFrequency]) as 'HoraEncendido' ,                 
+                      convert(varchar(8), b.[OnceAtTimeDailyFrequency2]) as 'HoraApagado',      
+                      'Pendiente' as 'resultado',      
+                       b.FlagArr as 'FlagArr',      
+                       '0'  as 'FlagArrAu',       
+                       '0'  as 'FlagApaAu',  
+        '0' as 'ModeGenerator'  
+             from TB_VEHICLE a           
+                   inner join TB_JOB b on a.[IdVehicle]=b.[IdVehicle] where a.Plate = @Plate and a.codeGPS= @serial          
+                  
+           
+             end      
+    
+          else if((select a.StatusArrAu from TB_VEHICLE a inner join [dbo].[TB_JOB] b on a.[IdVehicle]=b.[IdVehicle] where a.Plate =@Plate and a.codeGPS=@serial)= 'H' )      
+           begin      
+      
+           update TB_VEHICLE  set StatusArrAu = 'D' where Plate = @Plate and StatusArrAu ='H'          
+             
+              select        
+                    a.Plate,      
+                    '00:00:00' as 'HoraEncendido',                 
+                    '00:00:00' as 'HoraApagado',      
+                    'ArranqueAu' as 'resultado',      
+                    b.FlagArr as 'FlagArr',       
+                    b.FlagArrAu  as 'FlagArrAu',       
+                    '0'  as 'FlagApaAu',  
+     '0' as 'ModeGenerator'  
+              from TB_VEHICLE a           
+                    inner join TB_JOB b on a.[IdVehicle]=b.[IdVehicle] where a.Plate = @Plate and a.codeGPS= @serial      
+      
+      
+     end      
+          else if((select a.StatusApaAu from TB_VEHICLE a inner join [dbo].[TB_JOB] b on a.[IdVehicle]=b.[IdVehicle] where a.Plate =@Plate and a.codeGPS=@serial)= 'H' )      
+           begin      
+      
+              update TB_VEHICLE  set StatusApaAu = 'D' where Plate = @Plate and StatusApaAu ='H'          
+                    
+                       select        
+                            a.Plate,      
+                        '00:00:00' as 'HoraEncendido',                 
+                           '00:00:00' as 'HoraApagado',      
+                           'ApagadoAu' as 'resultado',       
+                           b.FlagArr as 'FlagArr',       
+                           '0'  as 'FlagArrAu',       
+                           b.FlagApaAu  as 'FlagApaAu',  
+         '0' as 'ModeGenerator'  
+                       from TB_VEHICLE a           
+                          inner join TB_JOB b on a.[IdVehicle]=b.[IdVehicle] where a.Plate = @Plate and a.codeGPS= @serial      
+           end      
+          else                
+            begin     
+              IF((SELECT EstLum FROM TB_VEHICLE WHERE Plate =@Plate) = 1)      
+                  BEGIN      
+                  
+                    update TB_VEHICLE  set EstLum = 0 where Plate =@Plate AND EstLum = 1      
+                      
+                    select  [Plate], '00:00:00'as'HoraEncendido' , '00:00:00'as'HoraApagado','ArranqueHabilitado' as 'resultado' , '1' as 'FlagArr' , '0' as 'FlagArrAu', '0' as 'FlagApaAu', '0' as 'ModeGenerator' from TB_VEHICLE where Plate =@Plate      
+                  END      
+              ELSE      
+                  BEGIN      
+                    select  [Plate], '00:00:00'as'HoraEncendido' , '00:00:00'as'HoraApagado','Insertado' as 'resultado' , '1' as 'FlagArr' , '0' as 'FlagArrAu', '0' as 'FlagApaAu', '0' as 'ModeGenerator' from TB_VEHICLE where Plate =@Plate       
+                  END      
+                      
+            end        
+        end        
+      else        
+        begin           
+          
+        IF((SELECT EstLum FROM TB_VEHICLE WHERE Plate =@Plate) = 0)      
+          BEGIN      
+      
+       update TB_VEHICLE  set EstLum = 1 where Plate =@Plate AND EstLum = 0      
+      
+       select  [Plate], '00:00:00'as'HoraEncendido' , '00:00:00'as'HoraApagado','ArranqueDesabilitado' as 'resultado' , '0' as 'FlagArr' , '0' as 'FlagArrAu', '0' as 'FlagApaAu', '0' as 'ModeGenerator' from TB_VEHICLE where Plate =@Plate --and [Serial]=@s
+erial       
+       END      
+        ELSE      
+         BEGIN      
+          select  [Plate], '00:00:00'as'HoraEncendido' , '00:00:00'as'HoraApagado','Insertado' as 'resultado' , '1' as 'FlagArr' , '0' as 'FlagArrAu', '0' as 'FlagApaAu', '0' as 'ModeGenerator' from TB_VEHICLE where Plate =@Plate       
+      END      
+      
+                       
+        end        
+       
+          
+                  
+    --SE VERIFICA LAS DISTANCIAS Y MOVIMIENTO DE LOS EQUIPOS                
+    if not exists(select * from TB_MOVEMENT where [IdVehicle]=@IdVehicle  )                
+      begin                
+       insert into TB_MOVEMENT ([IdVehicle],[Latitud],[Longitud],[LocationDate],[LocationTime],[EstArr],[EstBat],[EstNivel],[EstPrt],[EstPe],[Estado_Arranque_detalle]          
+   ,[Estado_Bateria_detalle],[Estado_Nivel_detalle],[Estado_Prta_detalle],[Estado_Prd_Emrgc_detalle],[Distancia],[velocidad])           
+    values (@IdVehicle,@Latitud,@Longitud,@LocationDate ,@LocationTime,@estArr,@estBat,@estNivel,@estPrt,@estPe,@estado_Arranque_detalle          
+    ,@estado_Bateria_detalle,@estado_Nivel_detalle,@estado_Puerta_detalle,@estado_Puerta_Emer_detalle,0,@velocidad)                
+      end                
+    else                
+       begin                
+        declare @latitud1 float             
+        declare @longitud1 float                
+        declare @latitud2 float                
+        declare @longitud2 float                 
+                     
+        declare @unidad_metrica char(1)                
+        set @unidad_metrica ='M'                
+        SET @latitud1 =@Latitud                
+        SET @longitud1  =@Longitud                
+                     
+        SET @latitud2 =(select TOP 1 Latitud from TB_MOVEMENT where [IdVehicle]=@IdVehicle ORDER BY [IdMovement] DESC)                
+                       
+        SET @longitud2  =(select TOP 1 Longitud  from TB_MOVEMENT where [IdVehicle]=@IdVehicle ORDER BY [IdMovement] DESC)                
+                       
+         --Unidad Metrica: K=kilometros  M=metros                 
+                       
+          DECLARE @distancia float                  
+          --Radio de la tierra según WGS84                
+          DECLARE @radius float                
+          SET @radius = 6371                
+          --SET @radius = 6378.137                 
+          DECLARE @deg2radMultiplier float                 
+          SET @deg2radMultiplier = PI() / 180                
+                       
+          SET @latitud1 = @latitud1 * @deg2radMultiplier                
+          SET @longitud1 = @longitud1 * @deg2radMultiplier                
+          SET @latitud2 = @latitud2 * @deg2radMultiplier                
+          SET @longitud2 = @longitud2 * @deg2radMultiplier                
+                         
+          DECLARE @dlongitud float                
+          SET @dlongitud = @longitud2 - @longitud1                
+                         
+          SET @distancia = ACOS(SIN(@latitud1) * SIN(@latitud2) + COS(@latitud1) *                
+               COS(@latitud2) * COS(@dlongitud)) * @radius                
+                       
+          IF @unidad_metrica = 'M'                  
+          SET @distancia = @distancia * 1000                
+                     
+          -- Retorna distancia en Metros o Kilómetros                  
+          declare @distancias decimal (15,2)                
+          set @distancias =  convert(numeric(15,2), @distancia)                
+          --SELECT @distancias                
+           if (@distancias>30 )                
+           begin                
+            insert into TB_MOVEMENT ([IdVehicle],[Latitud],[Longitud],[LocationDate],[LocationTime],[EstArr],[EstBat],[EstNivel],[EstPrt],[EstPe],[Estado_Arranque_detalle]          
+   ,[Estado_Bateria_detalle],[Estado_Nivel_detalle],[Estado_Prta_detalle],[Estado_Prd_Emrgc_detalle],Distancia,velocidad)                 
+            values (@IdVehicle,@Latitud,@Longitud,@LocationDate ,@LocationTime,@estArr,@estBat,@estNivel,@estPrt,@estPe,@estado_Arranque_detalle          
+    ,@estado_Bateria_detalle,@estado_Nivel_detalle,@estado_Puerta_detalle,@estado_Puerta_Emer_detalle,@distancias,@velocidad)                
+           end                
+                     
+       end                
+                  
+                  
+    --SE VERIFICA EL ESTADO DE CADA EQUIPO                
+    if not exists(select * from TB_STATUS where [IdVehicle]=@IdVehicle  )                
+    begin                
+    insert into TB_STATUS ([IdVehicle],[Latitud],[Longitud],[LocationDate],[LocationTime],[EstArr],[EstBat],[EstNivel],[EstPrt],[EstPe],[Estado_Arranque_detalle]          
+   ,[Estado_Bateria_detalle],[Estado_Nivel_detalle],[Estado_Prta_detalle],[Estado_Prd_Emrgc_detalle]) values                
+     (@IdVehicle,@Latitud,@Longitud,@LocationDate ,@LocationTime,@estArr,@estBat,@estNivel,@estPrt,@estPe,@estado_Arranque_detalle          
+    ,@estado_Bateria_detalle,@estado_Nivel_detalle,@estado_Puerta_detalle,@estado_Puerta_Emer_detalle)                
+    END                
+    ELSE                
+    BEGIN                
+    DECLARE @LAST_STATUS INT                
+    SET @LAST_STATUS =(select TOP 1 [EstArr] from TB_STATUS where [IdVehicle]=@IdVehicle ORDER BY [IdMovement] DESC)                
+                  
+     IF(@LAST_STATUS <> @estArr )                
+     BEGIN                
+      insert into TB_STATUS ([IdVehicle],[Latitud],[Longitud],[LocationDate],[LocationTime],[EstArr],[EstBat],[EstNivel],[EstPrt],[EstPe],[Estado_Arranque_detalle]          
+   ,[Estado_Bateria_detalle],[Estado_Nivel_detalle],[Estado_Prta_detalle],[Estado_Prd_Emrgc_detalle]) values                
+      (@IdVehicle,@Latitud,@Longitud,@LocationDate ,@LocationTime,@estArr,@estBat,@estNivel,@estPrt,@estPe,@estado_Arranque_detalle          
+    ,@estado_Bateria_detalle,@estado_Nivel_detalle,@estado_Puerta_detalle,@estado_Puerta_Emer_detalle)               
+     END                
+    END                
+                
+    /*CODIGO ANGEL*/              
+                
+   DECLARE @horactual INT              
+    set @horactual =900              
+                
+    DECLARE @VALvehicleId INT              
+    SET @VALvehicleId = (SELECT TOP 1 TV.IdVehicle FROM TB_VEHICLE TV WHERE TV.Plate = @Plate)              
+   -- SELECT @VALvehicleId              
+                
+    IF EXISTS (SELECT TOP 1 IdVehicle FROM TB_PM_DETAILS_TIME WHERE IdVehicle = @VALvehicleId AND StatusPM = 'C')              
+      BEGIN              
+                   
+     DECLARE @TABLE AS TABLE(              
+       IDtemporal INT,              
+       IdPMDetailsTime INT,              
+       IdVehicle INT,              
+       IdVehicleType INT,              
+       IdPM INT,              
+       LastPM DECIMAL(10,3),              
+       EndPM DECIMAL(10,3),              
+       FrequencyPM DECIMAL(10,3),              
+       StatusPM CHAR(1)              
+     );              
+                
+       INSERT INTO @TABLE(IDtemporal ,IdPMDetailsTime,IdVehicle,IdVehicleType,IdPM,LastPM,EndPM,FrequencyPM,StatusPM)              
+            SELECT ROW_NUMBER() OVER(ORDER BY IdVehicle DESC)               
+               AS IDtemporal,IdPMDetailsTime,IdVehicle,IdVehicleType,IdPM,LastPM,EndPM,FrequencyPM,StatusPM               
+          FROM TB_PM_DETAILS_TIME WHERE IdVehicle = @VALvehicleId AND StatusPM = 'C'              
+                     
+    --SELECT * FROM @TABLE              
+                
+    DECLARE @MAXIMO INT              
+       SET @MAXIMO = isnull((SELECT MAX(IDtemporal ) FROM @TABLE),0)              
+      -- SELECT @MAXIMO              
+                
+    DECLARE @CONTADOR INT              
+    SET @CONTADOR=1              
+                      
+    DECLARE @VALIdPMDetailsTime INT              
+    DECLARE @PasandoHorometro DECIMAL(10,3)              
+    DECLARE @VALIdVehiclePM INT              
+    DECLARE @VALIdVehicleTypePM INT              
+    DECLARE @VALIdPM INT               
+    DECLARE @VALLastPM INT              
+    DECLARE @VALEndPM DECIMAL(10,3)               
+    DECLARE @VALFrequencyPM DECIMAL(10,3)               
+    DECLARE @NewPMtime DECIMAL(10,3)              
+    DECLARE @VALStatusPM CHAR(1)              
+                
+       WHILE  @CONTADOR <= @MAXIMO              
+           BEGIN              
+                         
+           SELECT @VALIdPMDetailsTime= IdPMDetailsTime,@PasandoHorometro=EndPM ,@VALIdVehicleTypePM=IdVehicleType,              
+           @VALIdPM=IdPM ,@VALLastPM= EndPM, @VALFrequencyPM =FrequencyPM ,@NewPMtime=FrequencyPM+EndPM,              
+           @VALIdVehiclePM=IdVehicle               
+                
+          FROM @TABLE WHERE IdVehicle = @VALvehicleId AND StatusPM = 'C' and IDtemporal =@CONTADOR              
+                         
+                
+                       
+          --select  @hor,@VALIdVehiclePM,@VALIdVehicleTypePM,@VALIdPM,@VALLastPM,@NewPMtime,@VALFrequencyPM              
+                
+         if (@hor >@PasandoHorometro)              
+          begin              
+                
+          INSERT INTO TB_PM_DETAILS_TIME(IdVehicle,IdVehicleType,IdPM,LastPM,EndPM,FrequencyPM,StatusPM,Revisado)               
+                 VALUES(@VALIdVehiclePM,@VALIdVehicleTypePM,@VALIdPM,@VALLastPM,@NewPMtime,@VALFrequencyPM,'C','0')              
+             IF(@@ROWCOUNT > 0)              
+                BEGIN              
+               UPDATE TB_PM_DETAILS_TIME SET StatusPM = 'T', RegistrationUpdate = GETDATE() WHERE IdPmDetailsTime = @VALIdPMDetailsTime              
+             END              
+                
+         print 'nuevo registro'              
+          end              
+         else               
+          begin              
+         print 'nada'              
+                       
+          end              
+                
+                
+                         
+         SET @CONTADOR=@CONTADOR +1               
+        end              
+  end              
+                
+                
+    /**/              
+                
+                
+  end                
+else                
+  begin             
+   --SELECT 'NO PASO' AS 'ONO'          
+   select 'NA'as'Plate','00:00'as'HoraEncendido' , '00:00'as'HoraApagado',  'Error' as 'resultado'                
+  end 

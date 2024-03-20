@@ -1,0 +1,2175 @@
+﻿<script src="~/Scripts/util/jsUtilCambioGuardia.js"></script>
+@*<script src="~/Scripts/util/ColoresPersonalizados.js"></script>
+    <script src="~/Scripts/plugin/dygraphs/dygraph-combined.min.js"></script>*@
+<!--LIBRERIA PARA DATEPICKER-->
+@*<link href="~/Content/plugin/datapicker/datepicker3.css" rel="stylesheet" />*@
+<script src="~/Scripts/plugin/datapicker/bootstrap-datepicker.js"></script>
+@*<script src="~/Scripts/plugin/bootstrap-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>*@
+<!--LIBRERIA PARA CARGA DE ARCHIVOS-->
+<script src="~/Scripts/bootstrap-filestyle.min.js"></script>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script type="text/javascript">
+    function anular(e) {
+
+        tecla = (document.all) ? e.keyCode : e.which;
+        return (tecla != 13);
+    }
+</script>
+
+<style>
+
+    .panel-group {
+        margin-bottom: 0;
+    }
+
+        .panel-group .panel {
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+            .panel-group .panel .panel-heading {
+                padding: 0;
+            }
+
+                .panel-group .panel .panel-heading h4 a {
+                    background: #D7F2DF;
+                    display: block;
+                    font-size: 12px;
+                    font-weight: bold;
+                    padding: 15px;
+                    text-decoration: none;
+                    transition: 0.15s all ease-in-out;
+                }
+
+                    .panel-group .panel .panel-heading h4 a:hover, .panel-group .panel .panel-heading h4 a:not(.collapsed) {
+                        background: #fff;
+                        transition: 0.15s all ease-in-out;
+                    }
+
+                        .panel-group .panel .panel-heading h4 a:not(.collapsed) i:before {
+                            content: "‾";
+                        }
+
+                    .panel-group .panel .panel-heading h4 a i {
+                        color: #999;
+                    }
+
+            .panel-group .panel .panel-body {
+                padding-top: 0;
+            }
+
+            .panel-group .panel .panel-heading + .panel-collapse > .list-group,
+            .panel-group .panel .panel-heading + .panel-collapse > .panel-body {
+                border-top: none;
+            }
+
+            .panel-group .panel + .panel {
+                border-top: none;
+                margin-top: 0;
+            }
+
+
+    .colorAzul {
+        background-color: #C2E1F8 !important;
+        font-weight: bold !important;
+    }
+
+    .colorVerde {
+        background-color: #ced !important;
+    }
+
+    .colorRojo {
+        background-color: #FE8475;
+    }
+
+    .colorAmarillo {
+        background-color: #FFDF6A;
+    }
+
+    #GrillaPuntosATratarArchivos .k-grid-content {
+        max-height: 50vh;
+    }
+
+    #GrillaPuntosATratarArchivos th.k-header {
+        text-align: center;
+        font-size: 12px;
+        font-weight: bold;
+        font-family: Arial;
+    }
+
+    .swal2-popup {
+        font-size: 1em !important;
+    }
+    /*.responstable {
+      margin: 1em 0;
+      width: 95%;
+      overflow: hidden;
+      background: #FFF;
+      color: #024457;
+      border-radius: 10px;
+      border: 1px solid #167F92;
+      text-align:center;
+    }
+    .responstable tr {
+      border: 1px solid #D9E4E6;
+    }
+    .responstable tr:nth-child(odd) {
+      background-color: #EAF3F3;
+    }
+    .responstable th {
+      display: none;
+      border: 1px solid #FFF;
+      background-color: #167F92;
+      color: #FFF;
+      padding: 1em;
+    }
+    .responstable th:first-child {
+      display: table-cell;
+      text-align: center;
+    }
+    .responstable th:nth-child(2) {
+      display: table-cell;
+    }
+    .responstable th:nth-child(2) span {
+      display: none;
+    }
+    .responstable th:nth-child(2):after {
+      content: attr(data-th);
+    }
+
+    .responstable td {
+      display: block;
+      word-wrap: break-word;
+      max-width: 7em;
+    }
+    .responstable td:first-child {
+      display: table-cell;
+      text-align: center;
+      border-right: 1px solid #D9E4E6;
+    }
+
+    .responstable th, .responstable td {
+      text-align: left;
+      margin: .5em 1em;
+    }*/
+
+</style>
+
+
+<div id="content">
+
+    <div class="well" style="padding:0px 30px 10px 30px; background-color:white;">
+        <div class="row wrapper">
+            <div style="width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            text-align: center;
+            align-items: center;
+            ">
+                <h2 title="Registro de Ticket"><i class="fa fa-bar-chart-o fa-fw"></i> [Creacion de Ticket]</h2>
+                @*<button class="btn btn-primary" type="button" id="btnRegisterTicket" title="Registro de Ticket"><i class="fa fa-plus"></i> Registro de Ticket</button>*@
+            </div>
+        </div>
+
+        <form id="FrmCreacionTicket" onsubmit="return false">
+
+            <div class="modal-body" style="overflow:auto;">
+
+                <div id="exTab2" class="container" style="background-color:white; width:100%;">
+
+                    <!--TAB OPERACION-->
+                    <div class="tab-pane active" id="tabCompraDirecta">
+
+                        <div class="content">
+                            <!--accordion 1 -- Carrito de Compras -->
+                            <div class="panel-group" id="accordion1" role="tablist" aria-multiselectable="true">
+                                <div class="row form-group">
+
+                                    <section class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+                                        <label style=" color: #2F4050"><strong>Operación: </strong><strong class="CampoRequerido">*</strong></label>
+                                        <div style="width: 100%; display:flex; flex-flow:row nowrap;">
+                                            <select id="selectorTicketOperacion" class="selectpicker" multiple data-selected-text-format="count > 3" data-live-search="true" data-width="100%" title="Seleccionar Operación" data-size="5" data-max-options="1" data-actions-box="false" data-style="btn-info"></select>
+                                            <button style="        width: 50px;" class="btn btn-primary" type="button" id="btnAgregarOperacion"><i class="icon-append fa fa-plus"></i></button>
+                                        </div>
+                                    </section>
+
+                                    <section class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                        <label style="color: #2F4050"><strong>Quien Llama: </strong><strong class="CampoRequerido">*</strong></label>
+                                        <div style="width: 100%; display:flex; flex-flow:row nowrap;">
+                                            <select id="selectorWhoCall" class="selectpicker" multiple data-selected-text-format="count > 3" data-live-search="true" data-width="95%" title="Seleccionar Principales" data-size="5" data-max-options="1" data-actions-box="false" data-style="btn-info">
+                                            </select>
+                                            <button style="width:50px;" class="btn btn-primary" type="button" id="btnAgregarWhoCall"><i class="icon-append fa fa-plus"></i></button>
+                                        </div>
+                                    </section>
+
+                                    <section class="col-xs-12 col-sm-12 col-md-3 col-lg-4">
+                                        <label style="color: #2F4050"><strong>Quien Registra: </strong><strong class="CampoRequerido">*</strong></label>
+                                        <div class="input-group">
+                                            <input type="text" tabindex="2" class="form-control" name="" id="IdWhoRegister" disabled maxlength="12" style="padding-left:5px;" />
+                                            <span class="input-group-addon"><i class="icon-prev fa fa-list-alt"></i></span>
+                                        </div>
+                                    </section>
+
+                                </div>
+
+                                <div id="divFechasTimer" class="row form-group">
+
+                                    <section class="col-xs-12 col-sm-12 col-md-3 col-lg-4">
+                                        <label style="color: #2F4050"><strong>Responsable: </strong><strong class="CampoRequerido">*</strong></label>
+                                        <div style="width: 100%; display:flex; flex-flow:row nowrap;">
+                                            <select id="selectorWhoResponsible" class="selectpicker" multiple data-selected-text-format="count > 3" data-live-search="true" data-width="95%" title="Seleccionar Responsable" data-size="5" data-max-options="1" data-actions-box="false" data-style="btn-info">
+                                            </select>
+                                            @*<button style="width:50px;" class="btn btn-primary" type="button" id="btnAgregarPrincipal"><i class="icon-append fa fa-plus"></i></button>*@
+                                        </div>
+                                    </section>
+
+                                    <section id="divCambioDeGuardiaHora" class="col-xs-12 col-sm-12 col-md-3 col-lg-3 hidden">
+                                        <label style="color: #2F4050"><strong>Hora: </strong></label>
+                                        <div class="input-group">
+                                            <input type="text" tabindex="2" class="form-control" name="txtCambioDeGuardiaHora" id="txtCambioDeGuardiaHora" disabled maxlength="12" style="padding-left:5px;" />
+                                            <span class="input-group-addon"><i class="icon-prev fa fa-list-alt"></i></span>
+                                        </div>
+                                    </section>
+
+                                    <section class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+                                        <label style="color: #2F4050"><strong>Razón: </strong><strong class="CampoRequerido">*</strong></label>
+                                        <div style="width: 100%; display:flex; flex-flow:row nowrap;">
+                                            <select id="selectorTicketRazon" class="selectpicker" multiple data-selected-text-format="count > 3" data-live-search="true" data-width="95%" title="Seleccionar Razón" data-size="5" data-max-options="1" data-actions-box="false" data-style="btn-info">
+                                            </select>
+                                            <button style="width:50px;" class="btn btn-primary" type="button" id="btnAgregarRazon"><i class="icon-append fa fa-plus"></i></button>
+                                        </div>
+                                    </section>
+
+                                    @*<section class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+                                            <label style="color: #2F4050"><strong>Criticidad: </strong><strong class="CampoRequerido">*</strong></label>
+                                            <div style="width: 100%; display:flex; flex-flow:row nowrap;">
+                                                <select id="selectorTicketCriticidad" class="selectpicker" multiple data-selected-text-format="count > 3" data-live-search="true" data-width="95%" title="Seleccionar Invitados" data-size="5" data-max-options="1" data-actions-box="false" data-style="btn-info">
+                                                </select>
+                                                <button style="width:50px;" class="btn btn-primary" type="button" id="btnAgregarInvitados"><i class="icon-append fa fa-plus"></i></button>
+                                            </div>
+                                        </section>*@
+                                    <section class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+                                        <label style="color: #2F4050"><strong>Criticidad: </strong><strong class="CampoRequerido">*</strong></label>
+                                        <div style="width: 100%;">
+                                            <input tabindex="7" type="radio" name="rdoNameCriticidad" id="rdoAltaCriticidad" checked="checked">
+                                            <label style="color: #2F4050;"><strong>Alta: </strong></label>
+                                            <input tabindex="7" type="radio" name="rdoNameCriticidad" style="margin-left:30px" id="rdoMedioCriticidad">
+                                            <label style="color: #2F4050"><strong>Media: </strong></label>
+                                            <input tabindex="7" type="radio" name="rdoNameCriticidad" style="margin-left:30px" id="rdoBajaCriticidad">
+                                            <label style="color: #2F4050"><strong>Baja: </strong></label>
+                                        </div>
+                                    </section>
+                                </div>
+
+                                <div class="row form-group">
+                                    <section class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+                                        <label style="color: #2F4050"><strong>Locación: </strong><strong class="CampoRequerido">*</strong></label>
+                                        <div style="width: 100%; display:flex; flex-flow:row nowrap;">
+                                            <select id="selectorTicketLocation" class="selectpicker" multiple data-selected-text-format="count > 3" data-live-search="true" data-width="95%" title="Seleccionar Locacion" data-size="5" data-max-options="1" data-actions-box="false" data-style="btn-info">
+                                            </select>
+                                            @*<button style="width:50px;" class="btn btn-primary" type="button" id="btnAgregarLocation"><i class="icon-append fa fa-plus"></i></button>*@
+                                        </div>
+                                    </section>
+
+                                    <section class="col-xs-12 col-sm-12 col-md-3 col-lg-4">
+                                        <label style="color: #2F4050"><strong>Invitados: </strong><strong class="CampoRequerido">*</strong></label>
+                                        <div class="form-group">
+                                            <select id="selectorInvitados" class="selectpicker" multiple data-selected-text-format="count < 3" data-live-search="true" data-width="100%" data-size="5" title="Selección múltiple" data-actions-box="true"></select>
+                                        </div>
+                                    </section>
+
+                                    <section class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                        <label style="color: #2F4050"><strong>Fecha Inicio: </strong></label>
+                                        <div class="input-group">
+                                            <input type="text" tabindex="2" class="form-control" name="txtTicketDate" id="txtTicketDate" disabled maxlength="12" style="padding-left:5px;" />
+                                            <span class="input-group-addon"><i class="icon-prev fa fa-list-alt"></i></span>
+                                        </div>
+                                    </section>
+                                </div>
+
+                                <div class="row form-group">
+                                    <!-- DETALLER DE TICKET-->
+                                    <section class="col-xs-12 col-sm-12 col-md-6 col-lg-12 form-group">
+                                        <label style="color: #2F4050"><strong>Detalle: </strong></label>
+                                        <div style="width: 100%; display:flex; flex-flow:row nowrap;">
+                                            <textarea style="min-width: 100%" class="form-control" id="txtDetallerTicket" name="txtAreaDetalleTicket" rows="5"></textarea>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div><!-- fin id="exTab2"  -->
+
+            </div>
+
+            <div class="modal-footer">
+                <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-start">
+                    @Html.Partial("../MensajesParciales/_MensajeLeyendaCampoRequerido")
+                </div>
+                @*<button style="margin:3px;" tabindex="8" class="btn btn-danger" type="button" id="btnCancelar"><i class="fa fa-times-circle"></i> Cancelar</button>*@
+                <button style="margin:3px;" tabindex="9" class="btn btn-primary" type="submit" id="btnCreacionTicket"><i class="fa fa-save"></i> Grabar</button>
+                @*<button style="margin:3px;" tabindex="9" class="btn btn-primary" type="submit" id="btnGrabar"><i class="fa fa-save"></i> Grabar</button>*@
+                @*<button style="margin:3px;" tabindex="9" class="btn btn-success" type="button" id="BtnAbrirModalPDF" title="Exportar PDF Acta de Reunión"><i class="fa fa-file-pdf-o"></i> Imprimir PDF</button>*@
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!--MODAL TRABAJADOR -->
+<div id="ModalTrabajador" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:50%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Datos del Trabajador</h4>
+            </div>
+            <div class="modal-body clearfix" style="padding-left:10px; padding-right:10px;">
+                <form id="FrmTrabajador" onsubmit="return false">
+                    <div class="row">
+                        <section class="col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group">
+                            <label style="color: #2F4050">Tipo de Documento:</label>
+                            <div style="width: 100%; display:flex; flex-flow:row nowrap;">
+                                <select id="selectorTrabajadorTipoDoc" class="selectpicker" multiple data-selected-text-format="count > 3" data-live-search="true" data-width="100%" title="Seleccionar Cargo" data-size="5" data-max-options="1" data-actions-box="false" data-style="btn-info">
+                                    <option value="1">DNI</option>
+                                    <option value="2">CARNET DE EXTRANJERIA</option>
+                                    <option value="3">PASAPORTE</option>
+                                    <option value="4">PERMISO VEHICULAR</option>
+                                    <option value="5">RUC</option>
+                                </select>
+                            </div>
+                        </section>
+
+                        <section class="col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group">
+                            <label style="color: #2F4050">Nro Documento:</label>
+                            <div class="input-group">
+                                <input type="text" tabindex="1" class="form-control" name="txtTrabajadorNroDoc" id="txtTrabajadorNroDoc" maxlength="20" style="padding-left:5px;" />
+                                <span class="input-group-addon"><i class="icon-prev fa fa-credit-card"></i></span>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="row">
+                        <section class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
+                            <label style="color: #2F4050">Nombres: <strong class="CampoRequerido">*</strong></label>
+                            <div class="input-group">
+                                <input type="text" tabindex="1" class="form-control" name="txtTrabajadorNombres" id="txtTrabajadorNombres" maxlength="50" style="padding-left:5px;" />
+                                <span class="input-group-addon"><i class="icon-prev fa fa-user"></i></span>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="row">
+                        <section class="col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group">
+                            <label style="color: #2F4050">Apellido Paterno: <strong class="CampoRequerido">*</strong></label>
+                            <div class="input-group">
+                                <input type="text" tabindex="1" class="form-control" name="txtTrabajadorApellidoPat" id="txtTrabajadorApellidoPat" maxlength="50" style="padding-left:5px;" />
+                                <span class="input-group-addon"><i class="icon-prev fa fa-user"></i></span>
+                            </div>
+                        </section>
+
+                        <section class="col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group">
+                            <label style="color: #2F4050">Apellido Materno: </label>
+                            <div class="input-group">
+                                <input type="text" tabindex="1" class="form-control" name="txtTrabajadorApellidoMat" id="txtTrabajadorApellidoMat" maxlength="50" style="padding-left:5px;" />
+                                <span class="input-group-addon"><i class="icon-prev fa fa-user"></i></span>
+                            </div>
+                        </section>
+                    </div>
+
+
+                    <div class="row">
+                        <section class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
+                            <label style="color: #2F4050">Dirección:</label>
+                            <div class="input-group">
+                                <input type="text" tabindex="1" class="form-control" name="txtTrabajadorDireccion" id="txtTrabajadorDireccion" maxlength="100" style="padding-left:5px;" />
+                                <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                            </div>
+                        </section>
+                    </div>
+
+
+                    <div class="row">
+                        <section class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
+                            <label style="color: #2F4050">Email: <strong class="CampoRequerido">*</strong></label>
+                            <div class="input-group">
+                                <input type="text" tabindex="1" class="form-control" name="txtTrabajadorEmail" id="txtTrabajadorEmail" maxlength="100" style="padding-left:5px;" />
+                                <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="row">
+                        <section class="col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group">
+                            <label style="color: #2F4050">Teléfono: <strong class="CampoRequerido">*</strong></label>
+                            <div class="input-group">
+                                <input type="text" tabindex="1" class="form-control" name="txtTrabajadorTelefono" id="txtTrabajadorTelefono" maxlength="15" style="padding-left:5px;" />
+                                <span class="input-group-addon"><i class="icon-prev fa fa-phone"></i></span>
+                            </div>
+                        </section>
+                        <section class="col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group">
+                            <label style="color: #2F4050">Fecha Nacimiento:</label>
+                            <div class="input-group date dtpickerI">
+                                <input type="text" class="form-control hasDatepicker" id="txtTrabajadorFechaNac" name="txtTrabajadorFechaNac" value="" maxlength="12" data-dateformat="dd/mm/yy" autocomplete="off">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="row">
+                        <section class="col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group">
+                            <label style="color: #2F4050">Area:<strong class="CampoRequerido">*</strong></label>
+                            <div style="width: 100%; display:flex; flex-flow:row nowrap;">
+                                <select id="selectorTrabajadorArea" class="selectpicker" multiple data-selected-text-format="count > 3" data-live-search="true" data-width="100%" title="Seleccionar Área" data-size="5" data-max-options="1" data-actions-box="false" data-style="btn-info">
+                                </select>
+                                <button style="width:50px;" class="btn btn-primary" type="button" id="btnAgregarArea"><i class="icon-append fa fa-plus"></i></button>
+                            </div>
+                        </section>
+
+                        <section class="col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group">
+                            <label style="color: #2F4050">Cargo:<strong class="CampoRequerido">*</strong></label>
+                            <div style="width: 100%; display:flex; flex-flow:row nowrap;">
+                                <select id="selectorTrabajadorCargo" class="selectpicker" multiple data-selected-text-format="count > 3" data-live-search="true" data-width="100%" title="Seleccionar Cargo" data-size="5" data-max-options="1" data-actions-box="false" data-style="btn-info">
+                                </select>
+                                <button style="width:50px;" class="btn btn-primary" type="button" id="btnAgregarCargo"><i class="icon-append fa fa-plus"></i></button>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="row">
+                        <section class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
+                            <label style="color: #2F4050">Operación:<strong class="CampoRequerido">*</strong></label>
+                            <div style="width: 100%; display:flex; flex-flow:row nowrap;">
+                                <select id="selectorTrabajadorOperacion" class="selectpicker" multiple data-selected-text-format="count > 3" data-live-search="true" data-width="100%" title="Seleccionar Operación" data-size="5" data-max-options="1" data-actions-box="false" data-style="btn-info"></select>
+                                <button style="width:50px;" class="btn btn-primary" type="button" id="btnAgregarOperacion2"><i class="icon-append fa fa-plus"></i></button>
+                            </div>
+                        </section>
+                    </div>
+
+
+
+                    <section class="col-xs-12" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:space-between">
+                        <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-start">
+                            @Html.Partial("../MensajesParciales/_MensajeLeyendaCampoRequerido")
+                        </div>
+                        <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-end">
+                            <button style="margin:3px;" tabindex="8" class="btn btn-danger" type="button" id="btnCancelarNuevoTrabajador"><i class="fa fa-times-circle"></i> Cancelar</button>
+                            <button style="margin:3px;" tabindex="9" class="btn btn-primary" type="submit" id="btnGrabarNuevoTrabajador"><i class="fa fa-save"></i> Grabar</button>
+                        </div>
+                    </section>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!--MODAL OPERACIÓN -->
+<div id="ModalOperacion" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:40%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Datos de la Operacion</h4>
+            </div>
+            <div class="modal-body clearfix" style="padding-left:10px; padding-right:10px;">
+                <form id="FrmOperacion" onsubmit="return false">
+                    <section class="col-xs-12">
+                        <label style="color: #2F4050">Nombre de la Operación: <strong class="CampoRequerido">*</strong></label>
+                        <div class="input-group">
+                            <input type="text" tabindex="1" class="form-control" name="txtNombreOperacion" id="txtNombreOperacion" maxlength="100" style="padding-left:5px;" />
+                            <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                        </div>
+                    </section>
+
+                    <section class="col-xs-12" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:space-between">
+                        <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-start">
+                            @Html.Partial("../MensajesParciales/_MensajeLeyendaCampoRequerido")
+                        </div>
+                        <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-end">
+                            <button style="margin:3px;" tabindex="8" class="btn btn-danger" type="button" id="btnCancelarNuevaOperacion"><i class="fa fa-times-circle"></i> Cancelar</button>
+                            <button style="margin:3px;" tabindex="9" class="btn btn-primary" type="submit" id="btnGrabarNuevaOperacion"><i class="fa fa-save"></i> Grabar</button>
+                        </div>
+                    </section>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!--MODAL AREA -->
+<div id="ModalArea" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:40%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Datos del Área</h4>
+            </div>
+            <div class="modal-body clearfix" style="padding-left:10px; padding-right:10px;">
+                <form id="FrmArea" onsubmit="return false">
+                    <section class="col-xs-12">
+                        <label style="color: #2F4050">Nombre del Área: <strong class="CampoRequerido">*</strong></label>
+                        <div class="input-group">
+                            <input type="text" tabindex="1" class="form-control" name="txtAreaNombre" id="txtAreaNombre" maxlength="100" style="padding-left:5px;" />
+                            <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                        </div>
+                    </section>
+
+                    <section class="col-xs-12" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:space-between">
+                        <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-start">
+                            @Html.Partial("../MensajesParciales/_MensajeLeyendaCampoRequerido")
+                        </div>
+                        <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-end">
+                            <button style="margin:3px;" tabindex="8" class="btn btn-danger" type="button" id="btnCancelarNuevaArea"><i class="fa fa-times-circle"></i> Cancelar</button>
+                            <button style="margin:3px;" tabindex="9" class="btn btn-primary" type="submit" id="btnGrabarNuevaArea"><i class="fa fa-save"></i> Grabar</button>
+                        </div>
+                    </section>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!--MODAL CARGO -->
+<div id="ModalCargo" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:40%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Datos del Cargo</h4>
+            </div>
+            <div class="modal-body clearfix" style="padding-left:10px; padding-right:10px;">
+                <form id="FrmCargo" onsubmit="return false">
+                    <section class="col-xs-12">
+                        <label style="color: #2F4050">Nombre del Cargo: <strong class="CampoRequerido">*</strong></label>
+                        <div class="input-group">
+                            <input type="text" tabindex="1" class="form-control" name="txtCargoNombre" id="txtCargoNombre" maxlength="50" style="padding-left:5px;" />
+                            <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                        </div>
+                    </section>
+
+                    <section class="col-xs-12" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:space-between">
+                        <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-start">
+                            @Html.Partial("../MensajesParciales/_MensajeLeyendaCampoRequerido")
+                        </div>
+                        <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-end">
+                            <button style="margin:3px;" tabindex="8" class="btn btn-danger" type="button" id="btnCancelarNuevoCargo"><i class="fa fa-times-circle"></i> Cancelar</button>
+                            <button style="margin:3px;" tabindex="9" class="btn btn-primary" type="submit" id="btnGrabarNuevoCargo"><i class="fa fa-save"></i> Grabar</button>
+                        </div>
+                    </section>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!--MODAL RAZON -->
+
+<div id="ModalReason" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:40%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Datos de la Razón</h4>
+            </div>
+            <div class="modal-body clearfix" style="padding-left:10px; padding-right:10px;">
+                <form id="FrmArea" onsubmit="return false">
+                    <section class="col-xs-12">
+                        <label style="color: #2F4050">Nombre de la Razón: <strong class="CampoRequerido">*</strong></label>
+                        <div class="input-group">
+                            <input type="text" tabindex="1" class="form-control" name="txtReasonNombre" id="txtReasonNombre" maxlength="100" style="padding-left:5px;" />
+                            <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                        </div>
+                    </section>
+
+                    <section class="col-xs-12" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:space-between">
+                        <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-start">
+                            @Html.Partial("../MensajesParciales/_MensajeLeyendaCampoRequerido")
+                        </div>
+                        <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-end">
+                            <button style="margin:3px;" tabindex="8" class="btn btn-danger" type="button" id="btnCancelarNuevaReason"><i class="fa fa-times-circle"></i> Cancelar</button>
+                            <button style="margin:3px;" tabindex="9" class="btn btn-primary" type="submit" id="btnGrabarNuevaReason"><i class="fa fa-save"></i> Grabar</button>
+                        </div>
+                    </section>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+        var usuarioRegistrador = "@User.Identity.Name.ToUpper().ToString()";
+        document.getElementById('IdWhoRegister').value = usuarioRegistrador.split(',')[4];
+
+        var NroTicketActivity = 0;
+        var SelectInvitados = "";
+        /*---------------- VALUES - TICKET -------------*/
+        var IdLocationTicket = 0;
+        var IdResponsibleTicket = 0;
+        var IdOperatorTicket = 0;
+        var IdOperationTicket = 0;
+        var IdEncargadoTicket = 0;
+        var FechaInicioTicket = "";
+        var IdRazonTicket = 0;
+        var IdCriticidadTicket = 0;
+        var DetalleTextTicket = "";
+
+        /* --------------------------- FUNCIONES -------------------------*/
+
+        function LimpiarEtiquetas() {
+
+            $("#selectorTicketOperacion").selectpicker('val', "");
+            //document.getElementById('selectorCambioDeGuardiaOperacion').disabled = false;
+            $("#selectorTicketOperacion").selectpicker('refresh');
+            document.getElementById('selectorTicketOperacion').disabled = false;
+
+            $("#selectorWhoCall").selectpicker('val', "");
+            document.getElementById('selectorWhoCall').disabled = false;
+            $("#selectorWhoCall").selectpicker('refresh');
+
+            $("#selectorWhoResponsible").selectpicker('val', "");
+            document.getElementById('selectorWhoResponsible').disabled = false;
+            $("#selectorWhoResponsible").selectpicker('refresh');
+
+            $("#selectorTicketRazon").selectpicker('val', "");
+            document.getElementById('selectorTicketRazon').disabled = false;
+            $("#selectorTicketRazon").selectpicker('refresh');
+
+            $("#selectorTicketLocation").selectpicker('val', "");
+            document.getElementById('selectorTicketLocation').disabled = false;
+            $("#selectorTicketLocation").selectpicker('refresh');
+
+            $("#selectorInvitados").selectpicker('val', "");
+            document.getElementById('selectorInvitados').disabled = false;
+            $("#selectorInvitados").selectpicker('refresh');
+
+            document.getElementById("rdoAltaCriticidad").checked = true;
+            document.getElementById("rdoMedioCriticidad").checked = false;
+            document.getElementById("rdoBajaCriticidad").checked = false;
+
+
+            document.getElementById("txtDetallerTicket").value = '';
+    }
+
+        function FormatoFechas() {
+            var FechaHoy = new Date();
+            var FechaActual = new Date(FechaHoy.getFullYear(), FechaHoy.getMonth(), FechaHoy.getDate());
+
+            $('#txtFechaInicioCambioDeGuardia').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                endDate: FechaActual,
+            });
+            $('#txtFechaFinalCambioDeGuardia').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                endDate: FechaActual,
+            });
+
+            $('#txtTicketDate').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                endDate: FechaActual,
+            });
+
+            $('#txtActPendienteFechaFin').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                //endDate: FechaActual,
+            });
+
+            $('#txtActivityDateEnd').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                //endDate: FechaActual,
+            });
+
+            $("#txtFechaInicioCambioDeGuardia").datepicker("setDate", primerDiaMes);
+            $("#txtFechaFinalCambioDeGuardia").datepicker("setDate", FechaFinalReporte);
+            $("#txtTicketDate").datepicker("setDate", FechaFinalReporte);
+            $("#txtActPendienteFechaFin").datepicker("setDate", FechaFinalReporte);
+            ComboOperacion(0, 0);
+            ComboReason();
+            ComboLocation();
+            //ComboCriticality();
+    }
+
+        function ComboOperacion(tipoConsulta) {
+            $.ajax({
+                type: "GET", /*Puede ser post*/
+                url: tRutaServidor + "/Operation/ListarOperaciones", /* es importante poner los .. delante*/
+                contentType: "application/json; charset=utf-8",
+                //data: "yearMonthNumber=" + yearMonthIds1,
+                dataType: "json",
+                success: function (resultado) {
+
+                    var opcionesOperacion = "";
+
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+
+                        if (resultado[0].ValorConsulta == "1") {
+
+                            /**Llenar el combo con todo las compañías**/
+                            for (i = 0; i < resultado.length; i++) {
+
+                                opcionesOperacion += "<option value='" + resultado[i].IdOperation + "'>" + resultado[i].OperationName + "</option>";
+                            }
+
+                            $("#selectorOperacion").empty();
+                            $("#selectorTicketOperacion").empty();
+                            $("#selectorTrabajadorOperacion").empty();
+
+                            $("#selectorOperacion").append(opcionesOperacion);
+                            $("#selectorOperacion").selectpicker('refresh');
+
+                            $("#selectorTrabajadorOperacion").append(opcionesOperacion);
+                            $("#selectorTrabajadorOperacion").selectpicker('refresh');
+
+                            if (tipoConsulta == "1") {
+                                $("#selectorTicketOperacion").append(opcionesOperacion);
+                                //if (resultado.filter((x) => x.OperationName == NombreOperacion.toUpperCase()).length > 0) {
+                                //    $("#selectorCambioDeGuardiaOperacion").selectpicker('val', resultado.find((x) => x.OperationName == NombreOperacion.toUpperCase()).IdOperation);
+                                //}
+                                $("#selectorTicketOperacion").selectpicker('refresh');
+                            }
+                            else {
+                                $("#selectorTicketOperacion").append(opcionesOperacion);
+                                $("#selectorTicketOperacion").selectpicker('refresh');
+                                //GrillaListado();
+                            }
+
+
+                        }
+                        else {
+                            /*Error al listar*/
+
+                        }
+
+                    } else {
+                        /*Vacio*/
+                        $("#selectorOperacion").empty();
+                        $("#selectorTicketOperacion").empty();
+                        $("#selectorTrabajadorOperacion").empty();
+                        //GrillaListado();
+
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*Fallo al llamar funcion ajax*/
+
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+        }
+
+        function ComboEncargado(tipoConsulta) {
+
+            $.ajax({
+                type: "GET", /*Puede ser post*/
+                url: tRutaServidor + "/Person/ListarPersonaTicket", /* es importante poner los .. delante*/
+                contentType: "application/json; charset=utf-8",
+                data:
+                     "IdOperation=" + IdOperatorTicket,
+                dataType: "json",
+                success: function (resultado) {
+
+                    var opcionesPersonTicket = "";
+
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+
+                        if (resultado[0].ValorConsulta == "1") {
+
+                            /**Llenar el combo con todo las compañías**/
+                            for (i = 0; i < resultado.length; i++) {
+
+                                opcionesPersonTicket += "<option value='" + resultado[i].IdPerson + "'>" + resultado[i].FullNameOperation+ "</option>";
+                            }
+
+                            if (tipoConsulta == "0") {
+
+                                $("#selectorWhoCall").empty();
+                                $("#selectorWhoCall").append(opcionesPersonTicket);
+                                $("#selectorWhoCall").selectpicker('refresh');
+
+                            } else {
+
+                                $("#selectorResponsableActivity").empty();
+                                $("#selectorResponsableActivity").append(opcionesPersonTicket);
+                                $("#selectorResponsableActivity").selectpicker('refresh');
+
+                            }
+
+
+
+                        }
+                        else {
+                            /*Error al listar*/
+
+                        }
+
+                    } else {
+
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*Fallo al llamar funcion ajax*/
+
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+        }
+        
+        function ComboReason() {
+
+            $.ajax({
+                type: "GET", /*Puede ser post*/
+                url: tRutaServidor + "/Reason/ListarReason", /* es importante poner los .. delante*/
+                contentType: "application/json; charset=utf-8",
+                //data:
+                //     "IdOperation=" + IdOperatorTicket,
+                dataType: "json",
+                success: function (resultado) {
+
+                    var opcionesReasonTicket = "";
+
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+
+                        if (resultado[0].ValorConsulta == "1") {
+
+                            /**Llenar el combo con todo las compañías**/
+                            for (i = 0; i < resultado.length; i++) {
+
+                                opcionesReasonTicket += "<option value='" + resultado[i].IdReason + "'>" + resultado[i].ReasonName + "</option>";
+                            }
+
+                            $("#selectorTicketRazon").empty();
+                            $("#selectorTicketRazon").append(opcionesReasonTicket);
+                            $("#selectorTicketRazon").selectpicker('refresh');
+
+                        }
+                        else {
+                            /*Error al listar*/
+
+                        }
+
+                    } else {
+
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*Fallo al llamar funcion ajax*/
+
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+        }
+        
+        function ComboLocation() {
+
+            $.ajax({
+                type: "GET", /*Puede ser post*/
+                url: tRutaServidor + "/Reason/ListarLocation", /* es importante poner los .. delante*/
+                contentType: "application/json; charset=utf-8",
+                //data:
+                //     "IdOperation=" + IdOperatorTicket,
+                dataType: "json",
+                success: function (resultado) {
+
+                    var opcionesLocationTicket = "";
+
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+
+                        if (resultado[0].ValorConsulta == "1") {
+
+                            /**Llenar el combo con todo las compañías**/
+                            for (i = 0; i < resultado.length; i++) {
+
+                                opcionesLocationTicket += "<option value='" + resultado[i].IdLocation + "'>" + resultado[i].LocationName + "</option>";
+                            }
+
+                            $("#selectorTicketLocation").empty();
+                            $("#selectorTicketLocation").append(opcionesLocationTicket);
+                            $("#selectorTicketLocation").selectpicker('refresh');
+
+                        }
+                        else {
+                            /*Error al listar*/
+
+                        }
+
+                    } else {
+
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*Fallo al llamar funcion ajax*/
+
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+        }
+        
+        function ComboCriticality() {
+
+            $.ajax({
+                type: "GET", /*Puede ser post*/
+                url: tRutaServidor + "/Criticality/ListarCriticality", /* es importante poner los .. delante*/
+                contentType: "application/json; charset=utf-8",
+                //data:
+                //     "IdOperation=" + IdOperatorTicket,
+                dataType: "json",
+                success: function (resultado) {
+
+                    var opcionesCriticalityTicket = "";
+
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+
+                        if (resultado[0].ValorConsulta == "1") {
+
+                            /**Llenar el combo con todo las compañías**/
+                            for (i = 0; i < resultado.length; i++) {
+
+                                opcionesCriticalityTicket += "<option value='" + resultado[i].IdCriticality + "'>" + resultado[i].CriticalityNameTime + "</option>";
+                            }
+
+                            $("#selectorTicketCriticidad").empty();
+                            $("#selectorTicketCriticidad").append(opcionesCriticalityTicket);
+                            $("#selectorTicketCriticidad").selectpicker('refresh');
+
+                        }
+                        else {
+                            /*Error al listar*/
+
+                        }
+
+                    } else {
+
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*Fallo al llamar funcion ajax*/
+
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+        }
+
+        function RegistrarTicket() {
+
+            $("#CargaTemporal").removeClass("hidden");
+
+            if ($('#rdoAltaCriticidad').is(":checked") == true) {
+
+                IdCriticidadTicket = 3;
+
+            } else if ($('#rdoMedioCriticidad').is(":checked") == true) {
+
+                IdCriticidadTicket = 2;
+
+            } else if ($('#rdoBajaCriticidad').is(":checked") == true){
+
+                IdCriticidadTicket = 1;
+
+            }
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Ticket/CrearTicket",
+                dataType: "json",
+                data: {
+                    IdLocation : IdLocationTicket,
+                    IdOperation: IdOperationTicket,
+                    IdEncargado: IdEncargadoTicket,
+                    FechaInicio: FechaInicioTicket,
+                    IdRazon: IdRazonTicket,
+                    IdCriticidad: IdCriticidadTicket,
+                    DetalleText: DetalleTextTicket,
+                    ResponsibleId: IdResponsibleTicket,
+                    InvitadoTicket: SelectInvitados
+                },
+                success: function (resultado) {
+
+                    if (resultado.length > 0) {
+
+                        if (resultado[0].ValorConsulta == '1') {
+
+                            toastr.options.timeOut = nTiempoMedio;
+                            toastr.options.extendedTimeOut = nTiempoMedio;
+                            /*success - info - warning - error*/
+                            var $toast = toastr["success"](tMensajeCreadoExito, tTituloExito); $toastlast = $toast;
+
+
+                            //ComboEncargado('1');
+                            //$("#PanelActivityFather").removeClass("hidden");
+                            $('#ModalCrearTicket').modal('hide');
+
+                            $("#CargaTemporal").addClass("hidden");
+
+                            Swal.fire({
+                                title: '<strong>Nro Ticket:<span style="color:red"> '+ resultado[0].NroTicket +'</span></strong>',
+                                icon: 'info',
+                                html:
+                                    '<div style="text-align:left;font-size:18px;margin-left:50px">' +
+                                    '<b>Operacion :</b> ' + resultado[0].OperationName + '</br>' +
+                                    '<b>Quien Llama :</b> ' + resultado[0].FullNameTicket + '</br>' +
+                                    '<b>Quien Registra :</b> ' + usuarioRegistrador.split(',')[4] + '</br>' +
+                                    '<b>Responsable :</b> ' + resultado[0].ResponsibleNameTicket + '</br>' +
+                                    //'<b>Encargado :</b> ' + resultado[0].FullNameTicket + ' </br>' +
+                                    '<b>Fecha Inicio :</b> ' + resultado[0].StartDate + ' </br>' +
+                                    '<b>Razon : </b> ' + resultado[0].ReasonName + '  </br>' +
+                                    '<b>Criticidad : </b> ' + resultado[0].CriticalityName + '  </br></br>'+
+                                    'Se ha enviado un correo sobre los detalles del ticket, puedes visualizarlo ' +
+                                    '<a href="http://webmail.assac.com.pe/" target="_blank">aquí</a>' +
+                                    '</div>',
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                focusConfirm: false,
+                                confirmButtonText:
+                                    'OK <i class="fa-regular fa-circle-check"></i>',
+                                confirmButtonAriaLabel: 'great!',
+                            });
+
+                            LimpiarEtiquetas();
+
+                        } else {
+
+                            toastr.options.timeOut = nTiempoMedio;
+                            toastr.options.extendedTimeOut = nTiempoMedio;
+                            /*success - info - warning - error*/
+                            var $toast = toastr["warning"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                            return;
+                        }
+
+                    } else if (resultado == 2) {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValidacionNroCotizacionExiste, tTituloError); $toastlast = $toast;
+                        document.getElementById('btnGrabar').disabled = false;
+
+                    } else if (resultado == 3) {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorActualizarRutas, tTituloError); $toastlast = $toast;
+                        document.getElementById('btnGrabar').disabled = false;
+                    } else {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado);
+                    }
+                    $("#CargaTemporal").addClass("hidden");
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+
+        };
+
+        function ComboEncargado2(tipoConsulta) {
+
+        $.ajax({
+            type: "GET", /*Puede ser post*/
+            url: tRutaServidor + "/Person/ListarPersonaTicket", /* es importante poner los .. delante*/
+            contentType: "application/json; charset=utf-8",
+            data:
+                 "IdOperation=" + 0,
+            dataType: "json",
+            success: function (resultado) {
+
+                var opcionesPersonTicket = "";
+
+                /*exitosamente*/
+                if (resultado.length > 0) {
+                    /* proceso exitoso con datos*/
+
+                    if (resultado[0].ValorConsulta == "1") {
+
+                        /**Llenar el combo con todo las compañías**/
+                        for (i = 0; i < resultado.length; i++) {
+
+                            opcionesPersonTicket += "<option value='" + resultado[i].IdPerson + "'>" + resultado[i].FullNameOperation+ "</option>";
+                        }
+
+                        if (tipoConsulta == "1") {
+
+                            $("#selectorWhoResponsible").empty();
+                            $("#selectorWhoResponsible").append(opcionesPersonTicket);
+                            $("#selectorWhoResponsible").selectpicker('refresh');
+
+                        }
+
+                    }
+                    else {
+                        /*Error al listar*/
+
+                    }
+
+                } else {
+
+                }
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                /*Fallo al llamar funcion ajax*/
+
+                console.log("ERROR AJAX : " + ajaxOptions);
+                console.log("ERROR AJAX : " + thrownError);
+                console.log(xhr.responseText);
+                console.log(xhr);
+
+            }
+        });
+    }
+        
+        function ComboArea(tipoConsulta, AreaNuevo) {
+            $.ajax({
+                type: "GET", /*Puede ser post*/
+                url: tRutaServidor + "/Area/ListarAreas", /* es importante poner los .. delante*/
+                contentType: "application/json; charset=utf-8",
+                //data: "yearMonthNumber=" + yearMonthIds1,
+                dataType: "json",
+                success: function (resultado) {
+
+                    var optionsAreas = "";
+
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+
+                        if (resultado[0].ValorConsulta == "1") {
+
+                            /**Llenar el combo con todo las compañías**/
+                            for (i = 0; i < resultado.length; i++) {
+
+                                optionsAreas += "<option value='" + resultado[i].IdArea + "'>" + resultado[i].AreaName + "</option>";
+                            }
+
+                            $("#selectorTrabajadorArea").empty();
+
+                            if (tipoConsulta == "1") {
+                                $("#selectorTrabajadorArea").append(optionsAreas);
+                                if (resultado.filter((x) => x.AreaName == AreaNuevo.toUpperCase()).length > 0) {
+                                    $("#selectorTrabajadorArea").selectpicker('val', resultado.find((x) => x.AreaName == AreaNuevo.toUpperCase()).IdArea);
+                                }
+                                $("#selectorTrabajadorArea").selectpicker('refresh');
+                            }
+                            else {
+                                $("#selectorTrabajadorArea").append(optionsAreas);
+                                $("#selectorTrabajadorArea").selectpicker('refresh');
+                            }
+
+                        }
+                        else {
+                            /*Error al listar*/
+
+                        }
+
+                    } else {
+                        /*Vacio*/
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*Fallo al llamar funcion ajax*/
+
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+    }
+        
+        function ComboCargo(tipoConsulta, CargoNuevo) {
+            $.ajax({
+                type: "GET", /*Puede ser post*/
+                url: tRutaServidor + "/Position/ListarCargos", /* es importante poner los .. delante*/
+                contentType: "application/json; charset=utf-8",
+                //data: "yearMonthNumber=" + yearMonthIds1,
+                dataType: "json",
+                success: function (resultado) {
+
+                    var optionsPositions = "";
+
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+
+                        if (resultado[0].ValorConsulta == "1") {
+
+                            /**Llenar el combo con todo las compañías**/
+                            for (i = 0; i < resultado.length; i++) {
+
+                                optionsPositions += "<option value='" + resultado[i].IdPosition + "'>" + resultado[i].PositionName + "</option>";
+                            }
+
+                            $("#selectorTrabajadorCargo").empty();
+
+                            if (tipoConsulta == "1") {
+                                $("#selectorTrabajadorCargo").append(optionsPositions);
+                                if (resultado.filter((x) => x.PositionName == CargoNuevo.toUpperCase()).length > 0) {
+                                    $("#selectorTrabajadorCargo").selectpicker('val', resultado.find((x) => x.PositionName == CargoNuevo.toUpperCase()).IdPosition);
+                                }
+                                $("#selectorTrabajadorCargo").selectpicker('refresh');
+                            }
+                            else {
+                                $("#selectorTrabajadorCargo").append(optionsPositions);
+                                $("#selectorTrabajadorCargo").selectpicker('refresh');
+                            }
+
+                        }
+                        else {
+                            /*Error al listar*/
+
+                        }
+
+                    } else {
+                        /*Vacio*/
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*Fallo al llamar funcion ajax*/
+
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+        }
+        
+        function CrearTrabajador() {
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Employee/CrearTrabajador",
+                dataType: "json",
+                data: {
+                    TipoDocumento: document.getElementById('selectorTrabajadorTipoDoc').value == "" ? 0 : parseInt(document.getElementById('selectorTrabajadorTipoDoc').value),
+                    NroDocumento: $("#txtTrabajadorNroDoc").val().trim(),
+                    Nombres: $("#txtTrabajadorNombres").val().trim(),
+                    ApellidoPat: $("#txtTrabajadorApellidoPat").val().trim(),
+                    ApellidoMat: $("#txtTrabajadorApellidoMat").val().trim(),
+                    Direccion: $("#txtTrabajadorDireccion").val().trim(),
+                    Email: $("#txtTrabajadorEmail").val().trim(),
+                    Telefono: $("#txtTrabajadorTelefono").val().trim(),
+                    FechaNacimiento: $("#txtTrabajadorFechaNac").val().trim(),
+                    IdArea: $("#selectorTrabajadorArea").val(),
+                    IdCargo: $("#selectorTrabajadorCargo").val(),
+                    IdOperacion: document.getElementById('selectorTrabajadorOperacion').value == "" ? 0 : parseInt(document.getElementById('selectorTrabajadorOperacion').value)
+                },
+                success: function (resultado) {
+
+                    if (resultado == "1") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["success"](tMensajeCreadoExito, tTituloExito); $toastlast = $toast;
+
+                        ComboTrabajador("", "");
+                        document.getElementById('btnGrabarNuevoTrabajador').disabled = false;
+
+                        ComboEncargado2("1");
+
+                        $('#ModalTrabajador').modal('hide');
+
+                    } else if (resultado == "2") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorYaExiste, tTituloError); $toastlast = $toast;
+                        document.getElementById('btnGrabarNuevoTrabajador').disabled = false;
+
+                    } else if (resultado == "0") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado);
+
+                    } else {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado);
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+        }
+
+        function CrearCargo() {
+
+        $("#CargaTemporal").removeClass("hidden");
+
+        $.ajax({
+            type: "POST",
+            url: tRutaServidor + "/Position/CrearCargo",
+            dataType: "json",
+            data: "PositionName=" + $("#txtCargoNombre").val().trim(),
+            success: function (resultado) {
+
+                if (resultado == "1") {
+                    $("#CargaTemporal").addClass("hidden");
+                    toastr.options.timeOut = nTiempoCorto;
+                    toastr.options.extendedTimeOut = nTiempoCorto;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["success"](tMensajeCreadoExito, tTituloExito); $toastlast = $toast;
+
+                    ComboCargo('1', $("#txtCargoNombre").val().trim());
+                    document.getElementById('btnGrabarNuevoCargo').disabled = false;
+                    $('#ModalCargo').modal('hide');
+
+                } else if (resultado == "2") {
+                    $("#CargaTemporal").addClass("hidden");
+                    toastr.options.timeOut = nTiempoMedio;
+                    toastr.options.extendedTimeOut = nTiempoMedio;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorYaExiste, tTituloError); $toastlast = $toast;
+                    document.getElementById('btnGrabarNuevoCargo').disabled = false;
+
+                } else if (resultado == "0") {
+                    $("#CargaTemporal").addClass("hidden");
+                    toastr.options.timeOut = nTiempoMedio;
+                    toastr.options.extendedTimeOut = nTiempoMedio;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                    console.log("Mensaje del error : " + resultado);
+
+                } else {
+                    $("#CargaTemporal").addClass("hidden");
+                    toastr.options.timeOut = nTiempoMedio;
+                    toastr.options.extendedTimeOut = nTiempoMedio;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                    console.log("Mensaje del error : " + resultado);
+                }
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                $("#CargaTemporal").addClass("hidden");
+                /*fallo al llamar a la funcion ajax*/
+                toastr.options.timeOut = nTiempoLargo;
+                toastr.options.extendedTimeOut = nTiempoLargo;
+                /*success - info - warning - error*/
+                var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                console.log("ERROR AJAX : " + ajaxOptions);
+                console.log("ERROR AJAX : " + thrownError);
+                console.log(xhr.responseText);
+                console.log(xhr);
+            }
+        });
+    }
+
+        function CrearOperacion() {
+            //$("#CargaTemporal").removeClass("hidden");
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Operation/CrearOperacion",
+                dataType: "json",
+                data:
+                {
+                    OperationName: $("#txtNombreOperacion").val().trim()
+                },
+                success: function (resultado) {
+
+                    if (resultado == "1") {
+                        //$("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["success"](tMensajeCreadoExito, tTituloExito); $toastlast = $toast;
+
+                        ComboOperacion("1", $("#txtNombreOperacion").val().trim());
+                        document.getElementById('btnGrabarNuevaOperacion').disabled = false;
+                        $('#ModalOperacion').modal('hide');
+
+                    } else if (resultado == "2") {
+                        //$("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorYaExiste, tTituloError); $toastlast = $toast;
+                        document.getElementById('btnGrabarNuevaOperacion').disabled = false;
+
+                    } else if (resultado == "0") {
+                        //$("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado);
+
+                    } else {
+                        //$("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado);
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //$("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+        }
+
+        function CrearReason() {
+
+             //$("#CargaTemporal").removeClass("hidden");
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Reason/CrearReason",
+                dataType: "json",
+                data: "ReasonName=" + $("#txtReasonNombre").val().trim(),
+                success: function (resultado) {
+            
+                    if (resultado == "1") {
+            
+                        //$("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["success"](tMensajeCreadoExito, tTituloExito); $toastlast = $toast;
+            
+                        //ComboCargo('1', $("#txtCargoNombre").val().trim());
+                        document.getElementById('txtReasonNombre').value = "";
+                        document.getElementById('btnAgregarRazon').disabled = false;
+            
+                        ComboReason();
+            
+                        $('#ModalReason').modal('hide');
+            
+                    } else if (resultado == "2") {
+                        //$("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorYaExiste, tTituloError); $toastlast = $toast;
+                        document.getElementById('btnAgregarRazon').disabled = false;
+            
+                    } else if (resultado == "0") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado);
+            
+                    } else {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado);
+                    }
+            
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+        }
+
+        function ComboEncargadoAll() {
+
+            $.ajax({
+                type: "GET", /*Puede ser post*/
+                url: tRutaServidor + "/Person/ListarPersonaTicketTodos", /* es importante poner los .. delante*/
+                contentType: "application/json; charset=utf-8",
+                //data:
+                //     "IdOperation=" + IdOperatorTicket,
+                dataType: "json",
+                success: function (resultado) {
+
+                    var opcionesPersonTicket = "";
+
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+
+                        if (resultado[0].ValorConsulta == "1") {
+
+                            /**Llenar el combo con todo las compañías**/
+                            for (i = 0; i < resultado.length; i++) {
+
+                                opcionesPersonTicket += "<option value='" + resultado[i].PersonMail + "'>" + resultado[i].FullNameOperation+ "</option>";
+                            }
+
+                            //$("#selectorResponsableActivity").empty();
+                            //$("#selectorResponsableActivity").append(opcionesPersonTicket);
+                            //$("#selectorResponsableActivity").selectpicker('refresh');
+
+                            $("#selectorInvitados").empty();
+                            $("#selectorInvitados").append(opcionesPersonTicket);
+                            $("#selectorInvitados").selectpicker('refresh');
+
+                        }
+                        else {
+                            /*Error al listar*/
+
+                        }
+
+                    } else {
+
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*Fallo al llamar funcion ajax*/
+
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+        }
+        /* --------------------------- EVENTOS -------------------------*/
+
+        $('#selectorInvitados').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+
+           /*SelectInvitados = $('#selectorInvitados').val();*/
+
+           SelectInvitados = "";
+
+             if ($('#selectorInvitados').val()) {
+             
+                 for (i = 0; i < $('#selectorInvitados').val().length; i++) {
+             
+                     SelectInvitados += $('#selectorInvitados').val()[i] + ";";
+             
+                 }
+             
+                 SelectInvitados = SelectInvitados.substring(0, SelectInvitados.length - 1);
+             
+                 console.log(SelectInvitados);
+                 //SelectInvitados = SelectInvitados[0];
+             
+                 //console.log(SelectInvitados);
+                  //ComboEncargado('0');
+                  //console.log(IdOperatorTicket);
+             
+             } else {
+                 SelectInvitados = "";
+             }
+
+        });
+
+        $("#btnAgregarOperacion").click(function () {
+            $("#txtNombreOperacion").val("");
+            $('#ModalOperacion').modal('show');
+        });
+
+        $("#btnAgregarOperacion2").click(function () {
+            $("#txtNombreOperacion").val("");
+            $('#ModalOperacion').modal('show');
+        });
+
+        $("#btnAgregarWhoCall").click(function () {
+
+            $("#txtTrabajadorNombres").val("");
+            $("#txtTrabajadorApellidoPat").val("");
+            $("#txtTrabajadorApellidoMat").val("");
+            $("#txtTrabajadorTelefono").val("");
+            $("#txtTrabajadorEmail").val("");
+            $("#txtTrabajadorNroDoc").val("");
+            $("#txtTrabajadorDireccion").val("");
+            $("#txtTrabajadorFechaNac").val("");
+            $("#selectorTrabajadorTipoDoc").selectpicker('val', "1");
+            $("#selectorTrabajadorTipoDoc").selectpicker('refresh');
+            $("#selectorTrabajadorArea").selectpicker('val', "");
+            $("#selectorTrabajadorArea").selectpicker('refresh');
+            $("#selectorTrabajadorCargo").selectpicker('val', "");
+            $("#selectorTrabajadorCargo").selectpicker('refresh');
+            $("#selectorTrabajadorOperacion").selectpicker('val', "");
+            $("#selectorTrabajadorOperacion").selectpicker('refresh');
+
+            ComboCargo("0", "");
+            ComboArea("0", "");
+
+            $('#ModalTrabajador').modal('show');
+
+        });
+
+        $("#btnAgregarRazon").click(function () {
+           $("#txtReasonNombre").val("");
+           $('#ModalReason').modal('show');
+        });
+
+        $("#btnCreacionTicket").click(function () {
+
+             if ($("#selectorTicketOperacion").val() == "" || $("#selectorTicketOperacion").val() == null || $("#selectorTicketOperacion").val() == undefined) {
+                 toastr.options.timeOut = nTiempoCorto;
+                 toastr.options.extendedTimeOut = nTiempoCorto;
+                 /*success - info - warning - error*/
+                 var $toast = toastr["error"]("Es necesario seleccionar una operación al ticket", tTituloError); $toastlast = $toast;
+                 return;
+             }
+
+             if ($("#selectorWhoCall").val() == "" || $("#selectorWhoCall").val() == null || $("#selectorWhoCall").val() == undefined) {
+                 toastr.options.timeOut = nTiempoCorto;
+                 toastr.options.extendedTimeOut = nTiempoCorto;
+                 /*success - info - warning - error*/
+                 var $toast = toastr["error"]("Es necesario seleccionar un 'quien llama' al ticket", tTituloError); $toastlast = $toast;
+                 return;
+             }
+
+             if ($("#selectorWhoResponsible").val() == "" || $("#selectorWhoResponsible").val() == null || $("#selectorWhoCall").val() == undefined) {
+                 toastr.options.timeOut = nTiempoCorto;
+                 toastr.options.extendedTimeOut = nTiempoCorto;
+                 /*success - info - warning - error*/
+                 var $toast = toastr["error"]("Es necesario seleccionar un responsable del ticket", tTituloError); $toastlast = $toast;
+                 return;
+             }
+
+             if ($("#selectorTicketRazon").val() == "" || $("#selectorTicketRazon").val() == null || $("#selectorTicketRazon").val() == undefined) {
+                 toastr.options.timeOut = nTiempoCorto;
+                 toastr.options.extendedTimeOut = nTiempoCorto;
+                 /*success - info - warning - error*/
+                 var $toast = toastr["error"]("Es necesario seleccionar una razón al ticket", tTituloError); $toastlast = $toast;
+                 return;
+             }
+
+             //if ($("#selectorTicketCriticidad").val() == "" || $("#selectorTicketCriticidad").val() == null || $("#selectorTicketCriticidad").val() == undefined) {
+             //    toastr.options.timeOut = nTiempoCorto;
+             //    toastr.options.extendedTimeOut = nTiempoCorto;
+             //    /*success - info - warning - error*/
+             //    var $toast = toastr["error"]("Es necesario seleccionar un tipo de criticidad al ticket", tTituloError); $toastlast = $toast;
+             //    return;
+             //}
+              if ($("#selectorTicketLocation").val() == "" || $("#selectorTicketLocation").val() == null || $("#selectorTicketLocation").val() == undefined) {
+                 toastr.options.timeOut = nTiempoCorto;
+                 toastr.options.extendedTimeOut = nTiempoCorto;
+                 /*success - info - warning - error*/
+                 var $toast = toastr["error"]("Es necesario seleccionar una Locacion al ticket", tTituloError); $toastlast = $toast;
+                 return;
+              }
+
+
+             if ($("#txtDetallerTicket").val() == "" || $("#txtDetallerTicket").val() == null) {
+               toastr.options.timeOut = nTiempoCorto;
+               toastr.options.extendedTimeOut = nTiempoCorto;
+               /*success - info - warning - error*/
+               var $toast = toastr["error"]("Es necesario ingresar un detalle del ticket", tTituloError); $toastlast = $toast;
+               return;
+             }
+
+            
+
+
+
+
+            Swal.fire({
+                title: 'Estas seguro de registrar esta información?',
+                text: "Ya no podras revertirla!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, deseo guardar!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    IdLocationTicket = $("#selectorTicketLocation").val()[0];
+                    IdOperationTicket = $('#selectorTicketOperacion').val()[0];
+                    IdEncargadoTicket = $('#selectorWhoCall').val()[0];
+                    FechaInicioTicket = $('#txtTicketDate').val();
+                    IdRazonTicket = $('#selectorTicketRazon').val()[0];
+                    IdResponsibleTicket = $('#selectorWhoResponsible').val()[0];
+                    //IdCriticidadTicket = $('#selectorTicketCriticidad').val()[0];
+                    DetalleTextTicket = $('#txtDetallerTicket').val();
+
+                    RegistrarTicket();
+
+                } else {
+
+
+
+                }
+            });
+
+        });
+
+        $("#btnGrabarNuevaOperacion").click(function () {
+
+         var $registerForm = $("#FrmOperacion").validate({
+             rules: {
+                 txtNombreOperacion: {
+                     required: true,
+                     maxlength: 100,
+                     minlength: 3,
+                     //regx: ReTexto
+                 }
+             },
+             messages: {
+                 txtNombreOperacion: {
+                     required: tCampoRequerido,
+                     minlength: tMinLength,
+                     maxlength: tMaxLength,
+                     //regx: tCaracteresNoValido
+                 }
+             },
+             submitHandler: function (form) {
+
+                 if ($("#txtNombreOperacion").val().trim() == "") {
+                     toastr.options.timeOut = nTiempoMedio;
+                     toastr.options.extendedTimeOut = nTiempoMedio;
+                     /*success - info - warning - error*/
+                     var $toast = toastr["error"](tValoresVacios, tTituloError); $toastlast = $toast;
+                     return;
+                 }
+                 document.getElementById('btnGrabarNuevaOperacion').disabled = true;
+                 CrearOperacion();
+             },
+
+             errorPlacement: function (error, element) {
+                 error.insertAfter(element.parent());
+             }
+         });
+
+    });
+
+        $("#btnCancelarNuevaOperacion").click(function () {
+           $("#txtNombreOperacion").val("");
+           $('#ModalOperacion').modal('hide');
+        });
+
+        $("#btnCancelarNuevaReason").click(function () {
+           $("#txtReasonNombre").val("");
+           $('#ModalReason').modal('hide');
+        });
+
+        $("#btnAgregarArea").click(function () {
+
+             $("#txtAreaNombre").val("");
+             $('#ModalArea').modal('show');
+         
+         });
+
+        $("#btnAgregarCargo").click(function () {
+            $("#txtCargoNombre").val("");
+        
+            $('#ModalCargo').modal('show');
+        });
+
+        $("#btnAgregarOperacion2").click(function () {
+            $("#txtNombreOperacion").val("");
+            $('#ModalOperacion').modal('show');
+        });
+
+        $("#btnGrabarNuevoTrabajador").click(function () {
+
+            var $registerForm = $("#FrmTrabajador").validate({
+                rules: {
+                    txtTrabajadorNroDoc: {
+                        //required: true,
+                        maxlength: 20,
+                        minlength: 8,
+                        regx: ReSoloNumeros
+                    },
+
+                    txtTrabajadorNombres: {
+                        required: true,
+                        maxlength: 50,
+                        minlength: 3,
+                        regx: ReTexto
+                    },
+                    txtTrabajadorApellidoPat: {
+                        required: true,
+                        maxlength: 50,
+                        minlength: 3,
+                        regx: ReTexto
+                    },
+                    txtTrabajadorApellidoMat: {
+                        //required: true,
+                        maxlength: 50,
+                        minlength: 3,
+                        regx: ReTexto
+                    },
+                    txtTrabajadorEmail: {
+                        required: true,
+                        maxlength: 50,
+                        minlength: 5,
+                        regx: ReEmail
+                    },
+                    txtTrabajadorTelefono: {
+                        required: true,
+                        maxlength: 12,
+                        minlength: 8,
+                        regx: ReSoloNumeros
+                    },
+                    //txtTrabajadorFechaNac:{
+                    //    //required: true,
+                    //    maxlength: 10,
+                    //    minlength: 10,
+                    //    regx: ReFecha
+                    //},
+                },
+                messages: {
+                    txtTrabajadorNroDoc: {
+                        //required: tCampoRequerido,
+                        minlength: tMinLength,
+                        maxlength: tMaxLength,
+                        regx: tCaracteresNoValido
+                    },
+                    txtTrabajadorNombres: {
+                        required: tCampoRequerido,
+                        minlength: tMinLength,
+                        maxlength: tMaxLength,
+                        regx: tCaracteresNoValido
+                    },
+                    txtTrabajadorApellidoPat: {
+                        required: tCampoRequerido,
+                        minlength: tMinLength,
+                        maxlength: tMaxLength,
+                        regx: tCaracteresNoValido
+                    },
+                    txtTrabajadorApellidoMat: {
+                        //required: tCampoRequerido,
+                        minlength: tMinLength,
+                        maxlength: tMaxLength,
+                        regx: tCaracteresNoValido
+                    },
+                    txtTrabajadorEmail: {
+                        required: tCampoRequerido,
+                        minlength: tMinLength,
+                        maxlength: tMaxLength,
+                        regx: tCaracteresNoValido
+                    },
+                    txtTrabajadorTelefono: {
+                        required: tCampoRequerido,
+                        minlength: tMinLength,
+                        maxlength: tMaxLength,
+                        regx: tCaracteresNoValido
+                    },
+                    //txtTrabajadorFechaNac: {
+                    //    //required: tCampoRequerido,
+                    //    minlength: tMinLength,
+                    //    maxlength: tMaxLength,
+                    //    regx: tCaracteresNoValido
+                    //}
+                },
+                submitHandler: function (form) {
+
+                    if ($("#selectorTrabajadorArea").val() == null || $("#selectorTrabajadorArea").val() == "") {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"]("Debe seleccionar 1 Área", tTituloError); $toastlast = $toast;
+                        return;
+                    }
+
+                    if ($("#selectorTrabajadorCargo").val() == null || $("#selectorTrabajadorCargo").val() == "") {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"]("Debe seleccionar 1 Cargo", tTituloError); $toastlast = $toast;
+                        return;
+                    }
+
+                    if ($("#txtTrabajadorNombres").val().trim() == "" || $("#txtTrabajadorNombres").val().trim() == null) {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValoresVacios, tTituloError); $toastlast = $toast;
+                        return;
+                    }
+
+                    if ($("#txtTrabajadorApellidoPat").val().trim() == "" || $("#txtTrabajadorApellidoPat").val().trim() == null) {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValoresVacios, tTituloError); $toastlast = $toast;
+                        return;
+                    }
+
+                    if ($("#txtTrabajadorTelefono").val().trim() == "" || $("#txtTrabajadorTelefono").val().trim() == null) {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValoresVacios, tTituloError); $toastlast = $toast;
+                        return;
+                    }
+
+                    if ($("#txtTrabajadorEmail").val().trim() == "" || $("#txtTrabajadorEmail").val().trim() == null) {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValoresVacios, tTituloError); $toastlast = $toast;
+                        return;
+                    }
+
+                    document.getElementById('btnGrabarNuevoTrabajador').disabled = true;
+                    CrearTrabajador();
+                },
+
+                errorPlacement: function (error, element) {
+                    error.insertAfter(element.parent());
+                }
+            });
+
+        });
+
+        $("#btnCancelarNuevoTrabajador").click(function () {
+
+            $('#ModalTrabajador').modal('hide');
+        
+        });
+
+        $("#btnGrabarNuevoCargo").click(function () {
+
+            var $registerForm = $("#FrmCargo").validate({
+                rules: {
+                    txtCargoNombre: {
+                        required: true,
+                        maxlength: 30,
+                        minlength: 1,
+                        regx: ReTexto
+                    }
+                },
+                messages: {
+                    txtCargoNombre: {
+                        required: tCampoRequerido,
+                        minlength: tMinLength,
+                        maxlength: tMaxLength,
+                        regx: tCaracteresNoValido
+                    }
+                },
+                submitHandler: function (form) {
+            
+                    if ($("#txtCargoNombre").val().trim() == "") {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValoresVacios, tTituloError); $toastlast = $toast;
+                        return;
+                    }
+                    document.getElementById('btnGrabarNuevoCargo').disabled = true;
+                    CrearCargo();
+                },
+            
+                errorPlacement: function (error, element) {
+                    error.insertAfter(element.parent());
+                }
+            });
+
+        });
+
+        $('#selectorTicketOperacion').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+
+            var ValorOperation = 0;
+
+            ValorOperation = $('#selectorTicketOperacion').val();
+
+            if (ValorOperation) {
+
+                IdOperatorTicket = ValorOperation[0];
+
+                ComboEncargado('0');
+                 //console.log(IdOperatorTicket);
+
+            } else {
+
+            }
+
+        });
+
+        $("#btnGrabarNuevaReason").click(function () {
+
+            var $registerForm = $("#FrmReason").validate({
+                     rules: {
+                         txtReasonNombre: {
+                             required: true,
+                             maxlength: 100,
+                             minlength: 2,
+                             regx: ReTexto
+                         }
+                     },
+                     messages: {
+                         txtReasonNombre: {
+                             required: tCampoRequerido,
+                             minlength: tMinLength,
+                             maxlength: tMaxLength,
+                             regx: tCaracteresNoValido
+                         }
+                     },
+                     submitHandler: function (form) {
+            
+                         if ($("#txtReasonNombre").val().trim() == "") {
+                             toastr.options.timeOut = nTiempoMedio;
+                             toastr.options.extendedTimeOut = nTiempoMedio;
+                             /*success - info - warning - error*/
+                             var $toast = toastr["error"](tValoresVacios, tTituloError); $toastlast = $toast;
+                             return;
+                         }
+            
+                         CrearReason();
+                     },
+            
+                     errorPlacement: function (error, element) {
+                         error.insertAfter(element.parent());
+                     }
+            });
+
+        });
+
+        $('input[type=radio][name=rdoNameCriticidadAlta]').change(function (e) {
+
+            if (e.target.id == 'rdoAltaCriticidad') {
+
+                //$("input:radio[name=rdoNameCriticidadAlta]:checked")[0].checked = true;
+                //$("input:radio[name=rdoNameCriticidadMedia]:checked")[0].checked = false;
+                //$("input:radio[name=rdoNameCriticidadBaja]:checked")[0].checked = false;
+
+                $('#rdoMedioCriticidad').is(":checked") = false;
+                $('#rdoBajaCriticidad').is(":checked") = false;
+
+            } else if (e.target.id == 'rdoMedioCriticidad') {
+
+                //$("input:radio[name=rdoNameCriticidadMedia]:checked")[0].checked = false;
+                //$("input:radio[name=rdoNameCriticidadBaja]:checked")[0].checked = false;
+
+                $('#rdoAltaCriticidad').is(":checked") = false;
+                $('#rdoBajaCriticidad').is(":checked") = false;
+
+
+            } else if (e.target.id == 'rdoBajaCriticidad') {
+
+                //$("input:radio[name=rdoNameCriticidadMedia]:checked")[0].checked = false;
+                //$("input:radio[name=rdoNameCriticidadBaja]:checked")[0].checked = false;
+                $('#rdoAltaCriticidad').is(":checked") = false;
+                $('#rdoMedioCriticidad').is(":checked") = false;
+            }
+
+        });
+
+        FormatoFechas();
+        ComboEncargado2("1");
+        ComboEncargadoAll();
+        $.validator.addMethod("regx", function (value, element, regexpr) {
+            return regexpr.test(value);
+        }, "");
+
+    })
+
+</script>
+

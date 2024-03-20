@@ -1,0 +1,88 @@
+﻿body {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+.section404 {
+    margin:50px auto;
+    width:80%;
+    display:flex;
+    flex-flow: row nowrap;
+    align-items:center;
+    text-align:center;
+}
+#aticleA404 {
+    width: 60%;
+    font-family:Roboto;
+    color:#888888;
+}
+
+#aticleB404 {
+    width: 40%;
+}
+
+.NumberCode404 {
+font-size:160px;
+margin:0;
+}
+
+.MessageCode404 {
+font-size:50px;
+margin:0;
+}
+
+#img404 {
+ display:block;
+}
+
+#img404celular {
+     display:none;
+}
+
+    /*Medida para celulares*/
+ @media only screen and (max-width: 480px) {
+    #img404 {
+        display:none;
+    }
+
+    #img404celular {
+        display:block;
+    }
+
+    .NumberCode404 {
+        font-size:25px;
+        margin:0;
+    }
+
+    .MessageCode404 {
+        font-size:20px;
+        margin:0;
+    }
+        .CommentConde404 {
+        font-size:15px;
+        margin:0;
+        }
+    }
+      
+
+       /*Medida para Tabletas*/
+ @media only screen and (max-width: 790px) {
+    
+     .section404 {
+        width:100%;
+        flex-direction: column-reverse;
+    }
+    .section404 article {
+      width:100%;
+    }
+    .NumberCode404 {
+        font-size:90px;
+    }
+    .MessageCode404 {
+        font-size:30px;
+        margin:0;
+    }
+
+    }
+

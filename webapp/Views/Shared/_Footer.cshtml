@@ -1,0 +1,99 @@
+﻿    <!-- PAGE FOOTER -->
+<div class="page-footer">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
+            <span class="txt-color-white">Cronos NET <span class="hidden-xs"> - Web Application  2017-2020 / AUTOMATION SERVICE S.A.C. ©</span> </span>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 text-right hidden">
+            <div class="txt-color-white inline-block">
+                <i class="txt-color-blueLight hidden-mobile">Last account activity <i class="fa fa-clock-o"></i> <strong>52 mins ago &nbsp;</strong> </i>
+                <div class="btn-group dropup">
+                    <button class="btn btn-xs dropdown-toggle bg-color-blue txt-color-white" data-toggle="dropdown">
+                        <i class="fa fa-link"></i> <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu pull-right text-left">
+                        <li>
+                            <div class="padding-5">
+                                <p class="txt-color-darken font-sm no-margin">Download Progress</p>
+                                <div class="progress progress-micro no-margin">
+                                    <div class="progress-bar progress-bar-success" style="width: 50%;"></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <div class="padding-5">
+                                <p class="txt-color-darken font-sm no-margin">Server Load</p>
+                                <div class="progress progress-micro no-margin">
+                                    <div class="progress-bar progress-bar-success" style="width: 20%;"></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <div class="padding-5">
+                                <p class="txt-color-darken font-sm no-margin">Memory Load <span class="text-danger">*critical*</span></p>
+                                <div class="progress progress-micro no-margin">
+                                    <div class="progress-bar progress-bar-danger" style="width: 70%;"></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <div class="padding-5">
+                                <button class="btn btn-block btn-default">refresh</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ModalIndicador" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:96%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Indicador</h4>
+            </div>
+            <div class="modal-body clearfix" style="padding-left:10px; padding-right:10px;">
+                <form id="FrmCompania" onsubmit="return false">
+
+                    <section class="col-xs-12">
+                        <label style="color: #2F4050" id="lblTipoIndicador"></label>
+                        <hr />
+                        <label style="color: #2F4050" id="lblCodigoIndicador"></label><br />
+                        <label style="color: #2F4050" id="lblDescripcionIndicador"></label><br />
+                        <label style="color: #2F4050" id="lblFechaRegistroIndicador"></label><br />
+                        <label style="color: #2F4050" id="lblDetalleIndicador"></label>
+                    </section>
+                    <section class="col-xs-12" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:space-between">
+                        <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-end">
+                            <button style="margin:3px;" tabindex="8" class="btn btn-danger" type="button" id="btnCancelarIndicator"><i class="fa fa-times-circle"></i> Atrás</button>
+                            <button style="margin:3px;" tabindex="9" class="btn btn-primary" type="submit" id="btnGrabarIndicator"><i class="fa fa-save"></i> Dar por atendida</button>
+                        </div>
+                    </section>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- END PAGE FOOTER -->
+
+<script>
+    //Llama al método de la vista Header para listar las alertas
+    ListarIndicadores();
+    //Botones del modal detalle del indicador.
+    $('#btnCancelarIndicator').click(function () {
+        $('#ModalIndicador').modal('hide');
+    });
+    $('#btnGrabarIndicator').click(function () {
+        enviarRespuestaIndicador(idIndicadorRegistro);
+        $('#ModalIndicador').modal('hide');
+    });
+</script>

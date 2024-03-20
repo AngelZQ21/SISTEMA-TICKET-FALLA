@@ -1,0 +1,88 @@
+﻿body {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+.section500 {
+    margin:50px auto;
+    width:80%;
+    display:flex;
+    flex-flow: row nowrap;
+    align-items:center;
+    text-align:center;
+}
+#aticleA500 {
+    width: 60%;
+    font-family:Roboto;
+    color:#888888;
+}
+
+#aticleB500 {
+    width: 40%;
+}
+
+.NumberCode500 {
+font-size:160px;
+margin:0;
+}
+
+.MessageCode500 {
+font-size:50px;
+margin:0;
+}
+
+#img500 {
+ display:block;
+}
+
+#img500celular {
+     display:none;
+}
+
+    /*Medida para celulares*/
+ @media only screen and (max-width: 480px) {
+    #img500 {
+        display:none;
+    }
+
+    #img500celular {
+        display:block;
+    }
+
+    .NumberCode500 {
+        font-size:25px;
+        margin:0;
+    }
+
+    .MessageCode500 {
+        font-size:20px;
+        margin:0;
+    }
+        .CommentConde500 {
+        font-size:15px;
+        margin:0;
+        }
+    }
+      
+
+       /*Medida para Tabletas*/
+ @media only screen and (max-width: 790px) {
+    
+     .section500 {
+        width:100%;
+        flex-direction: column-reverse;
+    }
+    .section500 article {
+      width:100%;
+    }
+    .NumberCode500 {
+        font-size:90px;
+    }
+    .MessageCode500 {
+        font-size:30px;
+        margin:0;
+    }
+
+    }
+

@@ -1,0 +1,340 @@
+﻿<script src="~/Scripts/util/jsUtilCambioGuardia.js"></script>
+
+
+<div id="content">
+
+    <div class="well" style="padding:0px 30px 10px 30px; background-color:white;">
+        <div class="row wrapper">
+            <div style="width: 100%; display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:space-between; text-align:center; align-items:center;">
+                <h2><i class="fa fa-edit fa-fw"></i>Indicadores</h2>
+            </div>
+            <p><i class="fa fa-angle-right" style="margin-right:5px"></i>[Gestione los indicadores que tendrá la operación]</p>
+        </div>
+
+        <div class="row" style="margin-top: 10px;">
+
+            <div class="col-xs-12 col-sm-12 col-md-12" style="margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                <button class="btn btn-primary pull-right" type="button" id="btnGuardarIndicadores"><i class="fa fa-save"></i> Guardar</button>
+                <div class="hidden" id="MensajeVacioIndicador" style="margin:30px;">
+                    @Html.Partial("../MensajesParciales/_MensajeVacio")
+                </div>
+                <div class="hidden" id="MensajeErrorIndicador" style="margin:30px;">
+                    @Html.Partial("../MensajesParciales/_MensajeError")
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="widget-grid" class="PanelPerfil">
+
+        <div class="row">
+            <!--Alertas-->
+            <article class="col-xs-12">
+
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-MenuPerfil" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050;">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+                        <h2>Alertas</h2>
+                    </header>
+                    <div style="border: none; padding: 30px 30px 10px 30px;">
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                        </div>
+                        <div class="widget-body no-padding">
+
+                            <div class="spiner-example" id="ImagenCargaAlerta">
+                                @Html.Partial("../MensajesParciales/_MensajeCargando")
+                            </div>
+
+                            <div class="hidden" id="MensajeErrorAlerta" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeError")
+                            </div>
+
+                            <div class="hidden" id="MensajeVacioAlerta" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeVacio")
+                            </div>
+
+                            <div class="hidden" id="MensajeErrorListarAlerta" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                            </div>
+
+                            <div class="col col-xs-12 hidden" id="PanelAlertas" style="">
+                                <h4>Alertas</h4>
+                                <hr />
+                                <div id="CuerpoAlertas"></div>
+                            </div>
+                            <div class="clearfix" id="btnAlertasYNotificaciones"></div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <!--Notificaciones-->
+            <article class="col-xs-12">
+
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-MenuPerfil" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050;">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+                        <h2>Notificaciones</h2>
+                    </header>
+                    <div style="border: none; padding: 30px 30px 10px 30px;">
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                        </div>
+                        <div class="widget-body no-padding">
+
+                            <div class="spiner-example" id="ImagenCargaNotificacion">
+                                @Html.Partial("../MensajesParciales/_MensajeCargando")
+                            </div>
+
+                            <div class="hidden" id="MensajeErrorNotificacion" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeError")
+                            </div>
+
+                            <div class="hidden" id="MensajeVacioNotificacion" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeVacio")
+                            </div>
+
+                            <div class="hidden" id="MensajeErrorListarNotificacion" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                            </div>
+
+                            <div class="col col-xs-12 hidden" id="PanelNotificaciones" style="">
+                                <h4>Notificaciones</h4>
+                                <hr />
+                                <div id="CuerpoNotificaciones"></div>
+                            </div>
+                            <div class="clearfix" id="btnAlertasYNotificaciones"></div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+        /*----------------------------------------------------------------------------------------------- VARIABLES*/
+        var idsIndicadores = [];
+        /*----------------------------------------------------------------------------------------------- FUNCIONES GUARDAR/ACTUALIZAR/ELIMINAR ETC*/
+        //Guarda la configuración de las alertas y notificaciones en base al perfil.
+        function guardarConfiguracionIndicadores() {
+            $("#CargaTemporal").removeClass("hidden");
+            idsIndicadores = [];
+            $(".clsIndicador").each(function () {
+                if ($(this).is(":checked")) {
+                    idsIndicadores.push($(this).attr("id"));
+                }
+            });
+
+            $.ajax({
+                type: "GET",
+                url: tRutaServidor + "/Indicator/guardarConfiguracionIndicador",
+                contentType: "application/json; charset=utf-8",
+                data: "idsIndicadores=" + idsIndicadores,
+                dataType: "json",
+                /*async: false,*/
+                success: function (resultado) {
+                    $("#CargaTemporal").addClass("hidden");
+                    if (resultado == "0") {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                    } else if (resultado == "1") {
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["success"](tMensajeActualizadoExito, tTituloExito); $toastlast = $toast;
+                    } else {
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["success"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+
+            });
+
+        }
+
+        /*----------------------------------------------------------------------------------------------- ADICIONALES*/
+        /////////////////////////////////////////////////////////////////////
+        //FUNCIONES PARA EL MÓDULO ALERTAS / NOTIFICACIÓN MENÚ
+        /////////////////////////////////////////////////////////////////////
+        function llenarModuloAlertaNotificacion() {
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Indicator/ListarIndicador",
+                dataType: "json",
+                //data: "valorBusqueda=&valorConsulta=1&idPerfil=" + idPerfil,
+                success: function (resultado) {
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+                        if (resultado[0].ValorConsulta == "1") {
+                            $("#ImagenCargaAlerta").addClass("hidden");
+                            $("#PanelAlertas").removeClass("hidden");
+                            $("#MensajeErrorAlerta").addClass("hidden");
+                            $("#MensajeErrorListarAlerta").addClass("hidden");
+                            $("#MensajeVacioAlerta").addClass("hidden");
+
+                            $("#ImagenCargaNotificacion").addClass("hidden");
+                            $("#PanelNotificaciones").removeClass("hidden");
+                            $("#MensajeErrorNotificacion").addClass("hidden");
+                            $("#MensajeErrorListarNotificacion").addClass("hidden");
+                            $("#MensajeVacioNotificacion").addClass("hidden");
+
+                            $("#btnAlertasYNotificaciones").removeClass("hidden");
+                            var cuerpoAlerta = "";
+                            var cuerpoNotificacion = "";
+                            for (a = 0; a < resultado.length; a++) {
+                                if (resultado[a].IndicatorType == 'A') {
+                                    cuerpoAlerta +=
+                                   "<div class='col col-xs-12' style=''>" +
+                                      "<div class='col-xs-9'>" +
+                                        "<label class='control-label'>" + resultado[a].IndicatorDescription + "</label>" +
+                                      "</div>" +
+                                    "<div class='col-xs-3'>" +
+                                      "<div class='switch'>" +
+                                        "<div class='onoffswitch'>";
+                                    if (resultado[a].RegistrationStatus == 'A') {
+                                        cuerpoAlerta +=
+                                        "<input type='checkbox' checked class='onoffswitch-checkbox clsIndicador' id='" + resultado[a].IdIndicator + "'>";
+                                    } else {
+                                        cuerpoAlerta +=
+                                       "<input type='checkbox' class='onoffswitch-checkbox clsIndicador' id='" + resultado[a].IdIndicator + "'>";
+                                    }
+                                    cuerpoAlerta +=
+                                    "<label class='onoffswitch-label' for='" + resultado[a].IdIndicator + "'>" +
+                                    "<span class='onoffswitch-inner' data-swchon-text='SI' data-swchoff-text='NO'></span>" +
+                                    "<span class='onoffswitch-switch'></span>" +
+                                    "</label>" +
+                                 "</div>" +
+                               "</div>" +
+                             "</div>" +
+                            "</div>";
+                                } else {
+                                    cuerpoNotificacion +=
+                                                                "<div class='col col-xs-12' style=''>" +
+                                                                "<div class='col-xs-9'>" +
+                                                                    "<label class='control-label'>" + resultado[a].IndicatorDescription + "</label>" +
+                                                                "</div>" +
+                                                                "<div class='col-xs-3'>" +
+                                                                "<div class='switch'>" +
+                                                                "<div class='onoffswitch'>";
+                                    if (resultado[a].RegistrationStatus == 'A') {
+                                        cuerpoNotificacion +=
+                                            "<input type='checkbox' checked class='onoffswitch-checkbox clsIndicador' id='" + resultado[a].IdIndicator + "'>";
+                                    } else {
+                                        cuerpoNotificacion +=
+                                           "<input type='checkbox' class='onoffswitch-checkbox clsIndicador' id='" + resultado[a].IdIndicator + "'>";
+                                    }
+                                    cuerpoNotificacion +=
+                                        "<label class='onoffswitch-label' for='" + resultado[a].IdIndicator + "'>" +
+                                        "<span class='onoffswitch-inner' data-swchon-text='SI' data-swchoff-text='NO'></span>" +
+                                        "<span class='onoffswitch-switch'></span>" +
+                                        " </label>" +
+                                        "</div>" +
+                                        "</div>" +
+                                        "</div>" +
+                                    "</div>";
+                                }
+                            }
+                            document.getElementById("CuerpoAlertas").innerHTML = cuerpoAlerta;
+                            document.getElementById("CuerpoNotificaciones").innerHTML = cuerpoNotificacion;
+                        } else {
+                            /* proceso fallido catch listado datos*/
+                            $("#ImagenCargaAlerta").addClass("hidden");
+                            $("#PanelAlertas").addClass("hidden");
+                            $("#MensajeErrorAlerta").addClass("hidden");
+                            $("#MensajeErrorListarAlerta").removeClass("hidden");
+                            $("#MensajeVacioAlerta").addClass("hidden");
+
+                            $("#ImagenCargaNotificacion").addClass("hidden");
+                            $("#PanelNotificaciones").addClass("hidden");
+                            $("#MensajeErrorNotificacion").addClass("hidden");
+                            $("#MensajeErrorListarNotificacion").removeClass("hidden");
+                            $("#MensajeVacioNotificacion").addClass("hidden");
+
+                            $("#btnAlertasYNotificaciones").addClass("hidden");
+                            //falta mostrar el log del error.
+                        }
+                    } else {
+                        $("#ImagenCargaAlerta").addClass("hidden");
+                        $("#PanelAlertas").addClass("hidden");
+                        $("#MensajeErrorAlerta").addClass("hidden");
+                        $("#MensajeVacioAlerta").removeClass("hidden");
+                        $("#MensajeErrorListarAlerta").addClass("hidden");
+
+                        $("#ImagenCargaNotificacion").addClass("hidden");
+                        $("#PanelNotificaciones").addClass("hidden");
+                        $("#MensajeErrorNotificacion").addClass("hidden");
+                        $("#MensajeVacioNotificacion").removeClass("hidden");
+                        $("#MensajeErrorListarNotificacion").addClass("hidden");
+
+                        $("#btnAlertasYNotificaciones").addClass("hidden");
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+        }
+        /*----------------------------------------------------------------------------------------------- ASIGNAR FUNCIONES*/
+
+        $("#btnGuardarIndicadores").click(function () {
+            guardarConfiguracionIndicadores();
+        });
+
+        function NotificationToogle() {
+            var x = document.getElementById("HiddenBoxNotificacion");
+            if (x.style.display === "none") {
+                $('#HiddenBoxNotificacion').slideDown();
+                document.getElementById("ButtonHiddenBoxNotificacion").innerHTML = '<i class="fa fa-chevron-up"></i>';
+            } else {
+                $('#HiddenBoxNotificacion').slideUp();
+                document.getElementById("ButtonHiddenBoxNotificacion").innerHTML = '<i class="fa fa-chevron-down"></i>';
+            }
+        }
+
+        function AlertToogle() {
+            var x = document.getElementById("HiddenBoxAlerta");
+            if (x.style.display === "none") {
+                $('#HiddenBoxAlerta').slideDown();
+                document.getElementById("ButtonHiddenBoxAlerta").innerHTML = '<i class="fa fa-chevron-up"></i>';
+            } else {
+                $('#HiddenBoxAlerta').slideUp();
+                document.getElementById("ButtonHiddenBoxAlerta").innerHTML = '<i class="fa fa-chevron-down"></i>';
+            }
+        }
+
+        /*----------------------------------------------------------------------------------------------- METODOS INICIALES*/
+        llenarModuloAlertaNotificacion();
+    //});
+
+</script>

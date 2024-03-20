@@ -1,0 +1,1868 @@
+﻿<script src="~/Scripts/util/jsUtilCambioGuardia.js"></script>
+@*<script src="~/Scripts/util/ColoresPersonalizados.js"></script>
+    <script src="~/Scripts/plugin/dygraphs/dygraph-combined.min.js"></script>*@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
+<!--LIBRERIA PARA DATEPICKER-->
+<link href="~/Content/plugin/datapicker/datepicker3.css" rel="stylesheet" />
+<script src="~/Scripts/plugin/datapicker/bootstrap-datepicker.js"></script>
+@*<script src="~/Scripts/plugin/bootstrap-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>*@
+<!--LIBRERIA PARA CARGA DE ARCHIVOS-->
+<script src="~/Scripts/plugin/jsPDF/html2canvas.js"></script>
+<script src="~/Scripts/plugin/jsPDF/canvas2image.js"></script>
+
+<script src="~/Scripts/bootstrap-filestyle.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link href="~/Content/GraficoLineaTiempo/FindTicketStyles.css" rel="stylesheet" />
+<link href="~/Content/Autocomplete/Autocomplete.css" rel="stylesheet" />
+
+<script type="text/javascript">
+    function anular(e) {
+
+        tecla = (document.all) ? e.keyCode : e.which;
+        return (tecla != 13);
+    }
+</script>
+
+<style>
+
+    .panel-group {
+        margin-bottom: 0;
+    }
+
+        .panel-group .panel {
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+            .panel-group .panel .panel-heading {
+                padding: 0;
+            }
+
+                .panel-group .panel .panel-heading h4 a {
+                    background: #e0e0e0;
+                    display: block;
+                    font-size: 12px;
+                    font-weight: bold;
+                    padding: 15px;
+                    text-decoration: none;
+                    transition: 0.15s all ease-in-out;
+                }
+
+                    .panel-group .panel .panel-heading h4 a:hover, .panel-group .panel .panel-heading h4 a:not(.collapsed) {
+                        background: #fff;
+                        transition: 0.15s all ease-in-out;
+                    }
+
+                        .panel-group .panel .panel-heading h4 a:not(.collapsed) i:before {
+                            content: "‾";
+                        }
+
+                    .panel-group .panel .panel-heading h4 a i {
+                        color: #999;
+                    }
+
+            .panel-group .panel .panel-body {
+                padding-top: 0;
+            }
+
+            .panel-group .panel .panel-heading + .panel-collapse > .list-group,
+            .panel-group .panel .panel-heading + .panel-collapse > .panel-body {
+                border-top: none;
+            }
+
+            .panel-group .panel + .panel {
+                border-top: none;
+                margin-top: 0;
+            }
+
+
+    .colorAzul {
+        background-color: #C2E1F8 !important;
+        font-weight: bold !important;
+    }
+
+    .colorVerde {
+        background-color: #ced !important;
+    }
+
+    .colorRojo {
+        background-color: #FE8475;
+    }
+
+    .colorAmarillo {
+        background-color: #FFDF6A;
+    }
+
+    .swal2-popup {
+        font-size: 1em !important;
+    }
+
+    textarea {
+        resize: vertical;
+    }
+
+    .content-template {
+        display: none
+    }
+</style>
+
+<div id="content">
+
+    <div class="well" style="padding:0px 30px 10px 30px; background-color:white;">
+        <div class="row wrapper">
+            <div style="width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            text-align: center;
+            align-items: center;
+            ">
+                <h2 title="Listado de Ticket Generado"><i class="fa fa-bar-chart-o fa-fw"></i> [Listado de Ticket Generado]</h2>
+                @*<button class="btn btn-primary" type="button" id="btnNuevoCambioDeGuardia" disabled title="Registrar nueva Acta de Reunión"><i class="fa fa-plus"></i> Nueva Acta de Reunión</button>*@
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 10px;">
+            <form id="FrmFiltrosTicketCreado" onsubmit="return false" onkeypress="return anular(event)">
+
+                <div class="row">
+                    <section class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+
+                        <div style="width: 100%;">
+                            <input tabindex="7" type="radio" name="rdoRadioFechasTicket" id="rdoFecha" checked="checked">
+                            <label style="color: #2F4050;"><strong>Rango Fechas </strong></label>
+                            <input tabindex="7" type="radio" name="rdoRadioFechasTicket" id="rdoTickets" style="margin-left:30px">
+                            <label style="color: #2F4050"><strong>Tickets </strong></label>
+
+                        </div>
+                    </section>
+                </div>
+
+                <div class="row">
+                    <!--FECHA INICIO-->
+                    <section class="col-xs-12 col-sm-12 col-md-2 col-lg-2 ContainerRangoInicio">
+                        <label style="color: #2F4050"><strong>Desde: </strong><strong class="CampoRequerido">*</strong></label>
+                        <div class="input-group date">
+                            <input type="text" class="form-control hasDatepicker" id="txtFechaInicioTicket" name="txtFechaInicioTicket" value="" data-dateformat="dd/mm/yy">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </section>
+
+                    <!--FECHA FIN-->
+                    <section class="col-xs-12 col-sm-12 col-md-2 col-lg-2 ContainerRangoFin">
+                        <label style="color: #2F4050"><strong>Hasta: </strong><strong class="CampoRequerido">*</strong></label>
+                        <div class="input-group date">
+                            <input type="text" class="form-control hasDatepicker" id="txtFechaFinalTicket" name="txtFechaFinalTicket" value="" data-dateformat="dd/mm/yy">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </section>
+
+                    <section class="col-xs-12 col-sm-12 col-md-3 col-lg-3 ContainerTickets hidden">
+                        <label style="color: #2F4050"><strong>Ticket: </strong></label>
+                        <div class="form-group">
+                            <select id="selectorTicketBusqueda" class="selectpicker" multiple data-selected-text-format="count < 3" data-live-search="true" data-width="100%" data-size="5" title="Selección múltiple" data-actions-box="true"></select>
+                        </div>
+                    </section>
+
+                    <section class="col-xs-4 col-sm-4 col-md-1 col-lg-1">
+                        <div style="margin-top:25px">
+                            <button style="margin:0px;" tabindex="9" disabled class="btn btn-primary pull-right" type="submit" id="btnBuscar"><i class="fa fa-search"></i> Buscar</button>
+                        </div>
+                    </section>
+
+                    <section class="col-xs-4 col-sm-4 col-md-1 col-lg-1 hidden" style="margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                        <div style="margin-top:25px">
+                            <button class="btn btn-success pull-right" type="button" id="BtnExportarExcel" disabled title="Exportar listado a Excel"><i class="fa fa-file-excel-o"></i> Excel</button>
+                        </div>
+                    </section>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="widget-grid" class="PanelPerfil">
+
+        <div class="row">
+            <!--Menú Perfil-->
+            <article class="col-xs-6">
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-MenuPerfil" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050;">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+                        <h2>Vista Tickets - Actividades</h2>
+                    </header>
+                    <div style="border: none; padding: 30px 30px 10px 30px;">
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                        </div>
+                        <div class="widget-body no-padding">
+                            <div class="hidden" id="seccionMenuPerfilP1">
+                                <div id="contenedorMenuPerfil">
+                                    @*<h4>Menú</h4>*@
+                                    <br /> 
+                                    <div id="treeviewMenuPerfil"></div>
+                                </div>
+                            </div>
+                            @*<div id="seccionMenuPerfilP2" class="hidden" style="margin-top:20px;">
+                            <label style="color: #2F4050">Seleccione la vista Principal : <strong class="CampoRequerido">*</strong></label>
+                            <article>
+                                <input id="ComboVistasPerfil" style="width:30%;" />
+                            </article>
+                        </div>*@
+                            @*<div id="seccionMenuPerfilP3" class="clearfix hidden">
+                            <button class="btn btn-primary pull-right" type="button" id="btnGuardarMenuPerfil"><i class="fa fa-save"></i> Guardar</button>
+                        </div>*@
+                            <div class="spiner-example" id="ImagenCarga">
+                                @Html.Partial("../MensajesParciales/_MensajeCargando")
+                            </div>
+
+                            <div class="hidden" id="MensajeError" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeError")
+                            </div>
+
+                            <div class="hidden" id="MensajeVacio" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeVacio")
+                            </div>
+
+                            <div class="hidden" id="MensajeErrorListar" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="col-xs-6">
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-2" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050;">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+                        <h2>Contenido de Ticket o Actividad</h2>
+                    </header>
+                    <div style="border: none; padding: 30px 30px 10px 30px;">
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                        </div>
+                        <section class="col col-xs-12 col-md-12">
+                            <div id="LstContainerDescription" class="hidden"></div>
+                            <section class="spiner-example hidden"  id="ImagenCargaLstContainerDescription">
+                                @Html.Partial("../MensajesParciales/_MensajeCargando")
+                            </section>
+
+                            <section class="hidden" id="MensajeErrorLstContainerDescription" style="margin:20px;">
+                                @Html.Partial("../MensajesParciales/_MensajeError")
+                            </section>
+
+                            <section id="MensajeVacioLstContainerDescription" style="margin:20px;">
+                                @Html.Partial("../MensajesParciales/_MensajeVacio")
+                            </section>
+
+                            <section class="hidden" id="MensajeErrorListarLstContainerDescription" style="margin:20px;">
+                                @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                            </section>
+
+                        </section>
+                    </div>
+                </div>
+            </article>
+
+            <!--Menú Acción-->
+            <article class="col-xs-12 hidden">
+
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-AccionesPerfil" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050;">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+                        <h2>Acciones Menú</h2>
+                    </header>
+                    <div style="border: none; padding: 30px 30px 10px 30px;">
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                        </div>
+                        <div class="widget-body no-padding">
+                            <div id="seccionMenuAccionP1" class="hidden">
+                                <div id="contenedorMenuAccion">
+                                    <h4>Acciones - Menú</h4>
+                                    <div id="treeviewMenuAction"></div>
+                                </div>
+                            </div>
+
+                            <div class="clearfix hidden" id="seccionMenuAccionP2">
+                                <button class="btn btn-primary pull-right" type="button" id="btnGuardarMenuAccion"><i class="fa fa-save"></i> Guardar</button>
+                            </div>
+                            <div class="spiner-example" id="ImagenCargaB">
+                                @Html.Partial("../MensajesParciales/_MensajeCargando")
+                            </div>
+
+                            <div class="hidden" id="MensajeErrorB" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeError")
+                            </div>
+
+                            <div class="hidden" id="MensajeVacioB" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeVacio")
+                            </div>
+
+                            <div class="hidden" id="MensajeErrorListarB" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!--Menú Alertas-->
+            <article class="col-xs-12 hidden">
+
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-IndicadorPerfil" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050;">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+                        <h2>Alertas / Notificaciones</h2>
+                    </header>
+                    <div style="border: none; padding: 30px 30px 10px 30px;">
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                        </div>
+                        <div class="widget-body no-padding">
+                            <div class="col col-xs-12 hidden" id="PanelAlertas" style="">
+                                <h2>Alertas</h2>
+                                <hr />
+                                <div id="CuerpoAlertas"></div>
+                            </div>
+                            <div class="col col-xs-12 hidden" id="PanelNotificaciones" style="">
+                                <h2>Notificaciones</h2>
+                                <hr />
+                                <div id="CuerpoNotificaciones"></div>
+                            </div>
+
+                            <div class="clearfix hidden" id="btnAlertasYNotificaciones">
+                                <button class="btn btn-primary pull-right" type="button" id="btnGuardarIndicadores"><i class="fa fa-save"></i> Guardar</button>
+                            </div>
+                            <div class="spiner-example" id="ImagenCargaAlerta">
+                                @Html.Partial("../MensajesParciales/_MensajeCargando")
+                            </div>
+
+                            <div class="hidden" id="MensajeErrorAlerta" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeError")
+                            </div>
+
+                            <div class="hidden" id="MensajeVacioAlerta" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeVacio")
+                            </div>
+
+                            <div class="hidden" id="MensajeErrorListarAlerta" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+
+    <div id="widget-grid1">
+        <div class="row">
+            <article class="col-xs-12 ContenedoresReportes hidden">
+
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-rga1" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-list"></i> </span>
+                        <h2>Diagrama de Tickets y Actividades</h2>
+                    </header>
+                    <div style="border:none;">
+                        <div class="jarviswidget-editbox">
+                            This area used as dropdown edit box
+                        </div>
+                        <div class="widget-body no-padding" id="ContenedorgrCreateTicket">
+                            <div id="LstDiagramTicketActivities" class="hidden"></div>
+                            <div class="spiner-example" id="imgCargaLstDiagramTicketActivities">
+                                @Html.Partial("../MensajesParciales/_MensajeCargando")
+                            </div>
+
+                            <div class="hidden" id="msjErrorLstDiagramTicketActivities" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeError")
+                            </div>
+
+                            <div class="hidden" id="msjVacioLstDiagramTicketActivities" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeVacio")
+                            </div>
+
+                            <div class="hidden" id="msjErrorListarLstDiagramTicketActivities" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                            </div>
+                            <div class="hidden" id="msjSuperaLimiteLstDiagramTicketActivities" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeLimiteGraficas")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+       /* ------------------- VALUES ----------------- */
+        var usuarioRegistrador = "@User.Identity.Name.ToUpper().ToString()";
+        usuarioRegistrador = usuarioRegistrador.split(',')[4];
+
+        var data = [];
+        /*-----------*/
+        var idPerfil = 0; //Id obtenido del combo "ComboPerfil" y utilizado para actualizar el Treeview y el Combo "ComboVistasPerfil"
+
+        //Menú Perfil
+        //var idVistaPrincipal = 0; //Id obtenido de la funcion "ComboVistasPerfil" y utilizado para setear el combo "ComboVistasPerfil"
+        //var mainIdVistaPrincipal = 0; //Id obtenido del combo "ComboVistasPerfil" y utilizado para actualizar la vista principal.
+        var checkedNodes = []; //Array para guardar los nodos seleccionados en el treeview
+        var treeviewMenuPerfil = []; //Array para llenar el Treeview Menu Perfil
+        var nodosPadresListado = []; // Array para guardar los nodos seleccionados en el treeview además de sus nodos padres
+        //var nodosSeleccionados = []; //Array que remueve los valores duplicados del array "nodosPadresListado"
+        var incPrimerNivel = 0; //Variable utilizada para llenar el nivel 1 del Treeview
+        var incSegundoNivel = 0; //Variable utilizada para llenar el nivel 2 del Treeview
+        var incTercerNivel = 0; //Variable utilizada para llenar el nivel 3 del Treeview
+        //var incCuartoNivel = 0; //Variable utilizada para llenar el nivel 4 del Treeview
+        var idsIndicadores = [];
+        //Menú Acción
+        //var treeviewMenuAccion = []; //Array para llenar el Treeview Acciones Menu
+        var checkedNodosMenuAccion = [];
+        var ArrayMenuCompare;
+        var ValorRadio = 1;
+        /*-------------------- TREE VIEW ------------------- */
+
+        /*----------------------------------------------------------------------------------------------- FUNCIONES GUARDAR/ACTUALIZAR/ELIMINAR ETC*/
+        //Guarda la configuración de Menú Perfil. Recibe el idPerfil, el array nodosSeleccionados y la vista principa
+
+        //Guarda la configuración de las acciones del menú en base al perfil. Recibe el idPerfil y el array checkedNodosMenuAccion
+        function guardarConfiguracionMenuAccion() {
+        $("#CargaTemporal").removeClass("hidden");
+        $.ajax({
+            type: "GET",
+            url: tRutaServidor + "/MenuProfileAction/guardarConfiguracionMenuPerfilAccion",
+            contentType: "application/json; charset=utf-8",
+            data: "arrayIdMenu=" + checkedNodosMenuAccion + "&idPerfil=" + idPerfil,
+            dataType: "json",
+            success: function (resultado) {
+                $("#CargaTemporal").addClass("hidden");
+                if (resultado == "0") {
+                    toastr.options.timeOut = nTiempoMedio;
+                    toastr.options.extendedTimeOut = nTiempoMedio;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                } else if (resultado == "1") {
+                    toastr.options.timeOut = nTiempoCorto;
+                    toastr.options.extendedTimeOut = nTiempoCorto;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["success"](tMensajeActualizadoExito, tTituloExito); $toastlast = $toast;
+                } else {
+                    toastr.options.timeOut = nTiempoMedio;
+                    toastr.options.extendedTimeOut = nTiempoMedio;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                    console.log("Mensaje del error : " + resultado)
+
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                $("#CargaTemporal").addClass("hidden");
+                /*fallo al llamar a la funcion ajax*/
+                toastr.options.timeOut = nTiempoLargo;
+                toastr.options.extendedTimeOut = nTiempoLargo;
+                /*success - info - warning - error*/
+                var $toast = toastr["success"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                console.log("ERROR AJAX : " + ajaxOptions);
+                console.log("ERROR AJAX : " + thrownError);
+                console.log(xhr.responseText);
+                console.log(xhr);
+            }
+
+        });
+    }
+
+        //Guarda la configuración de las alertas y notificaciones en base al perfil.
+        function guardarConfiguracionIndicadores() {
+        $("#CargaTemporal").removeClass("hidden");
+        idsIndicadores = [];
+        $(".clsIndicador").each(function () {
+            if ($(this).is(":checked")) {
+                idsIndicadores.push($(this).attr("id"));
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: tRutaServidor + "/ProfileIndicator/guardarConfiguracionIndicadorPerfil",
+            contentType: "application/json; charset=utf-8",
+            data: "idsIndicadores=" + idsIndicadores + "&idPerfil="+idPerfil,
+            dataType: "json",
+            /*async: false,*/
+            success: function (resultado) {
+                $("#CargaTemporal").addClass("hidden");
+                if (resultado == "0") {
+                    toastr.options.timeOut = nTiempoMedio;
+                    toastr.options.extendedTimeOut = nTiempoMedio;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                } else if (resultado == "1") {
+                    toastr.options.timeOut = nTiempoCorto;
+                    toastr.options.extendedTimeOut = nTiempoCorto;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["success"](tMensajeActualizadoExito, tTituloExito); $toastlast = $toast;
+                } else {
+                    toastr.options.timeOut = nTiempoMedio;
+                    toastr.options.extendedTimeOut = nTiempoMedio;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                    console.log("Mensaje del error : " + resultado)
+
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                $("#CargaTemporal").addClass("hidden");
+                /*fallo al llamar a la funcion ajax*/
+                toastr.options.timeOut = nTiempoLargo;
+                toastr.options.extendedTimeOut = nTiempoLargo;
+                /*success - info - warning - error*/
+                var $toast = toastr["success"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                console.log("ERROR AJAX : " + ajaxOptions);
+                console.log("ERROR AJAX : " + thrownError);
+                console.log(xhr.responseText);
+                console.log(xhr);
+            }
+
+        });
+
+    }
+        /*----------------------------------------------------------------------------------------------- ADICIONALES*/
+
+        ////////////////////////////////////////////////////////////////////////////////
+        //FUNCIONES PARA EL MÓDULO MENÚ PERFIL
+        ////////////////////////////////////////////////////////////////////////////////
+
+        //1. Llena el primer combo que muestra los perfiles
+        function ComboPerfil() {
+
+              $.ajax({
+                  type: "GET",
+                  url: tRutaServidor + "/Profile/ListarPerfil",
+                  contentType: "application/json; charset=utf-8",
+                  data: "valorBusqueda=&valorConsulta=6",
+                  dataType: "json",
+                  /*async: false,*/
+                  success: function (resultado) {
+                      /*exitosamente*/
+                      if (resultado.length > 0) {
+                          /* proceso exitoso con datos*/
+                          if (resultado[0].ValorConsulta == "1") {
+                              $("#ComboPerfil").kendoDropDownList({
+                                  dataTextField: "ProfileName",
+                                  dataValueField: "IdProfile",
+                                  filter: "contains",
+                                  autoBind: true,
+                                  minLength: 1,
+                                  dataSource: {
+                                      data: resultado
+                                  },
+                                  select: onSelectPerfil
+                              });
+                              idPerfil = $("#ComboPerfil").data("kendoDropDownList").value();
+                              ListarMenuPerfil(idPerfil);
+                              ListarMenuPerfilAction(idPerfil);
+                              llenarModuloAlertaNotificacion(idPerfil);
+                          } else { $('#MensajeVacioCBPerfil').removeClass("hidden"); }
+                      } else {
+                          $('#MensajeVacioCBPerfil').removeClass("hidden");
+                          $('#ComboPerfil').addClass("hidden");
+                          $('.PanelPerfil').addClass("hidden");
+                      }
+                  },
+                  error: function (xhr, ajaxOptions, thrownError) {
+                      $('#MensajeErrorCBPerfil').removeClass("hidden");
+                      $('#ComboPerfil').addClass("hidden");
+                      $('.PanelPerfil').addClass("hidden");
+                      console.log("ERROR AJAX : " + ajaxOptions);
+                      console.log("ERROR AJAX : " + thrownError);
+                      console.log(xhr.responseText);
+                      console.log(xhr);
+
+                  }
+              });
+          };
+
+        function onSelectPerfil(e) {
+            var dataItem = this.dataItem(e.item.index());
+            idPerfil = dataItem.IdProfile;
+            ListarMenuPerfil(idPerfil);
+            //ComboVistasPerfil(idPerfil);
+            ListarMenuPerfilAction(idPerfil);
+            llenarModuloAlertaNotificacion(idPerfil);
+        };
+
+        //2. En base al perfil seleccionado muestra el treeview con las vistas habilitadas
+        function ListarMenuPerfil(idTickets) {
+
+            treeviewMenuPerfil = [];
+            incPrimerNivel = 0;
+            incSegundoNivel = 0;
+            incTercerNivel = 0;
+            incCuartoNivel = 0;
+
+            ArrayMenuCompare = [];
+
+            $.ajax({
+                type: "GET",
+                url: tRutaServidor + "/Ticket/ListarTreeViewTicketActivity",
+                contentType: "application/json; charset=utf-8",
+                data: "idTickets="+idTickets+"&FechaInicio="+$("#txtFechaInicioTicket").val()+"&FechaFin="+$("#txtFechaFinalTicket").val()+"&ValueRadio="+ValorRadio,
+                dataType: "json",
+                /*async: false,*/
+                success: function (resultado) {
+
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+                        if (resultado[0].ValorConsulta == "1") {
+                            //Nivel 1
+                            for (a = 0; a < resultado.length; a++) {
+
+                                ArrayMenuCompare = resultado;
+
+                                if (resultado[a].IdTicket == 0 && resultado[a].NroTicket != "") {
+
+                                    treeviewMenuPerfil.push({
+                                        id: resultado[a].IdTicket, text: resultado[a].NroTicket, checked: resultado[a].ActiveViews, spriteCssClass: "folder", dependency: resultado[a].DependencySequence, expanded: true, items: []
+
+                                    });
+
+                                    incPrimerNivel++;
+                                    //Nivel 2
+                                    incSegundoNivel = 0;
+                                    for (b = 0; b < resultado.length; b++) {
+                                        if (resultado[b].DependencyMainId == treeviewMenuPerfil[incPrimerNivel - 1].id && resultado[b].NroTicket != "") {
+                                            treeviewMenuPerfil[incPrimerNivel - 1].items[incSegundoNivel] = {
+                                                id: resultado[b].IdTicket, text: resultado[b].NroTicket, checked: resultado[b].ActiveViews, spriteCssClass: "folder", dependency: resultado[b].DependencySequence, expanded: true, items: []
+                                            }
+                                            incSegundoNivel++;
+                                            //Nivel 3
+                                            incTercerNivel = 0;
+
+                                            for (c = 0; c < resultado.length; c++) {
+
+                                                if (resultado[c].IdActivityTicket == treeviewMenuPerfil[incPrimerNivel - 1].items[incSegundoNivel - 1].id) {
+                                                    treeviewMenuPerfil[incPrimerNivel - 1].items[incSegundoNivel - 1].items[incTercerNivel] = { id: resultado[c].IdActivity, text: resultado[c].ActivityText, checked: resultado[c].ActiveViews, spriteCssClass: "folder", dependency: resultado[c].DependencySequence, expanded: true, items: [] }
+                                                    incTercerNivel++;
+                                            //        //Nivel 4
+                                            //        incCuartoNivel = 0;
+                                            //        for (d = 0; d < resultado.length; d++) {
+                                            //            if (resultado[d].Menu.DependencyMainId == treeviewMenuPerfil[incPrimerNivel - 1].items[incSegundoNivel - 1].items[incTercerNivel - 1].id) {
+                                            //                treeviewMenuPerfil[incPrimerNivel - 1].items[incSegundoNivel - 1].items[incTercerNivel - 1].items[incCuartoNivel] = { id: resultado[d].Menu.MainId, text: resultado[d].Menu.VisualName, checked: resultado[d].Menu.ActiveViews, spriteCssClass: "folder", dependency: resultado[d].Menu.DependencySequence, items: [] }
+                                            //                incCuartoNivel++;
+                                            //            }
+                                            //        }
+                                            //        //Nivel 3
+                                                }
+                                            }
+                                            //Nivel 2
+                                        }
+                                    }
+                                    //Nivel 1
+                                }
+                            }
+
+                            $("#treeviewMenuPerfil").remove();
+                            $("#contenedorMenuPerfil").append("<div id='treeviewMenuPerfil'></div>");
+
+                            $("#treeviewMenuPerfil").kendoTreeView({
+                                checkboxes: {
+                                    checkChildren: true
+                                },
+                                dragAndDrop: true,
+                                check: onCheckMenuPerfil,
+                                select: onSelect,
+                                dataSource: treeviewMenuPerfil
+                            });
+
+                            console.log(treeviewMenuPerfil);
+
+                            onCheckMenuPerfil();
+                            //ComboVistasPerfil(idPerfil);
+
+                        } else {
+                            /* proceso fallido catch listado datos*/
+                            $("#ImagenCarga").addClass("hidden");
+                            $("#seccionMenuPerfilP1").addClass("hidden");
+                            //$("#seccionMenuPerfilP2").addClass("hidden");
+                            //$("#seccionMenuPerfilP3").addClass("hidden");
+                            $("#MensajeError").addClass("hidden");
+                            $("#MensajeErrorListar").removeClass("hidden");
+                            $("#MensajeVacio").addClass("hidden");
+                            console.log(resultado);
+                        }
+                    } else {
+                        $("#ImagenCarga").addClass("hidden");
+                        $("#seccionMenuPerfilP1").addClass("hidden");
+                        //$("#seccionMenuPerfilP2").addClass("hidden");
+                        //$("#seccionMenuPerfilP3").addClass("hidden");
+                        $("#MensajeError").addClass("hidden");
+                        $("#MensajeVacio").removeClass("hidden");
+                        $("#MensajeErrorListar").addClass("hidden");
+                    }
+
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*fallo al llamar a la funcion ajax*/
+                    $("#ImagenCarga").addClass("hidden");
+                    $("#seccionMenuPerfilP1").addClass("hidden");
+                    $("#seccionMenuPerfilP2").addClass("hidden");
+                    $("#seccionMenuPerfilP3").addClass("hidden");
+                    $("#MensajeError").removeClass("hidden");
+                    $("#MensajeVacio").addClass("hidden");
+                    $("#MensajeErrorListar").addClass("hidden");
+
+
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+        }
+
+        /*-----------------*/
+
+        function onSelect(e) {
+
+           IdVista = 0;
+           NombreVista = "";
+           varlorDiferencial = "0";
+
+
+            for (i = 0; i < ArrayMenuCompare.length; i++) {
+
+                if (ArrayMenuCompare[i].NroTicket == this.text(e.node)) {
+
+                        $("#LstContainerDescription").addClass("hidden");
+                        $("#ImagenCargaLstContainerDescription").removeClass("hidden");
+                        $("#MensajeErrorLstContainerDescription").addClass("hidden");
+                        $("#MensajeVacioLstContainerDescription").addClass("hidden");
+                        $("#MensajeErrorListarLstContainerDescription").addClass("hidden");
+                        
+                        LstTickets(this.text(e.node));
+
+                } else {
+
+                    if (ArrayMenuCompare[i].ActivityText == this.text(e.node)) {
+
+                        $("#LstContainerDescription").addClass("hidden");
+                        $("#ImagenCargaLstContainerDescription").removeClass("hidden");
+                        $("#MensajeErrorLstContainerDescription").addClass("hidden");
+                        $("#MensajeVacioLstContainerDescription").addClass("hidden");
+                        $("#MensajeErrorListarLstContainerDescription").addClass("hidden");
+
+                        LstActivity(this.text(e.node));
+                    }
+
+                }
+
+            }
+        }
+
+        //4. Agrega los nodos seleccionados a un array y envia el mismo al método agregarNodosPadres
+        function capturarIdNodos(nodes, checkedNodes) {
+
+              for (var i = 0; i < nodes.length; i++) {
+                  //if (nodes[i].checked) {
+                  //    checkedNodes.push(nodes[i].id);
+                  //    agregarNodosPadres(nodes[i].DependencySequence);
+                  //}
+
+                  if (nodes[i].hasChildren) {
+                      capturarIdNodos(nodes[i].children.view(), checkedNodes);
+                  } else {
+                      checkedNodes.push(nodes[i].id);
+                      agregarNodosPadres(nodes[i].dependency);
+                  }
+              }
+          }
+
+        //5. recibe un array y despliega cada item para obtener los nodos padres y de esta manera tener toda la secuencia de cada nodo recibido
+        function agregarNodosPadres(nodosPadre) {
+            var nodosPadreArray = [];
+            nodosPadreArray = nodosPadre.split("-");
+            for (i = 0; i < nodosPadreArray.length; i++) {
+                if (nodosPadreArray[i] != "") {
+                    nodosPadresListado.push(nodosPadreArray[i])
+                }
+            }
+        }
+
+        //3. Se ejectuta al cargar el treeview y al hacer check en alguna casilla. LLama al método checkedNodeIds el cual captura los ids
+        // de los nodos seleccionados.
+        function onCheckMenuPerfil() {
+             checkedNodes = [];
+             nodosPadresListado = [];
+             nodosSeleccionados = [];
+             message = "";
+             treeView = $("#treeviewMenuPerfil").data("kendoTreeView"),
+                 message;
+
+                 capturarIdNodos(treeView.dataSource.view(), checkedNodes);
+                 nodosSeleccionados =  capturarNodosSeleccionados(nodosPadresListado);
+                 //console.log(nodosPadresListado);
+                 //console.log(capturarNodosSeleccionados(nodosPadresListado));
+                  /*if (checkedNodes.length > 0) {
+                      message = "IDs of checked nodes: " + checkedNodes.join(",");
+                  } else {
+                      message = "No nodes checked.";
+                  }
+
+                  $("#result").html(message);*/
+
+                  $("#ImagenCarga").addClass("hidden");
+                  $("#seccionMenuPerfilP1").removeClass("hidden");
+                  //$("#seccionMenuPerfilP2").removeClass("hidden");
+                  //$("#seccionMenuPerfilP3").removeClass("hidden");
+                  $("#MensajeError").addClass("hidden");
+                  $("#MensajeErrorListar").addClass("hidden");
+                  $("#MensajeVacio").addClass("hidden");
+        }
+
+        //6. se ejecuta en el método onCheckMenuPerfil despues del paso 5. Recibe el conjunto de nodos padres e hijos y remueve los datos repetidos
+        //Finalmente guarda datos unicos en otro array llamado nodosSeleccionados
+        function capturarNodosSeleccionados(nodosPadresListado) {
+
+            var nuevoArreglo = [];
+            var arregloRecorrido = {};
+
+            for (var i in nodosPadresListado) {
+                arregloRecorrido[nodosPadresListado[i]] = nodosPadresListado[i];
+            }
+
+            for (i in arregloRecorrido) {
+                nuevoArreglo.push(arregloRecorrido[i]);
+            }
+            return nuevoArreglo;
+    }
+
+        function onSelectVistaPerfil(e) {
+        var dataItem = this.dataItem(e.item.index());
+        idVistaPrincipal = dataItem.Menu.IdMenu;
+        mainIdVistaPrincipal = dataItem.Menu.MainId;
+    };
+
+        /////////////////////////////////////////////////////////////////////
+        //FUNCIONES PARA EL MÓDULO ACCIONES MENÚ
+        /////////////////////////////////////////////////////////////////////
+
+        //1. Recibe el valor del idPerfil del comboPerfil y muestra el treeview para las acciones
+        function ListarMenuPerfilAction(idPerfil) {
+
+        treeviewAccionMenu = [];
+        incSegundoNivel = 0;
+
+        $.ajax({
+            type: "GET",
+            url: tRutaServidor + "/MenuProfileAction/ListarMenuPerfilAction",
+            contentType: "application/json; charset=utf-8",
+            data: "idPerfil=" + idPerfil + "&valorConsulta=1",
+            dataType: "json",
+            /*async: false,*/
+            success: function (resultado) {
+                /*exitosamente*/
+                if (resultado.length > 0) {
+                    /* proceso exitoso con datos*/
+                    if (resultado[0].ValorConsulta == "1") {
+                        treeviewAccionMenu = RemoverValoresRepetidos(resultado);
+                        for (a = 0; a < treeviewAccionMenu.length; a++) {
+                            incSegundoNivel = 0;
+                            for (b = 0; b < resultado.length; b++) {
+                                if (resultado[b].Menu.IdMenu == treeviewAccionMenu[a].idMenu) {
+                                    treeviewAccionMenu[a].items[incSegundoNivel] = { id: resultado[b].IdMenuProfileAction, text: resultado[b].Action.ActionName, checked: resultado[b].Menu.ActiveViews, spriteCssClass: "folder", items: [] };
+                                    incSegundoNivel++;
+                                }
+                            }
+                        }
+
+                        $("#treeviewMenuAction").remove();
+                        $("#contenedorMenuAccion").append("<div id='treeviewMenuAction'></div>");
+                        $("#treeviewMenuAction").kendoTreeView({
+                            checkboxes: {
+                                checkChildren: true
+
+                            },
+
+                            check: onCheckMenuPerfilAccion,
+                            dataSource: treeviewAccionMenu
+                        });
+
+                        onCheckMenuPerfilAccion();
+
+                        $("#ImagenCargaB").addClass("hidden");
+                        $("#seccionMenuAccionP1").removeClass("hidden");
+                        $("#seccionMenuAccionP2").removeClass("hidden");
+                        $("#MensajeErrorB").addClass("hidden");
+                        $("#MensajeErrorListarB").addClass("hidden");
+                        $("#MensajeVacioB").addClass("hidden");
+                    } else {
+                        /* proceso fallido catch listado datos*/
+                        $("#ImagenCargaB").addClass("hidden");
+                        $("#seccionMenuAccionP1").addClass("hidden");
+                        $("#seccionMenuAccionP2").addClass("hidden");
+                        $("#MensajeErrorB").addClass("hidden");
+                        $("#MensajeErrorListarB").removeClass("hidden");
+                        $("#MensajeVacioB").addClass("hidden");
+                        console.log(resultado);
+                    }
+                } else {
+                    $("#ImagenCargaB").addClass("hidden");
+                    $("#seccionMenuAccionP1").addClass("hidden");
+                    $("#seccionMenuAccionP2").addClass("hidden");
+                    $("#MensajeErrorB").addClass("hidden");
+                    $("#MensajeVacioB").removeClass("hidden");
+                    $("#MensajeErrorListarB").addClass("hidden");
+                }
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                /*fallo al llamar a la funcion ajax*/
+                $("#ImagenCargaB").addClass("hidden");
+                $("#seccionMenuAccionP1").addClass("hidden");
+                $("#seccionMenuAccionP2").addClass("hidden");
+                $("#MensajeErrorB").removeClass("hidden");
+                $("#MensajeVacioB").addClass("hidden");
+                $("#MensajeErrorListarB").addClass("hidden");
+
+
+                console.log("ERROR AJAX : " + ajaxOptions);
+                console.log("ERROR AJAX : " + thrownError);
+                console.log(xhr.responseText);
+                console.log(xhr);
+
+            }
+        });
+
+    }
+        //2. Recibe el arreglo listadoAcciones y llena un nuevo arreglo con valores unicos del menú
+        function RemoverValoresRepetidos(listadoAcciones) {
+
+        var arregloNuevo = [];
+        var arregloRecorrido = {};
+
+        for (var i in listadoAcciones) {
+            arregloRecorrido[listadoAcciones[i].Menu.IdMenu] = listadoAcciones[i];
+        }
+
+        for (i in arregloRecorrido) {
+            arregloNuevo.push({ text: arregloRecorrido[i].Menu.VisualName, checked: arregloRecorrido[i].RegistrationStatus, idMenu: arregloRecorrido[i].Menu.IdMenu, spriteCssClass: "folder", items: [] });
+        }
+        return arregloNuevo;
+    }
+        //3. Se activa cuando se marca alguna casilla del treview y captura su id
+        function onCheckMenuPerfilAccion() {
+        checkedNodosMenuAccion = [];
+        //console.log(checkedNodosMenuAccion);
+        message = "";
+        treeView = $("#treeviewMenuAction").data("kendoTreeView"),
+            message;
+
+        capturarNodosMenuAccion(treeView.dataSource.view(), checkedNodosMenuAccion);
+        //console.log(checkedNodosMenuAccion);
+    }
+        //4. se utiliza en la función onCheckMenuPerfilAccion y llena el arreglo checkedNodosMenuAccion
+        function capturarNodosMenuAccion(nodos, checkedNodosMenuAccion) {
+        for (var i = 0; i < nodos.length; i++) {
+            if (nodos[i].checked && nodos[i].id != null) {
+                checkedNodosMenuAccion.push(nodos[i].id);
+            }
+            if (nodos[i].hasChildren) {
+                capturarNodosMenuAccion(nodos[i].children.view(), checkedNodosMenuAccion);
+            }
+        }
+    }
+
+        /////////////////////////////////////////////////////////////////////
+        //FUNCIONES PARA EL MÓDULO ALERTAS / NOTIFICACIÓN MENÚ
+        /////////////////////////////////////////////////////////////////////
+        function llenarModuloAlertaNotificacion(idPerfil) {
+        $.ajax({
+            type: "POST",
+            url: tRutaServidor + "/ProfileIndicator/ListarIndicadorPerfil",
+            dataType: "json",
+            data: "valorBusqueda=&valorConsulta=1&idPerfil=" + idPerfil,
+            success: function (resultado) {
+                if (resultado.length > 0) {
+                    /* proceso exitoso con datos*/
+                    if (resultado[0].ValorConsulta == "1") {
+                        $("#ImagenCargaAlerta").addClass("hidden");
+                        $("#PanelAlertas").removeClass("hidden");
+                        $("#PanelNotificaciones").removeClass("hidden");
+                        $("#MensajeErrorAlerta").addClass("hidden");
+                        $("#btnAlertasYNotificaciones").removeClass("hidden");
+                        $("#MensajeErrorListarAlerta").addClass("hidden");
+                        $("#MensajeVacioAlerta").addClass("hidden");
+                        var cuerpoAlerta = "";
+                        var cuerpoNotificacion = "";
+                        for (a = 0; a < resultado.length; a++) {
+                            if (resultado[a].Indicator.IndicatorType == 'A') {
+                                cuerpoAlerta +=
+                               "<div class='col col-xs-12' style=''>" +
+                                  "<div class='col-xs-9'>" +
+                                    "<label class='control-label'>" + resultado[a].Indicator.IndicatorDescription + "</label>" +
+                                  "</div>" +
+                                "<div class='col-xs-3'>" +
+                                  "<div class='switch'>" +
+                                    "<div class='onoffswitch'>";
+                                      if (resultado[a].RegistrationStatus == 'A') {
+                                        cuerpoAlerta +=
+                                        "<input type='checkbox' checked class='onoffswitch-checkbox clsIndicador' id='" + resultado[a].IdProfileIndicator + "'>";
+                                      } else {
+                                        cuerpoAlerta +=
+                                       "<input type='checkbox' class='onoffswitch-checkbox clsIndicador' id='" + resultado[a].IdProfileIndicator + "'>";
+                                      }
+                                       cuerpoAlerta +=
+                                       "<label class='onoffswitch-label' for='" + resultado[a].IdProfileIndicator + "'>" +
+                                       "<span class='onoffswitch-inner' data-swchon-text='SI' data-swchoff-text='NO'></span>" +
+                                       "<span class='onoffswitch-switch'></span>" +
+                                       "</label>" +
+                                    "</div>" +
+                                  "</div>" +
+                                "</div>" +
+                               "</div>";
+                            } else {
+                                cuerpoNotificacion +=
+                                                            "<div class='col col-xs-12' style=''>" +
+                                                            "<div class='col-xs-9'>" +
+                                                                "<label class='control-label'>" + resultado[a].Indicator.IndicatorDescription + "</label>" +
+                                                            "</div>" +
+                                                            "<div class='col-xs-3'>" +
+                                                            "<div class='switch'>" +
+                                                            "<div class='onoffswitch'>";
+                                if (resultado[a].RegistrationStatus == 'A') {
+                                    cuerpoNotificacion +=
+                                        "<input type='checkbox' checked class='onoffswitch-checkbox clsIndicador' id='" + resultado[a].IdProfileIndicator + "'>";
+                                } else {
+                                    cuerpoNotificacion +=
+                                       "<input type='checkbox' class='onoffswitch-checkbox clsIndicador' id='" + resultado[a].IdProfileIndicator + "'>";
+                                }
+                                cuerpoNotificacion +=
+                                    "<label class='onoffswitch-label' for='" + resultado[a].IdProfileIndicator + "'>" +
+                                    "<span class='onoffswitch-inner' data-swchon-text='SI' data-swchoff-text='NO'></span>" +
+                                    "<span class='onoffswitch-switch'></span>" +
+                                    " </label>" +
+                                    "</div>" +
+                                    "</div>" +
+                                    "</div>" +
+                                "</div>";
+                            }
+                        }
+                        document.getElementById("CuerpoAlertas").innerHTML = cuerpoAlerta;
+                        document.getElementById("CuerpoNotificaciones").innerHTML = cuerpoNotificacion;
+                    } else {
+                        /* proceso fallido catch listado datos*/
+                        $("#ImagenCargaAlerta").addClass("hidden");
+                        $("#PanelAlertas").addClass("hidden");
+                        $("#PanelNotificaciones").addClass("hidden");
+                        $("#btnAlertasYNotificaciones").addClass("hidden");
+                        $("#MensajeErrorAlerta").addClass("hidden");
+                        $("#MensajeErrorListarAlerta").removeClass("hidden");
+                        $("#MensajeVacioAlerta").addClass("hidden");
+                        //falta mostrar el log del error.
+                    }
+                } else {
+                    $("#ImagenCargaAlerta").addClass("hidden");
+                    $("#PanelAlertas").addClass("hidden");
+                    $("#PanelNotificaciones").addClass("hidden");
+                    $("#btnAlertasYNotificaciones").addClass("hidden");
+                    $("#MensajeErrorAlerta").addClass("hidden");
+                    $("#MensajeVacioAlerta").removeClass("hidden");
+                    $("#MensajeErrorListarAlerta").addClass("hidden");
+                }
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                $("#CargaTemporal").addClass("hidden");
+                /*fallo al llamar a la funcion ajax*/
+                toastr.options.timeOut = nTiempoLargo;
+                toastr.options.extendedTimeOut = nTiempoLargo;
+                /*success - info - warning - error*/
+                var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                console.log("ERROR AJAX : " + ajaxOptions);
+                console.log("ERROR AJAX : " + thrownError);
+                console.log(xhr.responseText);
+                console.log(xhr);
+            }
+        });
+    }
+
+        /*----------------------------------------------------------------------------------------------- ASIGNAR FUNCIONES*/
+         //    $("#btnGuardarMenuPerfil").click(function () {
+         //    guardarConfiguracionMenuPerfil();
+         //});
+
+        $('#ButtonHiddenBoxProfile').click(function () {
+        var x = document.getElementById("HiddenBoxProfile");
+        if (x.style.display === "none") {
+            $('#HiddenBoxProfile').slideDown();
+            document.getElementById("ButtonHiddenBoxProfile").innerHTML = '<i class="fa fa-chevron-up"></i>';
+        } else {
+            $('#HiddenBoxProfile').slideUp();
+            document.getElementById("ButtonHiddenBoxProfile").innerHTML = '<i class="fa fa-chevron-down"></i>';
+        }
+    });
+
+        $("#btnGuardarMenuAccion").click(function () {
+        guardarConfiguracionMenuAccion();
+    });
+
+        $('#ButtonHiddenBoxActionMenu').click(function () {
+        var x = document.getElementById("HiddenBoxActionMenu");
+        if (x.style.display === "none") {
+            $('#HiddenBoxActionMenu').slideDown();
+            document.getElementById("ButtonHiddenBoxActionMenu").innerHTML = '<i class="fa fa-chevron-up"></i>';
+        } else {
+            $('#HiddenBoxActionMenu').slideUp();
+            document.getElementById("ButtonHiddenBoxActionMenu").innerHTML = '<i class="fa fa-chevron-down"></i>';
+        }
+    });
+
+        $("#btnGuardarIndicadores").click(function () {
+        guardarConfiguracionIndicadores();
+    });
+
+        $('#ButtonHiddenBoxIndicator').click(function () {
+        var x = document.getElementById("HiddenBoxIndicator");
+        if (x.style.display === "none") {
+            $('#HiddenBoxIndicator').slideDown();
+            document.getElementById("ButtonHiddenBoxIndicator").innerHTML = '<i class="fa fa-chevron-up"></i>';
+        } else {
+            $('#HiddenBoxIndicator').slideUp();
+            document.getElementById("ButtonHiddenBoxIndicator").innerHTML = '<i class="fa fa-chevron-down"></i>';
+        }
+    });
+
+        $("#btnBuscar").click(function () {
+
+            if ($("#selectorTicketBusqueda").val() == "" || $("#selectorTicketBusqueda").val() == null || $("#selectorTicketBusqueda").val() == undefined) {
+
+                toastr.options.timeOut = nTiempoCorto;
+                toastr.options.extendedTimeOut = nTiempoCorto;
+                /*success - info - warning - error*/
+                var $toast = toastr["error"]("Es necesario ingresar un Ticket a listar", tTituloError); $toastlast = $toast;
+                return;
+
+            }
+
+            var ValueTicket = "";
+
+            ValueTicket = $("#selectorTicketBusqueda").val().toString();
+
+            $("#LstContainerDescription").addClass("hidden");
+            $("#ImagenCargaLstContainerDescription").addClass("hidden");
+            $("#MensajeErrorLstContainerDescription").addClass("hidden");
+            $("#MensajeVacioLstContainerDescription").removeClass("hidden");
+            $("#MensajeErrorListarLstContainerDescription").addClass("hidden");
+
+            ListarMenuPerfil(ValueTicket);
+
+        });
+        /* -------------------- KENDO UI - DIAGRAM ---------------*/
+
+        function FormatoFechas() {
+            var FechaHoy = new Date();
+            var FechaActual = new Date(FechaHoy.getFullYear(), FechaHoy.getMonth(), FechaHoy.getDate());
+
+            $('#txtFechaInicioTicket').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                endDate: FechaActual,
+            });
+
+            $('#txtFechaFinalTicket').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                //endDate: FechaHoy,
+            });
+
+            $('#txtFechaActividad').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                endDate: FechaActual,
+            });
+
+            //$('#txtCambioDeGuardiaFecha').datepicker({
+            //    keyboardNavigation: false,
+            //    forceParse: false,
+            //    autoclose: true,
+            //    format: 'dd/mm/yyyy',
+            //    endDate: FechaActual,
+            //});
+
+            $('#txtActivityDateEnd').kendoDateTimePicker({
+                value: new Date(),
+                dateInput: true,
+                format: "dd/MM/yyyy HH:mm:ss",
+                min: new Date(),
+                //endDate: new Date(),
+            });
+
+            $("#txtFechaInicioTicket").datepicker("setDate", primerDiaMes);
+            $("#txtFechaFinalTicket").datepicker("setDate", FechaFinalReporte);
+            $("#txtFechaActividad").datepicker("setDate", FechaActual);
+            //$('#txtActivityDateEnd').prop('disabled', false);
+            //$('#txtActivityDateEnd').data('kendoDateTimePicker').enable(true);
+            //$("#txtActivityDateEnd").datepicker("setDate", new Date());
+            //$('#txtActivityDateEnd').prop('disabled', false);
+            //$("#txtCambioDeGuardiaFecha").datepicker("setDate", FechaFinalReporte);
+            //$("#txtActivityDateEnd").datepicker("setDate", FechaHoy);
+            //ComboOperacion('1');
+        }
+
+        function ListadoDiagram() {
+
+            $.ajax({
+                type: "GET",
+                url: tRutaServidor + "/DiagramTicket/ListarDiagramaTicketActividades", /* es importante poner los .. delante*/
+                //data: {
+                //    StartDate: $("#txtFechaInicioTicket").val(),
+                //    EndDate: $("#txtFechaFinalTicket").val(),
+                //    IdsOperacion: IdOperacionTicket,
+                //    IdTicket: IdTicketSelect,
+                //    IdCriticalidad: IdCriticidadSelect
+                //},
+                dataType: "json",
+                /*async: false,*/
+                success: function (resultado) {
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+
+                        if (resultado[0].ValorConsulta == "1") {
+
+                            data = [{
+                                TicketNumber: resultado[0].NroTicket,
+                                NombreReponsable: resultado[0].ResponsibleNameTicket,
+                                TituloDescripcion: resultado[0].TitleDescription,
+                                TicketDescripcion: "antonio.jpg",
+                                colorScheme: "#1696d3",
+                                items: []
+                            }];
+
+                            for (i = 0; i < resultado.length; i++) {
+
+                                data[0].items.push({
+                                    NombreReponsable: resultado[i].ReponsibleNameActivity,
+                                    TituloDescripcion: resultado[i].ActivityText,
+                                    FechaCierre: "Brown",
+                                    colorScheme: "#ef6944",
+                                });
+
+                            }
+
+                            //console.log(data);
+                            createDiagram();
+                            //$("#LstDiagramTicketActivities").removeClass("hidden");
+                            //$("#imgCargaLstDiagramTicketActivities").addClass("hidden");
+                            //$("#msjErrorLstDiagramTicketActivities").addClass("hidden");
+                            //$("#msjVacioLstDiagramTicketActivities").addClass("hidden");
+                            //$("#msjErrorListarLstDiagramTicketActivities").addClass("hidden");
+                            //$("#msjSuperaLimiteLstDiagramTicketActivities").addClass("hidden");
+
+                            //$("#btnBuscar").prop('disabled', false);
+                            //$("#BtnExportarExcel").prop('disabled', false);
+
+                        } else if (resultado[0].ValorConsulta == "-1") {
+
+                            $("#LstDiagramTicketActivities").addClass("hidden");
+                            $("#imgCargaLstDiagramTicketActivities").addClass("hidden");
+                            $("#msjErrorLstDiagramTicketActivities").addClass("hidden");
+                            $("#msjVacioLstDiagramTicketActivities").addClass("hidden");
+                            $("#msjErrorListarLstDiagramTicketActivities").addClass("hidden");
+                            $("#msjSuperaLimiteLstDiagramTicketActivities").removeClass("hidden");
+
+                            $("#btnBuscar").prop('disabled', false);
+                            $("#BtnExportarExcel").prop('disabled', true);
+                        }
+                        else {
+                            /* proceso fallido catch listado datos*/
+                            $("#LstDiagramTicketActivities").addClass("hidden");
+                            $("#imgCargaLstDiagramTicketActivities").addClass("hidden");
+                            $("#msjErrorLstDiagramTicketActivities").addClass("hidden");
+                            $("#msjVacioLstDiagramTicketActivities").addClass("hidden");
+                            $("#msjErrorListarLstDiagramTicketActivities").removeClass("hidden");
+                            $("#msjSuperaLimiteLstDiagramTicketActivities").addClass("hidden");
+
+                            $("#btnBuscar").prop('disabled', true);
+                            $("#BtnExportarExcel").prop('disabled', true);
+                            console.log(resultado);
+                        }
+
+                    } else {
+                        $("#LstDiagramTicketActivities").addClass("hidden");
+                        $("#imgCargaLstDiagramTicketActivities").addClass("hidden");
+                        $("#msjErrorLstDiagramTicketActivities").addClass("hidden");
+                        $("#msjVacioLstDiagramTicketActivities").removeClass("hidden");
+                        $("#msjErrorListarLstDiagramTicketActivities").addClass("hidden");
+                        $("#msjSuperaLimiteLstDiagramTicketActivities").addClass("hidden");
+
+                        $("#btnBuscar").prop('disabled', false);
+                        $("#BtnExportarExcel").prop('disabled', true);
+                    }
+
+                    //options.success(resultado);
+                    //var grid = $("#LstDiagramTicketActivities").data("kendoGrid");
+                    //if (grid.dataSource.total() > 0) {
+                    //    grid.setDataSource(dataSource);
+                    //}
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    /*fallo al llamar a la funcion ajax*/
+                    $("#LstDiagramTicketActivities").addClass("hidden");
+                    $("#imgCargaLstDiagramTicketActivities").addClass("hidden");
+                    $("#msjErrorLstDiagramTicketActivities").removeClass("hidden");
+                    $("#msjVacioLstDiagramTicketActivities").addClass("hidden");
+                    $("#msjErrorListarLstDiagramTicketActivities").addClass("hidden");
+                    $("#msjSuperaLimiteLstDiagramTicketActivities").addClass("hidden");
+
+                    $("#btnBuscar").prop('disabled', true);
+                    $("#BtnExportarExcel").prop('disabled', true);
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+
+                }
+            });
+
+        }
+
+        function visualTemplate(options) {
+            var dataviz = kendo.dataviz;
+            var g = new dataviz.diagram.Group();
+            var dataItem = options.dataItem;
+
+            g.append(new dataviz.diagram.Rectangle({
+                width: 520,
+                height: 85,
+                stroke: {
+                    width: 0
+                },
+                fill: {
+                    gradient: {
+                        type: "linear",
+                        stops: [{
+                            color: dataItem.colorScheme,
+                            offset: 0,
+                            opacity: 0.5
+                        }, {
+                            color: dataItem.colorScheme,
+                            offset: 1,
+                            opacity: 1
+                        }]
+                    }
+                }
+            }));
+
+            g.append(new dataviz.diagram.TextBlock({
+                text: "Responsable : " + dataItem.NombreReponsable,
+                x: 85,
+                y: 20,
+                fill: "#fff"
+            }));
+
+            g.append(new dataviz.diagram.TextBlock({
+                text: "Descripción : " + dataItem.TituloDescripcion,
+                x: 85,
+                y: 40,
+                fill: "#fff"
+            }));
+
+            //g.append(new dataviz.diagram.Image({
+            //    source: "../content/dataviz/diagram/people/" + dataItem.image,
+            //    x: 3,
+            //    y: 3,
+            //    width: 68,
+            //    height: 68
+            //}));
+
+            return g;
+        }
+
+        function createDiagram() {
+            $("#LstDiagramTicketActivities").kendoDiagram({
+                dataSource: new kendo.data.HierarchicalDataSource({
+                    data: data,
+                    schema: {
+                        model: {
+                            children: "items"
+                        }
+                    }
+                }),
+                layout: {
+                    type: "layered"
+                },
+                shapeDefaults: {
+                    visual: visualTemplate
+                },
+                connectionDefaults: {
+                    stroke: {
+                        color: "#979797",
+                        width: 2
+                    }
+                }
+            });
+
+            var diagram = $("#LstDiagramTicketActivities").getKendoDiagram();
+            diagram.bringIntoView(diagram.shapes);
+
+            $("#LstDiagramTicketActivities").removeClass("hidden");
+            $("#imgCargaLstDiagramTicketActivities").addClass("hidden");
+            $("#msjErrorLstDiagramTicketActivities").addClass("hidden");
+            $("#msjVacioLstDiagramTicketActivities").addClass("hidden");
+            $("#msjErrorListarLstDiagramTicketActivities").addClass("hidden");
+            $("#msjSuperaLimiteLstDiagramTicketActivities").addClass("hidden");
+
+        }
+
+        /*--------------------------------------------*/
+
+        function ComboTicket() {
+
+             $.ajax({
+                 type: "GET", /*Puede ser post*/
+                 url: tRutaServidor + "/Ticket/ListarTicketPendientes", /* es importante poner los .. delante*/
+                 contentType: "application/json; charset=utf-8",
+                 data: {
+                     StatusCategory : 'E'
+                 },
+                 dataType: "json",
+                 success: function (resultado) {
+
+                     var opcionesTicket = "";
+
+                     /*exitosamente*/
+                     if (resultado.length > 0) {
+                         /* proceso exitoso con datos*/
+
+                         if (resultado[0].ValorConsulta == "1") {
+
+                             /**Llenar el combo con todo las compañías**/
+                             for (i = 0; i < resultado.length; i++) {
+
+                                 opcionesTicket += "<option value='" + resultado[i].IdTicket + "'>" + resultado[i].NroTicket + "</option>";
+                             }
+
+                             $("#selectorTicketBusqueda").empty();
+                             $("#selectorTicketBusqueda").append(opcionesTicket);
+                             $("#selectorTicketBusqueda").selectpicker('val', [resultado[0].IdTicket]);
+                             $("#selectorTicketBusqueda").selectpicker('refresh');
+
+                             $("#btnBuscar").prop('disabled', false);
+
+                             //ListarActivities();
+                             ListarMenuPerfil(resultado[0].IdTicket);
+                             //ListarMenuPerfilAction(resultado[0].IdTicket);
+                             //llenarModuloAlertaNotificacion(resultado[0].IdTicket);
+
+                         }
+                         else {
+                             /*Error al listar*/
+
+                         }
+
+                     } else {
+
+                         $("#ImagenCarga").addClass("hidden");
+                         $("#seccionMenuPerfilP1").addClass("hidden");
+                         $("#seccionMenuPerfilP2").addClass("hidden");
+                         $("#seccionMenuPerfilP3").addClass("hidden");
+                         $("#MensajeError").addClass("hidden");
+                         $("#MensajeVacio").removeClass("hidden");
+                         $("#MensajeErrorListar").addClass("hidden");
+
+
+                     }
+
+                 },
+                 error: function (xhr, ajaxOptions, thrownError) {
+                     /*Fallo al llamar funcion ajax*/
+
+                     console.log("ERROR AJAX : " + ajaxOptions);
+                     console.log("ERROR AJAX : " + thrownError);
+                     console.log(xhr.responseText);
+                     console.log(xhr);
+
+                 }
+             });
+        }
+
+        function LstTickets(ValueTicket) {
+
+             $.ajax({
+                 type: "GET", /*Puede ser post*/
+                 url: tRutaServidor + "/Ticket/ListarTicketsMenu", /* es importante poner los .. delante*/
+                 contentType: "application/json; charset=utf-8",
+                 data: {
+                     ValueTicketMenu : ValueTicket
+                 },
+                 dataType: "json",
+                 success: function (resultado) {
+
+                     //var opcionesTicket = "";
+
+                     /*exitosamente*/
+                     if (resultado.length > 0) {
+                         /* proceso exitoso con datos*/
+
+                         if (resultado[0].ValorConsulta == "1") {
+
+
+                             if (ValueTicket == 'TICKETS') {
+
+                                 var divContainer = "";
+                                 var ColorStatus = "";
+                                 let ListContainerMenu = document.getElementById('LstContainerDescription');
+
+                                 divContainer = '<div class="row" style="border:none;">' +
+                                                     '<h5 style="color: #0288d1;"><strong><i> TICKETS GENERALES </i></strong></h5><br>';
+                                                    //'<section class="col-xs-12 col-sm-12 col-md-6 col-lg-8">' +
+                                                    //    '<h5 style="color: #0288d1;font-style:italic"><strong>Numero Ticket   -   Estado   -   Resposable</strong></h4> <br />'+
+                                                    //'</section > ';
+
+                                 for (i = 0; i < resultado.length; i++) {
+
+                                     if (resultado[i].StatusTicket == 'PENDIENTE') {
+                                         ColorStatus = "#12d812";
+                                     } else if (resultado[i].StatusTicket == 'COMPLETADO') {
+                                         ColorStatus = "black";
+                                     } else {
+                                         ColorStatus = "red";
+                                     }
+
+
+                                     divContainer +=
+                                         '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                               '<h5><strong style="color:red"> Nro Ticket : </strong> <strong>' + resultado[i].NroTicket + '</strong></h5>' +
+                                         '</section>' +
+
+                                         '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                               '<p><strong> Estado : </strong> <strong style="color:' + ColorStatus +'">'+ resultado[i].StatusTicket +  '</strong></p>' +
+                                         '</section>' +
+
+                                         '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                               '<p><strong> Responsable : </strong> <strong>' + resultado[i].ResponsibleNameTicket + '</strong></p>' +
+                                         '</section>';
+                                 }
+
+                                 divContainer += '</div>';
+
+                                 
+                                 ListContainerMenu.innerHTML = divContainer;
+                                 //document.getElementById('LstContainerDescription').appendChild(divContainer);
+                             } else {
+
+                                 var divContainer = "";
+                                 var ColorStatus = "";
+                                 let ListContainerMenu = document.getElementById('LstContainerDescription');
+                                 var TextNroTicket = "";
+                                 var ArrayActivity;
+
+                                 divContainer = '<div class="row" style="border:none;">' +
+                                                     '<h4 style="color: #0288d1;"><strong><i>DETALLE TICKET </i></strong></h4><br>';
+
+                                 ArrayActivity = [];
+                                 ArrayActivity = resultado;
+
+                                  for (i = 0; i < resultado.length; i++) {
+
+
+                                      if (resultado[i].NroTicket != TextNroTicket) {
+
+                                        if (resultado[i].StatusTicket == 'PENDIENTE') {
+                                            ColorStatus = "#12d812";
+                                        } else if (resultado[i].StatusTicket == 'COMPLETADO') {
+                                            ColorStatus = "black";
+                                        } else {
+                                            ColorStatus = "red";
+                                        }
+                                        
+                                        
+                                        divContainer +=
+                                            '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                            '<p><strong style="color:red"> Nro Ticket : </strong> <strong>' + resultado[i].NroTicket + '</strong></p>' +
+                                            '</section>' +
+                                        
+                                            '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                            '<p><strong> Operacion : </strong> <strong>' + resultado[i].OperationName + '</strong></p>' +
+                                            '</section>' +
+                                        
+                                            '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                            '<p><strong> Quien Llama : </strong> <strong>' + resultado[i].EmailWhoCall + '</strong></p>' +
+                                            '</section>' +
+                                        
+                                            '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                            '<p><strong> Responsable : </strong> <strong>' + resultado[i].ResponsibleNameTicket + '</strong></p>' +
+                                            '</section>' +
+                                        
+                                            '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                            '<p><strong> Razon : </strong> <strong>' + resultado[i].ReasonName + '</strong></p>' +
+                                            '</section>' +
+                                        
+                                            '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                            '<p><strong> Criticidad : </strong> <strong>' + resultado[i].CriticalityName + '</strong></p>' +
+                                            '</section>' +
+                                        
+                                            '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                            '<p><strong> Locacion : </strong> <strong>' + resultado[i].LocationNameTicket + '</strong></p>' +
+                                            '</section>' +
+                                        
+                                            '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                            '<p><strong> Fecha Inicio : </strong> <strong>' + resultado[i].StartDate + '</strong></p>' +
+                                            '</section>' +
+                                        
+                                            '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                              '<p><strong> Estado : </strong> <strong style="color:' + ColorStatus + '">' + resultado[i].StatusTicket + '</strong></p>' +
+                                            '</section>' +
+                                        
+                                            '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                            '<p><strong> Titulo Ticket : </strong> <strong>' + resultado[i].TitleDescription + '</strong></p>' +
+                                            '</section>' +
+                                        
+                                            '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12" style="margin-bottom:15px">' +
+                                            '<p><strong> Descripcion : </strong></p>' +
+                                                '<div style="width: 90%; display:flex; flex-flow:row nowrap;">' +
+                                                     '<textarea style="font-family: "Roboto", sans-serif;min-width: 100%" class="form-control" id="lblDetallerTicket" disabled name="lblDetallerTicket" disabled rows="3">' + resultado[i].DetalleText + '</textarea>' +
+                                                '</div>'+
+                                            '</section>';
+
+                                          if (resultado[i].ActivityText != "NA"){
+
+                                              divContainer += '<h4 style="color: #0288d1"><strong><i>ACTIVIDADES </i></strong></h4><br>';
+
+                                              for (j = 0; j < ArrayActivity.length; j++) {
+                                              
+                                                  divContainer +=
+                                                      '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                                      '<p><strong>' + (j + 1) + '.- </strong> <strong>' + ArrayActivity[j].ActivityText + '</strong></p>' +
+                                                      '</section>';
+                                              
+                                              }
+                                          }
+
+                                          TextNroTicket = resultado[i].NroTicket;
+
+                                      }
+                                  }
+
+                                 divContainer += '</div>';
+
+                                 
+                                 ListContainerMenu.innerHTML = divContainer;
+
+
+                             }
+
+                            
+
+                              $("#LstContainerDescription").removeClass("hidden");
+                              $("#ImagenCargaLstContainerDescription").addClass("hidden");
+                              $("#MensajeErrorLstContainerDescription").addClass("hidden");
+                              $("#MensajeVacioLstContainerDescription").addClass("hidden");
+                              $("#MensajeErrorListarLstContainerDescription").addClass("hidden");
+
+
+
+                         }
+                         else {
+                             /*Error al listar*/
+
+                         }
+
+                     } else {
+
+                         $("#LstContainerDescription").addClass("hidden");
+                         $("#ImagenCargaLstContainerDescription").addClass("hidden");
+                         $("#MensajeErrorLstContainerDescription").addClass("hidden");
+                         $("#MensajeVacioLstContainerDescription").removeClass("hidden");
+                         $("#MensajeErrorListarLstContainerDescription").addClass("hidden");
+
+
+                     }
+
+                 },
+                 error: function (xhr, ajaxOptions, thrownError) {
+                     /*Fallo al llamar funcion ajax*/
+
+                     console.log("ERROR AJAX : " + ajaxOptions);
+                     console.log("ERROR AJAX : " + thrownError);
+                     console.log(xhr.responseText);
+                     console.log(xhr);
+
+                 }
+             });
+        }
+
+        function LstActivity(ValueActivity) {
+
+             $.ajax({
+                 type: "GET", /*Puede ser post*/
+                 url: tRutaServidor + "/Ticket/ListarActivityMenu", /* es importante poner los .. delante*/
+                 contentType: "application/json; charset=utf-8",
+                 data: {
+                     ValueActivityMenu : ValueActivity
+                 },
+                 dataType: "json",
+                 success: function (resultado) {
+
+                     //var opcionesTicket = "";
+
+                     /*exitosamente*/
+                     if (resultado.length > 0) {
+                         /* proceso exitoso con datos*/
+
+                         if (resultado[0].ValorConsulta == "1") {
+
+                              var divContainer = "";
+                              var ColorStatus = "";
+                              let ListContainerMenu = document.getElementById('LstContainerDescription');
+
+                              divContainer = '<div class="row" style="border:none;">' +
+                                                     '<h5 style="color: #0288d1;"><i><strong> NRO TICKET : <span style="color:red">' + resultado[0].NroTicket + '</span> - > ACTIVIDAD </strong></i></h5><br>';
+
+                              for (i = 0; i < resultado.length; i++) {
+
+                                     if (resultado[i].StatusActivity == 'PENDIENTE') {
+                                         ColorStatus = "#12d812";
+                                     } else if (resultado[i].StatusActivity == 'COMPLETADO') {
+                                         ColorStatus = "black";
+                                     } else {
+                                         ColorStatus = "red";
+                                     }
+
+
+                                     divContainer +=
+                                         '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                               '<p><strong> Actividad : </strong> <strong>' + resultado[i].ActivityText + '</strong></p>' +
+                                         '</section>' +
+
+                                         '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                               '<p><strong> Responsable : </strong> <strong>' + resultado[i].ResponsibleActivity + '</strong></p>' +
+                                         '</section>'+
+
+                                         '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                               '<p><strong> Fecha Estimada : </strong> <strong>' + resultado[i].FechaCierre + '</strong></p>' +
+                                         '</section>'+
+
+                                         '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                               '<p><strong> Porcentaje Avance : </strong> <strong>' + resultado[i].PercentageNumber + '</strong></p>' +
+                                         '</section>'+
+
+                                         '<section class="col-xs-12 col-sm-12 col-md-6 col-lg-12">' +
+                                               '<p><strong> Estado : </strong> <strong style="color:' + ColorStatus +'">'+ resultado[i].StatusActivity +  '</strong></p>' +
+                                         '</section>';
+                              }
+                              
+                              divContainer += '</div>';
+
+                              ListContainerMenu.innerHTML = divContainer;
+
+                              $("#LstContainerDescription").removeClass("hidden");
+                              $("#ImagenCargaLstContainerDescription").addClass("hidden");
+                              $("#MensajeErrorLstContainerDescription").addClass("hidden");
+                              $("#MensajeVacioLstContainerDescription").addClass("hidden");
+                              $("#MensajeErrorListarLstContainerDescription").addClass("hidden");
+
+                         }
+                         else {
+                             /*Error al listar*/
+
+                         }
+
+                     } else {
+
+                         $("#LstContainerDescription").addClass("hidden");
+                         $("#ImagenCargaLstContainerDescription").addClass("hidden");
+                         $("#MensajeErrorLstContainerDescription").addClass("hidden");
+                         $("#MensajeVacioLstContainerDescription").removeClass("hidden");
+                         $("#MensajeErrorListarLstContainerDescription").addClass("hidden");
+
+
+                     }
+
+                 },
+                 error: function (xhr, ajaxOptions, thrownError) {
+                     /*Fallo al llamar funcion ajax*/
+
+                     console.log("ERROR AJAX : " + ajaxOptions);
+                     console.log("ERROR AJAX : " + thrownError);
+                     console.log(xhr.responseText);
+                     console.log(xhr);
+
+                 }
+             });
+        }
+
+        $('input[type=radio][name=rdoRadioFechasTicket]').change(function (e) {
+
+            if (e.target.id == 'rdoFecha') {
+
+                $(".ContainerRangoInicio").removeClass("hidden");
+                $(".ContainerRangoFin").removeClass("hidden");
+                $(".ContainerTickets").addClass("hidden");
+
+                ValorRadio = 1;
+
+                //$("#selectorTicket").selectpicker('val', "");
+                //$("#selectorTicket").selectpicker('refresh');
+                //$("#txtTicket").val("");
+
+                //console.log(1);
+                //console.log(1);
+
+            } else if (e.target.id == 'rdoTickets') {
+
+                $(".ContainerRangoInicio").addClass("hidden");
+                $(".ContainerRangoFin").addClass("hidden");
+                $(".ContainerTickets").removeClass("hidden");
+
+                ValorRadio = 2;
+
+                //$("#selectorResponsible").selectpicker('val', "");
+                //$("#selectorResponsible").selectpicker('refresh');
+                //console.log(2);
+            }
+
+        });
+
+        FormatoFechas();
+        ComboTicket();
+        //ListadoDiagram();
+
+    });
+
+</script>
+
+<style>
+    #treeviewMenuPerfil .k-sprite {
+        background-image: url("../Content/Img/coloricons-sprite.png");
+    }
+
+    #treeviewMenuAction .k-sprite {
+        background-image: url("../Content/Img/coloricons-sprite.png");
+    }
+
+    .k-dropdown {
+        color: black;
+        border: 1px solid #AAAAAA;
+    }
+</style>

@@ -1,0 +1,110 @@
+﻿<script src="~/Scripts/util/jsUtilCambioGuardia.js"></script>
+
+@model AccountLoginModel
+@{
+    ViewBag.PageId = "extr-page";
+    ViewBag.PageClass = "animated fadeInDown";
+}
+
+@section topright{
+
+}
+
+<div id="content" class="container">
+    <div class="row">
+        @{ Html.RenderPartial("_LoginText"); }
+        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+            <div class="well no-padding">
+                <form action="@Url.Action("login", "account")" method="POST" id="login-form" class="smart-form client-form">
+                    <header>
+                        Inicio de Sesión
+                    </header>
+                    @Html.HiddenFor(m => m.ReturnUrl)
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationBootstrap()
+                    <fieldset>
+                        <section>
+                            <label class="label">Usuario :</label>
+                            <label class="input">
+                                <i class="icon-append fa fa-user"></i>
+                                <input type="text" name="email" value="">
+                                <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> Ingresar usuario</b>
+                            </label>
+                        </section>
+
+                        <section>
+                            <label class="label">Clave :</label>
+                            <label class="input">
+                                <i class="icon-append fa fa-lock"></i>
+                                <input type="password" name="password" value="">
+                                <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Ingresar Clave</b>
+                            </label>
+                            <div class="note">
+                               
+                            </div>
+                        </section>
+
+                        <section>
+                           <!-- <label class="checkbox">
+                                <input type="checkbox" name="rememberMe" value="true" checked="checked">
+                                <input type="hidden" name="rememberMe" value="false" />
+                                <i></i>Stay signed in
+                            </label> -->
+                        </section>
+                    </fieldset>
+                    <footer>
+                        <button type="submit" class="btn btn-primary">
+                            Ingresar
+                        </button>
+                    </footer>
+                </form>
+            </div>
+            @{ Html.RenderPartial("_SocialMedia"); }
+            <div class="row" style="margin-top:30px;">
+                <div style="width:100%; display:flex; flex-flow:row nowrap; align-items:center; justify-content:center">
+                    <h4>Compatible con </h4>
+                    <img src="~/Content/img/chrome_logo.png" class="" alt="" style="width:50px; margin-left:5px;" />
+                </div>
+            </div>
+        </div>
+       
+    </div>
+   
+</div>
+@section pagespecific {
+    <script type="text/javascript">        
+
+        $(function () {
+            // Validation
+            $("#login-form").validate({
+                // Rules for form validation
+                rules: {
+                    email: {
+                        required: true
+                    },
+                    password: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 20
+                    }
+                },
+                // Messages for form validation
+                messages: {
+                    email: {
+                        required: tCampoRequerido,
+                    },
+                    password: {
+                        required: tCampoRequerido,
+                        minlength: tMinLength,
+                        maxlength: tMaxLength
+                    }
+                },
+
+                // Do not change code below
+                errorPlacement: function (error, element) {
+                    error.insertAfter(element.parent());
+                }
+            });
+        });
+    </script>
+}

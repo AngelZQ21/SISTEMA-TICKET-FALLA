@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6D1C9D29-ED57-4A01-BF04-2F0B95F8DC47}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CL_DA</RootNamespace>
+    <AssemblyName>CL_DA</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataUtil.cs" />
+    <Compile Include="DA_Activity.cs" />
+    <Compile Include="DA_Area.cs" />
+    <Compile Include="DA_Components.cs" />
+    <Compile Include="DA_Configuration.cs" />
+    <Compile Include="DA_Criticality.cs" />
+    <Compile Include="DA_Employee.cs" />
+    <Compile Include="DA_GuardChange.cs" />
+    <Compile Include="DA_Indicator.cs" />
+    <Compile Include="DA_Indicator_Answer.cs" />
+    <Compile Include="DA_Indicator_Register.cs" />
+    <Compile Include="DA_Indicator_Type.cs" />
+    <Compile Include="DA_ListActivity.cs" />
+    <Compile Include="DA_ListActivityDetail.cs" />
+    <Compile Include="DA_ListGeneralActivity.cs" />
+    <Compile Include="DA_MeetingRecord.cs" />
+    <Compile Include="DA_Meeting_Record_Activity.cs" />
+    <Compile Include="DA_Menu.cs" />
+    <Compile Include="DA_MenuProfile.cs" />
+    <Compile Include="DA_Menu_Profile_Action.cs" />
+    <Compile Include="DA_Operation.cs" />
+    <Compile Include="DA_PathFile.cs" />
+    <Compile Include="DA_Person.cs" />
+    <Compile Include="DA_Position.cs" />
+    <Compile Include="DA_Profile.cs" />
+    <Compile Include="DA_Profile_Indicator.cs" />
+    <Compile Include="DA_Reason.cs" />
+    <Compile Include="DA_ReportListTicketActivity.cs" />
+    <Compile Include="DA_Restriction.cs" />
+    <Compile Include="DA_Restriction_Setting.cs" />
+    <Compile Include="DA_Role.cs" />
+    <Compile Include="DA_Search.cs" />
+    <Compile Include="DA_Ticket.cs" />
+    <Compile Include="DA_User.cs" />
+    <Compile Include="DA_Value.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CL_BE\CL_BE.csproj">
+      <Project>{e3d984e9-01fc-466a-b23d-d76d69c2ed03}</Project>
+      <Name>CL_BE</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

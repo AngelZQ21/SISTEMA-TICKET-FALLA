@@ -1,0 +1,140 @@
+﻿
+<script>
+
+    var tFlagPrimerAcceso = 0; /* Sirve para validar la página incial despues del logeo. Toma como parámetro el hash de la página. Se activa al iniciar sesión o presionar alguna etiqueta <a> */
+    var tRutaServidor = '..';
+    var tNombreUsuario = "@User.Identity.Name.ToUpper().ToString()";
+    tNombreUsuario = tNombreUsuario.split(',');
+    tNombreUsuario = tNombreUsuario[4];
+    //console.log(tNombreUsuario);
+</script>
+
+@{
+
+    string[] cadena = User.Identity.Name.ToUpper().ToString().Split(',');
+    var idperfil = cadena[2];
+    List<CL_BE.BE_Menu_Profile> ListaMenu = new List<CL_BE.BE_Menu_Profile>();
+    ListaMenu = new SmartAdminMvc.Controllers.MenuController().ListarMenu(idperfil, "1");
+
+    //var vistasPrincipales = new SmartAdminMvc.Controllers.MenuController().ListarVistaPrincipalMenu(idperfil, "1");
+    //string[] splitvalue = vistasPrincipales.Split('-');
+
+    //int splitValueLength = splitvalue.Length;
+    //int v1=0, v2=0, v3=0, v4=0;
+
+
+  
+
+
+<!-- Left panel : Navigation area -->
+<!-- Note: This width of the aside area can be adjusted through LESS variables -->
+<aside id="left-panel">
+
+    <!-- User info -->
+   
+    <!-- end user info -->
+    <!-- NAVIGATION : This navigation is also responsive
+
+    To make this navigation dynamic please make sure to link the node
+    (the reference to the nav > ul) after page load. Or the navigation
+    will not initialize.
+    -->
+    @{ Html.RenderPartial("_CurrentUser"); }
+    <nav>
+        <!-- NOTE: Notice the gaps after each icon usage <i></i>..
+        Please note that these links work a bit different than
+        traditional href="" links. See documentation for details.
+        -->
+
+        <ul>
+            <!--Nivel 1-->
+            @for (int a = 0; a < ListaMenu.Count(); a++)
+            {
+                if (ListaMenu[a].Menu.DependencyScale == 0)
+                {
+                    if (ListaMenu[a].Menu.HasDependency == "S")
+                    {
+                        <li id="@ListaMenu[a].Menu.MainId" class="top-menu-invisible @Html.RouteIf(@ListaMenu[a].Menu.ViewController,"active")" >
+                            <a href="#"><i class="@ListaMenu[a].Menu.IconShowed"></i><span class="menu-item-parent">@ListaMenu[a].Menu.VisualName</span></a>
+                             <!--<ul class="nav nav-second-level"> -->
+                            <ul class="">
+                                <!--Nivel 2-->
+                                @for (int b = 0; b < ListaMenu.Count; b++)
+                                {
+                                    if (ListaMenu[b].Menu.DependencyMainId == ListaMenu[a].Menu.MainId)
+                                    {
+                                        if (ListaMenu[b].Menu.HasDependency == "S")
+                                        {
+                                            <li id="@ListaMenu[b].Menu.MainId" class="top-menu-invisible @Html.RouteIf(@ListaMenu[b].Menu.ViewController,"active")">
+                                                <a href="#"><span class="menu-item-parent">@ListaMenu[b].Menu.VisualName</span></a>
+                                                <!--<ul class="nav nav-third-level">-->
+                                                <ul class="">
+                                                    <!--Nivel 3-->
+                                                    @for (int c = 0; c < ListaMenu.Count; c++)
+                                                    {
+                                                        if (ListaMenu[c].Menu.DependencyMainId == ListaMenu[b].Menu.MainId)
+                                                        {
+                                                            if (ListaMenu[c].Menu.HasDependency == "S")
+                                                            {
+
+                                                                <li id="@ListaMenu[c].Menu.MainId" class="top-menu-invisible @Html.RouteIf(@ListaMenu[c].Menu.ViewController,"active")">
+                                                                    <a href="#"><span class="menu-item-parent">@ListaMenu[c].Menu.VisualName</span></a>
+                                                                    <ul>
+                                                                        <!--Nivel 4-->
+                                                                        @for (int d = 0; d < ListaMenu.Count; d++)
+                                                                        {
+                                                                            if (ListaMenu[d].Menu.DependencyMainId == ListaMenu[c].Menu.MainId)
+                                                                            {
+                                                                                <li id="@ListaMenu[d].Menu.MainId" class="top-menu-invisible @Html.RouteIf(@ListaMenu[d].Menu.ViewController,"active")">
+                                                                                    <a href="@Url.Action(@ListaMenu[d].Menu.ViewController, @ListaMenu[d].Menu.Controller)"><span class="menu-item-parent"> @ListaMenu[d].Menu.VisualName</span></a>
+                                                                                </li>
+                                                                            }
+                                                                        }
+                                                                    </ul>
+                                                                </li>
+                                                            }
+                                                            else
+                                                            {
+                                                                <!--Nivel 3-->
+                                                                <li id="@ListaMenu[c].Menu.MainId" class="top-menu-invisible @Html.RouteIf(@ListaMenu[c].Menu.ViewController,"active")">
+                                                                    <a href="@Url.Action(@ListaMenu[c].Menu.ViewController, @ListaMenu[c].Menu.Controller)"><span class="menu-item-parent">@ListaMenu[c].Menu.VisualName</span></a>
+                                                                </li>
+                                                             }
+                                                         }
+                                                    }
+                                                </ul>
+                                             </li>
+                                       }
+                                       else
+                                       {
+                                          <!--Nivel 2-->
+                                          <li id="@ListaMenu[b].Menu.MainId" class="top-menu-invisible @Html.RouteIf(@ListaMenu[b].Menu.ViewController,"active")">
+                                            <a href="@Url.Action(@ListaMenu[b].Menu.ViewController, @ListaMenu[b].Menu.Controller)"><span class="menu-item-parent">@ListaMenu[b].Menu.VisualName</span></a>
+                                          </li>
+                                       }
+                                    }
+                                }
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <!--Nivel 1-->
+                        <li id="@ListaMenu[a].Menu.MainId" class="top-menu-invisible @Html.RouteIf(@ListaMenu[a].Menu.ViewController,"active")">
+                            <a href="@Url.Action(@ListaMenu[a].Menu.ViewController, @ListaMenu[a].Menu.Controller)"><span class="menu-item-parent">@ListaMenu[a].Menu.VisualName</span></a>
+                        </li>
+                    }
+                }
+            }
+
+        </ul>
+    </nav>
+
+    <span class="minifyme" data-action="minifyMenu">
+        <i class="fa fa-arrow-circle-left hit"></i>
+    </span>
+
+</aside>
+<!-- END NAVIGATION -->
+    
+}

@@ -1,0 +1,997 @@
+﻿<script src="~/Scripts/util/jsUtilCambioGuardia.js"></script>
+
+
+
+<div id="content">
+
+    <div class="well" style="padding:0px 30px 10px 30px; background-color:white;">
+        <div class="row wrapper">
+            <div style="width: 100%; display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:space-between; text-align:center; align-items:center;">
+                <h2><i class="fa fa-edit fa-fw"></i>Configuración Perfil</h2>
+            </div>
+            <p><i class="fa fa-angle-right" style="margin-right:5px"></i>[Realice la asignación de vistas en base a los perfiles existentes y a su vez defina la vista principal]</p>
+            <p><i class="fa fa-angle-right" style="margin-right:5px"></i>[Seleccione las acciones que podrá ejecutar cada perfil en cada vista]</p>
+        </div>
+
+        <div class="row" style="margin-top: 10px;">
+
+            <div class="col-xs-12 col-sm-12 col-md-12" style="margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                <p>Seleccione un Perfil<strong class="CampoRequerido">*</strong></p>
+                <article>
+                    <input id="ComboPerfil" />
+                </article>
+                <div class="hidden" id="MensajeVacioCBPerfil" style="margin:30px;">
+                    @Html.Partial("../MensajesParciales/_MensajeVacio")
+                </div>
+                <div class="hidden" id="MensajeErrorCBPerfil" style="margin:30px;">
+                    @Html.Partial("../MensajesParciales/_MensajeError")
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="widget-grid" class="PanelPerfil">
+
+        <div class="row">
+            <!--Menú Perfil-->
+            <article class="col-xs-12">
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-MenuPerfil" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050;">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+                        <h2>Vistas Menú - Perfil</h2>
+                    </header>
+                    <div style="border: none; padding: 30px 30px 10px 30px;">
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                        </div>
+                        <div class="widget-body no-padding">
+                            <div class="hidden" id="seccionMenuPerfilP1">
+                                <div id="contenedorMenuPerfil">
+                                    <h4>Menú</h4>
+                                    <div id="treeviewMenuPerfil"></div>
+                                </div>
+                            </div>
+                            <div id="seccionMenuPerfilP2" class="hidden" style="margin-top:20px;">
+                                <label style="color: #2F4050">Seleccione la vista Principal : <strong class="CampoRequerido">*</strong></label>
+                                <article>
+                                    <input id="ComboVistasPerfil" style="width:30%;" />
+                                </article>
+                            </div>
+                            <div id="seccionMenuPerfilP3" class="clearfix hidden">
+                                <button class="btn btn-primary pull-right" type="button" id="btnGuardarMenuPerfil"><i class="fa fa-save"></i> Guardar</button>
+                            </div>
+                            <div class="spiner-example" id="ImagenCarga">
+                                @Html.Partial("../MensajesParciales/_MensajeCargando")
+                            </div>
+
+                            <div class="hidden" id="MensajeError" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeError")
+                            </div>
+
+                            <div class="hidden" id="MensajeVacio" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeVacio")
+                            </div>
+
+                            <div class="hidden" id="MensajeErrorListar" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!--Menú Acción-->
+            <article class="col-xs-12 hidden">
+
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-AccionesPerfil" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050;">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+                        <h2>Acciones Menú</h2>
+                    </header>
+                    <div style="border: none; padding: 30px 30px 10px 30px;">
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                        </div>
+                        <div class="widget-body no-padding">
+                            <div id="seccionMenuAccionP1" class="hidden">
+                                <div id="contenedorMenuAccion">
+                                    <h4>Acciones - Menú</h4>
+                                    <div id="treeviewMenuAction"></div>
+                                </div>
+                            </div>
+
+                            <div class="clearfix hidden" id="seccionMenuAccionP2">
+                                <button class="btn btn-primary pull-right" type="button" id="btnGuardarMenuAccion"><i class="fa fa-save"></i> Guardar</button>
+                            </div>
+                            <div class="spiner-example" id="ImagenCargaB">
+                                @Html.Partial("../MensajesParciales/_MensajeCargando")
+                            </div>
+
+                            <div class="hidden" id="MensajeErrorB" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeError")
+                            </div>
+
+                            <div class="hidden" id="MensajeVacioB" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeVacio")
+                            </div>
+
+                            <div class="hidden" id="MensajeErrorListarB" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!--Menú Alertas-->
+            <article class="col-xs-12 hidden">
+
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-IndicadorPerfil" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050;">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+                        <h2>Alertas / Notificaciones</h2>
+                    </header>
+                    <div style="border: none; padding: 30px 30px 10px 30px;">
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                        </div>
+                        <div class="widget-body no-padding">
+                            <div class="col col-xs-12 hidden" id="PanelAlertas" style="">
+                                <h2>Alertas</h2>
+                                <hr />
+                                <div id="CuerpoAlertas"></div>
+                            </div>
+                            <div class="col col-xs-12 hidden" id="PanelNotificaciones" style="">
+                                <h2>Notificaciones</h2>
+                                <hr />
+                                <div id="CuerpoNotificaciones"></div>
+                            </div>
+
+                            <div class="clearfix hidden" id="btnAlertasYNotificaciones">
+                                <button class="btn btn-primary pull-right" type="button" id="btnGuardarIndicadores"><i class="fa fa-save"></i> Guardar</button>
+                            </div>
+                            <div class="spiner-example" id="ImagenCargaAlerta">
+                                @Html.Partial("../MensajesParciales/_MensajeCargando")
+                            </div>
+
+                            <div class="hidden" id="MensajeErrorAlerta" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeError")
+                            </div>
+
+                            <div class="hidden" id="MensajeVacioAlerta" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeVacio")
+                            </div>
+
+                            <div class="hidden" id="MensajeErrorListarAlerta" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    /*----------------------------------------------------------------------------------------------- VARIABLES*/
+
+    var idPerfil = 0; //Id obtenido del combo "ComboPerfil" y utilizado para actualizar el Treeview y el Combo "ComboVistasPerfil"
+
+    //Menú Perfil
+    var idVistaPrincipal = 0; //Id obtenido de la funcion "ComboVistasPerfil" y utilizado para setear el combo "ComboVistasPerfil"
+    var mainIdVistaPrincipal = 0; //Id obtenido del combo "ComboVistasPerfil" y utilizado para actualizar la vista principal.
+    var checkedNodes = []; //Array para guardar los nodos seleccionados en el treeview
+    var treeviewMenuPerfil = []; //Array para llenar el Treeview Menu Perfil
+    var nodosPadresListado = []; // Array para guardar los nodos seleccionados en el treeview además de sus nodos padres
+    var nodosSeleccionados = []; //Array que remueve los valores duplicados del array "nodosPadresListado"
+    var incPrimerNivel = 0; //Variable utilizada para llenar el nivel 1 del Treeview
+    var incSegundoNivel = 0; //Variable utilizada para llenar el nivel 2 del Treeview
+    var incTercerNivel = 0; //Variable utilizada para llenar el nivel 3 del Treeview
+    var incCuartoNivel = 0; //Variable utilizada para llenar el nivel 4 del Treeview
+    var idsIndicadores = [];
+    //Menú Acción
+    var treeviewMenuAccion = []; //Array para llenar el Treeview Acciones Menu
+    var checkedNodosMenuAccion = [];
+
+    /*----------------------------------------------------------------------------------------------- FUNCIONES GUARDAR/ACTUALIZAR/ELIMINAR ETC*/
+    //Guarda la configuración de Menú Perfil. Recibe el idPerfil, el array nodosSeleccionados y la vista principal
+    function guardarConfiguracionMenuPerfil() {
+        $("#CargaTemporal").removeClass("hidden");
+
+        $.ajax({
+            type: "GET",
+            url: tRutaServidor + "/MenuProfile/guardarConfiguracionMenuPerfil",
+            contentType: "application/json; charset=utf-8",
+            data: "arrayIdMenu=" + nodosSeleccionados + "&idPerfil=" + idPerfil + "&mainId=" + mainIdVistaPrincipal + "&idMenu=" + idVistaPrincipal,
+            dataType: "json",
+            success: function (resultado) {
+                $("#CargaTemporal").addClass("hidden");
+                if (resultado == "0") {
+                    toastr.options.timeOut = nTiempoMedio;
+                    toastr.options.extendedTimeOut = nTiempoMedio;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                } else if (resultado == "1") {
+                    toastr.options.timeOut = nTiempoCorto;
+                    toastr.options.extendedTimeOut = nTiempoCorto;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["success"](tMensajeActualizadoExito, tTituloExito); $toastlast = $toast;
+                } else if (resultado == "2") {
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConfMenuPerfil, tTituloError); $toastlast = $toast;
+                } else {
+                    toastr.options.timeOut = nTiempoMedio;
+                    toastr.options.extendedTimeOut = nTiempoMedio;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                    console.log("Mensaje del error : " + resultado)
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                $("#CargaTemporal").addClass("hidden");
+                /*fallo al llamar a la funcion ajax*/
+                toastr.options.timeOut = nTiempoLargo;
+                toastr.options.extendedTimeOut = nTiempoLargo;
+                /*success - info - warning - error*/
+                var $toast = toastr["success"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                console.log("ERROR AJAX : " + ajaxOptions);
+                console.log("ERROR AJAX : " + thrownError);
+                console.log(xhr.responseText);
+                console.log(xhr);
+            }
+
+        });
+    }
+
+    //Guarda la configuración de las acciones del menú en base al perfil. Recibe el idPerfil y el array checkedNodosMenuAccion
+    function guardarConfiguracionMenuAccion() {
+        $("#CargaTemporal").removeClass("hidden");
+        $.ajax({
+            type: "GET",
+            url: tRutaServidor + "/MenuProfileAction/guardarConfiguracionMenuPerfilAccion",
+            contentType: "application/json; charset=utf-8",
+            data: "arrayIdMenu=" + checkedNodosMenuAccion + "&idPerfil=" + idPerfil,
+            dataType: "json",
+            success: function (resultado) {
+                $("#CargaTemporal").addClass("hidden");
+                if (resultado == "0") {
+                    toastr.options.timeOut = nTiempoMedio;
+                    toastr.options.extendedTimeOut = nTiempoMedio;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                } else if (resultado == "1") {
+                    toastr.options.timeOut = nTiempoCorto;
+                    toastr.options.extendedTimeOut = nTiempoCorto;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["success"](tMensajeActualizadoExito, tTituloExito); $toastlast = $toast;
+                } else {
+                    toastr.options.timeOut = nTiempoMedio;
+                    toastr.options.extendedTimeOut = nTiempoMedio;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                    console.log("Mensaje del error : " + resultado)
+
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                $("#CargaTemporal").addClass("hidden");
+                /*fallo al llamar a la funcion ajax*/
+                toastr.options.timeOut = nTiempoLargo;
+                toastr.options.extendedTimeOut = nTiempoLargo;
+                /*success - info - warning - error*/
+                var $toast = toastr["success"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                console.log("ERROR AJAX : " + ajaxOptions);
+                console.log("ERROR AJAX : " + thrownError);
+                console.log(xhr.responseText);
+                console.log(xhr);
+            }
+
+        });
+    }
+
+    //Guarda la configuración de las alertas y notificaciones en base al perfil.
+    function guardarConfiguracionIndicadores() {
+        $("#CargaTemporal").removeClass("hidden");
+        idsIndicadores = [];
+        $(".clsIndicador").each(function () {
+            if ($(this).is(":checked")) {
+                idsIndicadores.push($(this).attr("id"));
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: tRutaServidor + "/ProfileIndicator/guardarConfiguracionIndicadorPerfil",
+            contentType: "application/json; charset=utf-8",
+            data: "idsIndicadores=" + idsIndicadores + "&idPerfil="+idPerfil,
+            dataType: "json",
+            /*async: false,*/
+            success: function (resultado) {
+                $("#CargaTemporal").addClass("hidden");
+                if (resultado == "0") {
+                    toastr.options.timeOut = nTiempoMedio;
+                    toastr.options.extendedTimeOut = nTiempoMedio;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                } else if (resultado == "1") {
+                    toastr.options.timeOut = nTiempoCorto;
+                    toastr.options.extendedTimeOut = nTiempoCorto;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["success"](tMensajeActualizadoExito, tTituloExito); $toastlast = $toast;
+                } else {
+                    toastr.options.timeOut = nTiempoMedio;
+                    toastr.options.extendedTimeOut = nTiempoMedio;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                    console.log("Mensaje del error : " + resultado)
+
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                $("#CargaTemporal").addClass("hidden");
+                /*fallo al llamar a la funcion ajax*/
+                toastr.options.timeOut = nTiempoLargo;
+                toastr.options.extendedTimeOut = nTiempoLargo;
+                /*success - info - warning - error*/
+                var $toast = toastr["success"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                console.log("ERROR AJAX : " + ajaxOptions);
+                console.log("ERROR AJAX : " + thrownError);
+                console.log(xhr.responseText);
+                console.log(xhr);
+            }
+        
+        });
+
+    }
+    /*----------------------------------------------------------------------------------------------- ADICIONALES*/
+
+    ////////////////////////////////////////////////////////////////////////////////
+    //FUNCIONES PARA EL MÓDULO MENÚ PERFIL
+    ////////////////////////////////////////////////////////////////////////////////
+
+    //1. Llena el primer combo que muestra los perfiles
+    function ComboPerfil() {
+
+        $.ajax({
+            type: "GET",
+            url: tRutaServidor + "/Profile/ListarPerfil",
+            contentType: "application/json; charset=utf-8",
+            data: "valorBusqueda=&valorConsulta=6",
+            dataType: "json",
+            /*async: false,*/
+            success: function (resultado) {
+                /*exitosamente*/
+                if (resultado.length > 0) {
+                    /* proceso exitoso con datos*/
+                    if (resultado[0].ValorConsulta == "1") {
+                        $("#ComboPerfil").kendoDropDownList({
+                            dataTextField: "ProfileName",
+                            dataValueField: "IdProfile",
+                            filter: "contains",
+                            autoBind: true,
+                            minLength: 1,
+                            dataSource: {
+                                data: resultado
+                            },
+                            select: onSelectPerfil
+                        });
+                        idPerfil = $("#ComboPerfil").data("kendoDropDownList").value();
+                        ListarMenuPerfil(idPerfil);
+                        ListarMenuPerfilAction(idPerfil);
+                        llenarModuloAlertaNotificacion(idPerfil);
+                    } else { $('#MensajeVacioCBPerfil').removeClass("hidden"); }
+                } else {
+                    $('#MensajeVacioCBPerfil').removeClass("hidden");
+                    $('#ComboPerfil').addClass("hidden");
+                    $('.PanelPerfil').addClass("hidden");
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                $('#MensajeErrorCBPerfil').removeClass("hidden");
+                $('#ComboPerfil').addClass("hidden");
+                $('.PanelPerfil').addClass("hidden");
+                console.log("ERROR AJAX : " + ajaxOptions);
+                console.log("ERROR AJAX : " + thrownError);
+                console.log(xhr.responseText);
+                console.log(xhr);
+
+            }
+        });
+    };
+
+    function onSelectPerfil(e) {
+        var dataItem = this.dataItem(e.item.index());
+        idPerfil = dataItem.IdProfile;
+        ListarMenuPerfil(idPerfil);
+        //ComboVistasPerfil(idPerfil);
+        ListarMenuPerfilAction(idPerfil);
+        llenarModuloAlertaNotificacion(idPerfil);
+    };
+
+    //2. En base al perfil seleccionado muestra el treeview con las vistas habilitadas
+    function ListarMenuPerfil(idPerfil) {
+
+        treeviewMenuPerfil = [];
+        incPrimerNivel = 0;
+        incSegundoNivel = 0;
+        incTercerNivel = 0;
+        incCuartoNivel = 0;
+
+        $.ajax({
+            type: "GET",
+            url: tRutaServidor + "/Menu/ListarMenuJson",
+            contentType: "application/json; charset=utf-8",
+            data: "idPerfil="+idPerfil+"&valorConsulta=2",
+            dataType: "json",
+            /*async: false,*/
+            success: function (resultado) {
+
+                /*exitosamente*/
+                if (resultado.length > 0) {
+                    /* proceso exitoso con datos*/
+                    if (resultado[0].ValorConsulta == "1") {
+                        //Nivel 1
+                        for (a = 0; a < resultado.length; a++) {
+                            if (resultado[a].Menu.DependencyScale == 0 ) {
+                                treeviewMenuPerfil.push({ id: resultado[a].Menu.MainId, text: resultado[a].Menu.VisualName, checked: resultado[a].Menu.ActiveViews, spriteCssClass: "folder", dependency: resultado[a].Menu.DependencySequence, items: [] });
+                                incPrimerNivel++;
+                                //Nivel 2
+                                incSegundoNivel = 0;
+                                for (b = 0; b < resultado.length; b++) {
+                                    if (resultado[b].Menu.DependencyMainId == treeviewMenuPerfil[incPrimerNivel - 1].id) {
+                                        treeviewMenuPerfil[incPrimerNivel - 1].items[incSegundoNivel] = { id: resultado[b].Menu.MainId, text: resultado[b].Menu.VisualName, checked: resultado[b].Menu.ActiveViews, spriteCssClass: "folder", dependency: resultado[b].Menu.DependencySequence, items: [] }
+                                        incSegundoNivel++;
+                                        //Nivel 3
+                                        incTercerNivel = 0;
+                                        for (c = 0; c < resultado.length; c++) {
+
+                                            if (resultado[c].Menu.DependencyMainId == treeviewMenuPerfil[incPrimerNivel - 1].items[incSegundoNivel - 1].id) {
+                                                treeviewMenuPerfil[incPrimerNivel - 1].items[incSegundoNivel - 1].items[incTercerNivel] = { id: resultado[c].Menu.MainId, text: resultado[c].Menu.VisualName, checked: resultado[c].Menu.ActiveViews, spriteCssClass: "folder", dependency: resultado[c].Menu.DependencySequence, items: [] }
+                                                incTercerNivel++;
+                                                //Nivel 4
+                                                incCuartoNivel = 0;
+                                                for (d = 0; d < resultado.length; d++) {
+                                                    if (resultado[d].Menu.DependencyMainId == treeviewMenuPerfil[incPrimerNivel - 1].items[incSegundoNivel - 1].items[incTercerNivel - 1].id) {
+                                                        treeviewMenuPerfil[incPrimerNivel - 1].items[incSegundoNivel - 1].items[incTercerNivel - 1].items[incCuartoNivel] = { id: resultado[d].Menu.MainId, text: resultado[d].Menu.VisualName, checked: resultado[d].Menu.ActiveViews, spriteCssClass: "folder", dependency: resultado[d].Menu.DependencySequence, items: [] }
+                                                        incCuartoNivel++;
+                                                    }
+                                                }
+                                                //Nivel 3
+                                            }
+                                        }
+                                        //Nivel 2
+                                    }
+                                }
+                                //Nivel 1
+                            }
+                        }
+
+                        $("#treeviewMenuPerfil").remove();
+                        $("#contenedorMenuPerfil").append("<div id='treeviewMenuPerfil'></div>");
+                        $("#treeviewMenuPerfil").kendoTreeView({
+                            checkboxes: {
+                                checkChildren: true
+
+                            },
+
+                            check: onCheckMenuPerfil,
+                            dataSource: treeviewMenuPerfil
+                        });
+                        onCheckMenuPerfil();
+                        ComboVistasPerfil(idPerfil);
+
+                    } else {
+                        /* proceso fallido catch listado datos*/
+                        $("#ImagenCarga").addClass("hidden");
+                        $("#seccionMenuPerfilP1").addClass("hidden");
+                        $("#seccionMenuPerfilP2").addClass("hidden");
+                        $("#seccionMenuPerfilP3").addClass("hidden");
+                        $("#MensajeError").addClass("hidden");
+                        $("#MensajeErrorListar").removeClass("hidden");
+                        $("#MensajeVacio").addClass("hidden");
+                        console.log(resultado);
+                    }
+                } else {
+                    $("#ImagenCarga").addClass("hidden");
+                    $("#seccionMenuPerfilP1").addClass("hidden");
+                    $("#seccionMenuPerfilP2").addClass("hidden");
+                    $("#seccionMenuPerfilP3").addClass("hidden");
+                    $("#MensajeError").addClass("hidden");
+                    $("#MensajeVacio").removeClass("hidden");
+                    $("#MensajeErrorListar").addClass("hidden");
+                }
+
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                /*fallo al llamar a la funcion ajax*/
+                $("#ImagenCarga").addClass("hidden");
+                $("#seccionMenuPerfilP1").addClass("hidden");
+                $("#seccionMenuPerfilP2").addClass("hidden");
+                $("#seccionMenuPerfilP3").addClass("hidden");
+                $("#MensajeError").removeClass("hidden");
+                $("#MensajeVacio").addClass("hidden");
+                $("#MensajeErrorListar").addClass("hidden");
+
+
+                console.log("ERROR AJAX : " + ajaxOptions);
+                console.log("ERROR AJAX : " + thrownError);
+                console.log(xhr.responseText);
+                console.log(xhr);
+
+            }
+        });
+
+
+
+    }
+
+    //4. Agrega los nodos seleccionados a un array y envia el mismo al método agregarNodosPadres
+    function capturarIdNodos(nodes, checkedNodes) {
+
+        for (var i = 0; i < nodes.length; i++) {
+            if (nodes[i].checked) {
+                checkedNodes.push(nodes[i].id);
+                agregarNodosPadres(nodes[i].dependency);
+            }
+
+            if (nodes[i].hasChildren) {
+                capturarIdNodos(nodes[i].children.view(), checkedNodes);
+            }
+        }
+    }
+
+    //5. recibe un array y despliega cada item para obtener los nodos padres y de esta manera tener toda la secuencia de cada nodo recibido
+    function agregarNodosPadres(nodosPadre) {
+        var nodosPadreArray = [];
+        nodosPadreArray = nodosPadre.split("-");
+        for (i = 0; i < nodosPadreArray.length; i++) {
+            if (nodosPadreArray[i] != "") {
+                nodosPadresListado.push(nodosPadreArray[i])
+            }
+        }
+    }
+
+    //3. Se ejectuta al cargar el treeview y al hacer check en alguna casilla. LLama al método checkedNodeIds el cual captura los ids
+    // de los nodos seleccionados.
+    function onCheckMenuPerfil() {
+        checkedNodes = [];
+        nodosPadresListado = [];
+        nodosSeleccionados = [];
+        message = "";
+        treeView = $("#treeviewMenuPerfil").data("kendoTreeView"),
+            message;
+
+            capturarIdNodos(treeView.dataSource.view(), checkedNodes);
+            nodosSeleccionados =  capturarNodosSeleccionados(nodosPadresListado);
+            //console.log(nodosPadresListado);
+            //console.log(capturarNodosSeleccionados(nodosPadresListado));
+        /*if (checkedNodes.length > 0) {
+            message = "IDs of checked nodes: " + checkedNodes.join(",");
+        } else {
+            message = "No nodes checked.";
+        }
+
+        $("#result").html(message);*/
+    }
+
+    //6. se ejecuta en el método onCheckMenuPerfil despues del paso 5. Recibe el conjunto de nodos padres e hijos y remueve los datos repetidos
+    //Finalmente guarda datos unicos en otro array llamado nodosSeleccionados
+    function capturarNodosSeleccionados(nodosPadresListado) {
+
+            var nuevoArreglo = [];
+            var arregloRecorrido = {};
+
+            for (var i in nodosPadresListado) {
+                arregloRecorrido[nodosPadresListado[i]] = nodosPadresListado[i];
+            }
+
+            for (i in arregloRecorrido) {
+                nuevoArreglo.push(arregloRecorrido[i]);
+            }
+            return nuevoArreglo;
+    }
+
+    //Combo que muestra la vista principal en base al perfil seleccionado
+    function ComboVistasPerfil(idPerfil) {
+        $.ajax({
+            type: "GET",
+            url: tRutaServidor + "/Menu/ListarMenuJson",
+            contentType: "application/json; charset=utf-8",
+            data: "idPerfil="+idPerfil+"&valorConsulta=3",
+            dataType: "json",
+            /*async: false,*/
+            success: function (resultado) {
+                /*exitosamente*/
+                if (resultado.length > 0) {
+                    /* proceso exitoso con datos*/
+                    if (resultado[0].ValorConsulta == "1") {
+                        for (i = 0; i < resultado.length; i++) {
+                            if (resultado[i].MainView == 'S') {
+                                idVistaPrincipal = resultado[i].Menu.IdMenu;
+                                mainIdVistaPrincipal = resultado[i].Menu.MainId;
+                            }
+                        }
+
+                        $("#ComboVistasPerfil").kendoDropDownList({
+                            dataTextField: "Menu.DependencySequenceName",
+                            dataValueField: "Menu.IdMenu",
+                            filter: "contains",
+                            autoBind: true,
+                            minLength: 1,
+                            dataSource: {
+                                data: resultado
+                            },
+                            select: onSelectVistaPerfil
+                        });
+                        $("#ComboVistasPerfil").data("kendoDropDownList").value(idVistaPrincipal);
+
+                        $("#ImagenCarga").addClass("hidden");
+                        $("#seccionMenuPerfilP1").removeClass("hidden");
+                        $("#seccionMenuPerfilP2").removeClass("hidden");
+                        $("#seccionMenuPerfilP3").removeClass("hidden");
+                        $("#MensajeError").addClass("hidden");
+                        $("#MensajeErrorListar").addClass("hidden");
+                        $("#MensajeVacio").addClass("hidden");
+                    } else {
+                        /* proceso fallido catch listado datos*/
+                        $("#ImagenCarga").addClass("hidden");
+                        $("#seccionMenuPerfilP1").addClass("hidden");
+                        $("#seccionMenuPerfilP2").addClass("hidden");
+                        $("#seccionMenuPerfilP3").addClass("hidden");
+                        $("#MensajeError").addClass("hidden");
+                        $("#MensajeErrorListar").removeClass("hidden");
+                        $("#MensajeVacio").addClass("hidden");
+                        console.log(resultado);
+                    }
+                } else {
+                    $("#ImagenCarga").addClass("hidden");
+                    $("#seccionMenuPerfilP1").addClass("hidden");
+                    $("#seccionMenuPerfilP2").addClass("hidden");
+                    $("#seccionMenuPerfilP3").addClass("hidden");
+                    $("#MensajeError").addClass("hidden");
+                    $("#MensajeVacio").removeClass("hidden");
+                    $("#MensajeErrorListar").addClass("hidden");
+                }
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                /*fallo al llamar a la funcion ajax*/
+                $("#ImagenCarga").addClass("hidden");
+                $("#seccionMenuPerfilP1").addClass("hidden");
+                $("#seccionMenuPerfilP2").addClass("hidden");
+                $("#seccionMenuPerfilP3").addClass("hidden");
+                $("#MensajeError").removeClass("hidden");
+                $("#MensajeVacio").addClass("hidden");
+                $("#MensajeErrorListar").addClass("hidden");
+
+
+                console.log("ERROR AJAX : " + ajaxOptions);
+                console.log("ERROR AJAX : " + thrownError);
+                console.log(xhr.responseText);
+                console.log(xhr);
+
+            }
+        });
+    };
+
+    function onSelectVistaPerfil(e) {
+        var dataItem = this.dataItem(e.item.index());
+        idVistaPrincipal = dataItem.Menu.IdMenu;
+        mainIdVistaPrincipal = dataItem.Menu.MainId;
+    };
+
+    /////////////////////////////////////////////////////////////////////
+    //FUNCIONES PARA EL MÓDULO ACCIONES MENÚ
+    /////////////////////////////////////////////////////////////////////
+
+    //1. Recibe el valor del idPerfil del comboPerfil y muestra el treeview para las acciones
+    function ListarMenuPerfilAction(idPerfil) {
+
+        treeviewAccionMenu = [];
+        incSegundoNivel = 0;
+
+        $.ajax({
+            type: "GET",
+            url: tRutaServidor + "/MenuProfileAction/ListarMenuPerfilAction",
+            contentType: "application/json; charset=utf-8",
+            data: "idPerfil=" + idPerfil + "&valorConsulta=1",
+            dataType: "json",
+            /*async: false,*/
+            success: function (resultado) {
+                /*exitosamente*/
+                if (resultado.length > 0) {
+                    /* proceso exitoso con datos*/
+                    if (resultado[0].ValorConsulta == "1") {
+                        treeviewAccionMenu = RemoverValoresRepetidos(resultado);
+                        for (a = 0; a < treeviewAccionMenu.length; a++) {
+                            incSegundoNivel = 0;
+                            for (b = 0; b < resultado.length; b++) {
+                                if (resultado[b].Menu.IdMenu == treeviewAccionMenu[a].idMenu) {
+                                    treeviewAccionMenu[a].items[incSegundoNivel] = { id: resultado[b].IdMenuProfileAction, text: resultado[b].Action.ActionName, checked: resultado[b].Menu.ActiveViews, spriteCssClass: "folder", items: [] };
+                                    incSegundoNivel++;
+                                }
+                            }
+                        }
+
+                        $("#treeviewMenuAction").remove();
+                        $("#contenedorMenuAccion").append("<div id='treeviewMenuAction'></div>");
+                        $("#treeviewMenuAction").kendoTreeView({
+                            checkboxes: {
+                                checkChildren: true
+
+                            },
+
+                            check: onCheckMenuPerfilAccion,
+                            dataSource: treeviewAccionMenu
+                        });
+                        onCheckMenuPerfilAccion();
+
+                        $("#ImagenCargaB").addClass("hidden");
+                        $("#seccionMenuAccionP1").removeClass("hidden");
+                        $("#seccionMenuAccionP2").removeClass("hidden");
+                        $("#MensajeErrorB").addClass("hidden");
+                        $("#MensajeErrorListarB").addClass("hidden");
+                        $("#MensajeVacioB").addClass("hidden");
+                    } else {
+                        /* proceso fallido catch listado datos*/
+                        $("#ImagenCargaB").addClass("hidden");
+                        $("#seccionMenuAccionP1").addClass("hidden");
+                        $("#seccionMenuAccionP2").addClass("hidden");
+                        $("#MensajeErrorB").addClass("hidden");
+                        $("#MensajeErrorListarB").removeClass("hidden");
+                        $("#MensajeVacioB").addClass("hidden");
+                        console.log(resultado);
+                    }
+                } else {
+                    $("#ImagenCargaB").addClass("hidden");
+                    $("#seccionMenuAccionP1").addClass("hidden");
+                    $("#seccionMenuAccionP2").addClass("hidden");
+                    $("#MensajeErrorB").addClass("hidden");
+                    $("#MensajeVacioB").removeClass("hidden");
+                    $("#MensajeErrorListarB").addClass("hidden");
+                }
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                /*fallo al llamar a la funcion ajax*/
+                $("#ImagenCargaB").addClass("hidden");
+                $("#seccionMenuAccionP1").addClass("hidden");
+                $("#seccionMenuAccionP2").addClass("hidden");
+                $("#MensajeErrorB").removeClass("hidden");
+                $("#MensajeVacioB").addClass("hidden");
+                $("#MensajeErrorListarB").addClass("hidden");
+
+
+                console.log("ERROR AJAX : " + ajaxOptions);
+                console.log("ERROR AJAX : " + thrownError);
+                console.log(xhr.responseText);
+                console.log(xhr);
+
+            }
+        });
+
+    }
+    //2. Recibe el arreglo listadoAcciones y llena un nuevo arreglo con valores unicos del menú
+    function RemoverValoresRepetidos(listadoAcciones) {
+
+        var arregloNuevo = [];
+        var arregloRecorrido = {};
+
+        for (var i in listadoAcciones) {
+            arregloRecorrido[listadoAcciones[i].Menu.IdMenu] = listadoAcciones[i];
+        }
+
+        for (i in arregloRecorrido) {
+            arregloNuevo.push({ text: arregloRecorrido[i].Menu.VisualName, checked: arregloRecorrido[i].RegistrationStatus, idMenu: arregloRecorrido[i].Menu.IdMenu, spriteCssClass: "folder", items: [] });
+        }
+        return arregloNuevo;
+    }
+    //3. Se activa cuando se marca alguna casilla del treview y captura su id
+    function onCheckMenuPerfilAccion() {
+        checkedNodosMenuAccion = [];
+        //console.log(checkedNodosMenuAccion);
+        message = "";
+        treeView = $("#treeviewMenuAction").data("kendoTreeView"),
+            message;
+
+        capturarNodosMenuAccion(treeView.dataSource.view(), checkedNodosMenuAccion);
+        //console.log(checkedNodosMenuAccion);
+    }
+    //4. se utiliza en la función onCheckMenuPerfilAccion y llena el arreglo checkedNodosMenuAccion
+    function capturarNodosMenuAccion(nodos, checkedNodosMenuAccion) {
+        for (var i = 0; i < nodos.length; i++) {
+            if (nodos[i].checked && nodos[i].id != null) {
+                checkedNodosMenuAccion.push(nodos[i].id);
+            }
+            if (nodos[i].hasChildren) {
+                capturarNodosMenuAccion(nodos[i].children.view(), checkedNodosMenuAccion);
+            }
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////
+    //FUNCIONES PARA EL MÓDULO ALERTAS / NOTIFICACIÓN MENÚ
+    /////////////////////////////////////////////////////////////////////
+    function llenarModuloAlertaNotificacion(idPerfil) {
+        $.ajax({
+            type: "POST",
+            url: tRutaServidor + "/ProfileIndicator/ListarIndicadorPerfil",
+            dataType: "json",
+            data: "valorBusqueda=&valorConsulta=1&idPerfil=" + idPerfil,
+            success: function (resultado) {
+                if (resultado.length > 0) {
+                    /* proceso exitoso con datos*/
+                    if (resultado[0].ValorConsulta == "1") {
+                        $("#ImagenCargaAlerta").addClass("hidden");
+                        $("#PanelAlertas").removeClass("hidden");
+                        $("#PanelNotificaciones").removeClass("hidden");
+                        $("#MensajeErrorAlerta").addClass("hidden");
+                        $("#btnAlertasYNotificaciones").removeClass("hidden");
+                        $("#MensajeErrorListarAlerta").addClass("hidden");
+                        $("#MensajeVacioAlerta").addClass("hidden");
+                        var cuerpoAlerta = "";
+                        var cuerpoNotificacion = "";
+                        for (a = 0; a < resultado.length; a++) {
+                            if (resultado[a].Indicator.IndicatorType == 'A') {
+                                cuerpoAlerta +=
+                               "<div class='col col-xs-12' style=''>" +
+                                  "<div class='col-xs-9'>" +
+                                    "<label class='control-label'>" + resultado[a].Indicator.IndicatorDescription + "</label>" +
+                                  "</div>" +
+                                "<div class='col-xs-3'>" +
+                                  "<div class='switch'>" +
+                                    "<div class='onoffswitch'>";
+                                      if (resultado[a].RegistrationStatus == 'A') {
+                                        cuerpoAlerta +=
+                                        "<input type='checkbox' checked class='onoffswitch-checkbox clsIndicador' id='" + resultado[a].IdProfileIndicator + "'>";
+                                      } else {
+                                        cuerpoAlerta +=
+                                       "<input type='checkbox' class='onoffswitch-checkbox clsIndicador' id='" + resultado[a].IdProfileIndicator + "'>";
+                                      }
+                                       cuerpoAlerta +=
+                                       "<label class='onoffswitch-label' for='" + resultado[a].IdProfileIndicator + "'>" +
+                                       "<span class='onoffswitch-inner' data-swchon-text='SI' data-swchoff-text='NO'></span>" +
+                                       "<span class='onoffswitch-switch'></span>" +
+                                       "</label>" +
+                                    "</div>" +
+                                  "</div>" +
+                                "</div>" +
+                               "</div>";
+                            } else {
+                                cuerpoNotificacion +=
+                                                            "<div class='col col-xs-12' style=''>" +
+                                                            "<div class='col-xs-9'>" +
+                                                                "<label class='control-label'>" + resultado[a].Indicator.IndicatorDescription + "</label>" +
+                                                            "</div>" +
+                                                            "<div class='col-xs-3'>" +
+                                                            "<div class='switch'>" +
+                                                            "<div class='onoffswitch'>";
+                                if (resultado[a].RegistrationStatus == 'A') {
+                                    cuerpoNotificacion +=
+                                        "<input type='checkbox' checked class='onoffswitch-checkbox clsIndicador' id='" + resultado[a].IdProfileIndicator + "'>";
+                                } else {
+                                    cuerpoNotificacion +=
+                                       "<input type='checkbox' class='onoffswitch-checkbox clsIndicador' id='" + resultado[a].IdProfileIndicator + "'>";
+                                }
+                                cuerpoNotificacion +=
+                                    "<label class='onoffswitch-label' for='" + resultado[a].IdProfileIndicator + "'>" +
+                                    "<span class='onoffswitch-inner' data-swchon-text='SI' data-swchoff-text='NO'></span>" +
+                                    "<span class='onoffswitch-switch'></span>" +
+                                    " </label>" +
+                                    "</div>" +
+                                    "</div>" +
+                                    "</div>" +
+                                "</div>";
+                            }
+                        }
+                        document.getElementById("CuerpoAlertas").innerHTML = cuerpoAlerta;
+                        document.getElementById("CuerpoNotificaciones").innerHTML = cuerpoNotificacion;
+                    } else {
+                        /* proceso fallido catch listado datos*/
+                        $("#ImagenCargaAlerta").addClass("hidden");
+                        $("#PanelAlertas").addClass("hidden");
+                        $("#PanelNotificaciones").addClass("hidden");
+                        $("#btnAlertasYNotificaciones").addClass("hidden");
+                        $("#MensajeErrorAlerta").addClass("hidden");
+                        $("#MensajeErrorListarAlerta").removeClass("hidden");
+                        $("#MensajeVacioAlerta").addClass("hidden");
+                        //falta mostrar el log del error.
+                    }
+                } else {
+                    $("#ImagenCargaAlerta").addClass("hidden");
+                    $("#PanelAlertas").addClass("hidden");
+                    $("#PanelNotificaciones").addClass("hidden");
+                    $("#btnAlertasYNotificaciones").addClass("hidden");
+                    $("#MensajeErrorAlerta").addClass("hidden");
+                    $("#MensajeVacioAlerta").removeClass("hidden");
+                    $("#MensajeErrorListarAlerta").addClass("hidden");
+                }
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                $("#CargaTemporal").addClass("hidden");
+                /*fallo al llamar a la funcion ajax*/
+                toastr.options.timeOut = nTiempoLargo;
+                toastr.options.extendedTimeOut = nTiempoLargo;
+                /*success - info - warning - error*/
+                var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                console.log("ERROR AJAX : " + ajaxOptions);
+                console.log("ERROR AJAX : " + thrownError);
+                console.log(xhr.responseText);
+                console.log(xhr);
+            }
+        });
+    }
+
+    /*----------------------------------------------------------------------------------------------- ASIGNAR FUNCIONES*/
+    $("#btnGuardarMenuPerfil").click(function () {
+        guardarConfiguracionMenuPerfil();
+    });
+
+    $('#ButtonHiddenBoxProfile').click(function () {
+        var x = document.getElementById("HiddenBoxProfile");
+        if (x.style.display === "none") {
+            $('#HiddenBoxProfile').slideDown();
+            document.getElementById("ButtonHiddenBoxProfile").innerHTML = '<i class="fa fa-chevron-up"></i>';
+        } else {
+            $('#HiddenBoxProfile').slideUp();
+            document.getElementById("ButtonHiddenBoxProfile").innerHTML = '<i class="fa fa-chevron-down"></i>';
+        }
+    });
+
+    $("#btnGuardarMenuAccion").click(function () {
+        guardarConfiguracionMenuAccion();
+    });
+
+    $('#ButtonHiddenBoxActionMenu').click(function () {
+        var x = document.getElementById("HiddenBoxActionMenu");
+        if (x.style.display === "none") {
+            $('#HiddenBoxActionMenu').slideDown();
+            document.getElementById("ButtonHiddenBoxActionMenu").innerHTML = '<i class="fa fa-chevron-up"></i>';
+        } else {
+            $('#HiddenBoxActionMenu').slideUp();
+            document.getElementById("ButtonHiddenBoxActionMenu").innerHTML = '<i class="fa fa-chevron-down"></i>';
+        }
+    });
+
+    $("#btnGuardarIndicadores").click(function () {
+        guardarConfiguracionIndicadores();
+    });
+
+    $('#ButtonHiddenBoxIndicator').click(function () {
+        var x = document.getElementById("HiddenBoxIndicator");
+        if (x.style.display === "none") {
+            $('#HiddenBoxIndicator').slideDown();
+            document.getElementById("ButtonHiddenBoxIndicator").innerHTML = '<i class="fa fa-chevron-up"></i>';
+        } else {
+            $('#HiddenBoxIndicator').slideUp();
+            document.getElementById("ButtonHiddenBoxIndicator").innerHTML = '<i class="fa fa-chevron-down"></i>';
+        }
+    });
+    
+
+    /*----------------------------------------------------------------------------------------------- METODOS INICIALES*/
+    ComboPerfil();
+</script>
+
+
+<style>
+    #treeviewMenuPerfil .k-sprite {
+        background-image: url("../Content/Img/coloricons-sprite.png");
+    }
+
+    #treeviewMenuAction .k-sprite {
+        background-image: url("../Content/Img/coloricons-sprite.png");
+    }
+
+    .k-dropdown {
+        color: black;
+        border: 1px solid #AAAAAA;
+    }
+</style>

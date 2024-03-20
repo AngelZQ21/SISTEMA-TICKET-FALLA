@@ -1,0 +1,2322 @@
+﻿<script src="~/Scripts/util/jsUtilCambioGuardia.js"></script>
+@*<script src="~/Scripts/util/ColoresPersonalizados.js"></script>
+    <script src="~/Scripts/plugin/dygraphs/dygraph-combined.min.js"></script>*@
+
+<!--LIBRERIA PARA DATEPICKER-->
+@*<link href="~/Content/plugin/datapicker/datepicker3.css" rel="stylesheet" />*@
+<script src="~/Scripts/plugin/datapicker/bootstrap-datepicker.js"></script>
+@*<script src="~/Scripts/plugin/bootstrap-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>*@
+<!--LIBRERIA PARA CARGA DE ARCHIVOS-->
+<script src="~/Scripts/bootstrap-filestyle.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script type="text/javascript">
+    function anular(e) {
+
+        tecla = (document.all) ? e.keyCode : e.which;
+        return (tecla != 13);
+    }
+</script>
+
+<style>
+
+    .panel-group {
+        margin-bottom: 0;
+    }
+
+        .panel-group .panel {
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+            .panel-group .panel .panel-heading {
+                padding: 0;
+            }
+
+                .panel-group .panel .panel-heading h4 a {
+                    background: #D7F2DF;
+                    display: block;
+                    font-size: 12px;
+                    font-weight: bold;
+                    padding: 15px;
+                    text-decoration: none;
+                    transition: 0.15s all ease-in-out;
+                }
+
+                    .panel-group .panel .panel-heading h4 a:hover, .panel-group .panel .panel-heading h4 a:not(.collapsed) {
+                        background: #fff;
+                        transition: 0.15s all ease-in-out;
+                    }
+
+                        .panel-group .panel .panel-heading h4 a:not(.collapsed) i:before {
+                            content: "‾";
+                        }
+
+                    .panel-group .panel .panel-heading h4 a i {
+                        color: #999;
+                    }
+
+            .panel-group .panel .panel-body {
+                padding-top: 0;
+            }
+
+            .panel-group .panel .panel-heading + .panel-collapse > .list-group,
+            .panel-group .panel .panel-heading + .panel-collapse > .panel-body {
+                border-top: none;
+            }
+
+            .panel-group .panel + .panel {
+                border-top: none;
+                margin-top: 0;
+            }
+
+
+    .colorAzul {
+        background-color: #C2E1F8 !important;
+        font-weight: bold !important;
+    }
+
+    .colorVerde {
+        background-color: #ced !important;
+    }
+
+    .colorRojo {
+        background-color: #FE8475;
+    }
+
+    .colorAmarillo {
+        background-color: #FFDF6A;
+    }
+
+    .swal2-popup {
+        font-size: 1em !important;
+    }
+</style>
+
+<div id="content">
+
+    <div class="well" style="padding:0px 30px 10px 30px; background-color:white;">
+        <div class="row wrapper">
+            <div style="width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            text-align: center;
+            align-items: center;
+            ">
+                <h2 title="Reporte de Ticket"><i class="fa fa-bar-chart-o fa-fw"></i> [Reporte de Ticket y Actividad]</h2>
+                @*<button class="btn btn-primary" type="button" id="btnNuevoCambioDeGuardia" disabled title="Registrar nueva Acta de Reunión"><i class="fa fa-plus"></i> Nueva Acta de Reunión</button>*@
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 10px;">
+            <form id="FrmFiltrosTicketxActivity" onsubmit="return false" onkeypress="return anular(event)">
+                <div class="row">
+                        <section class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+                            <div style="width: 100%;">
+                                <input tabindex="7" type="radio" name="rdoRadioTicketxActivity" id="rdoTicket" checked="checked">
+                                <label style="color: #2F4050;"><strong>Ticket </strong></label>
+                                <input tabindex="7" type="radio" name="rdoRadioTicketxActivity" id="rdoActivity" style="margin-left:30px">
+                                <label style="color: #2F4050"><strong>Actividad </strong></label>
+                            </div>
+                        </section>
+                    </div>
+
+                <div class="row">
+                    <!--FECHA INICIO-->
+                    <section class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                        <label style="color: #2F4050"><strong>Desde: </strong><strong class="CampoRequerido">*</strong></label>
+                        <div class="input-group date">
+                            <input type="text" class="form-control hasDatepicker" id="txtFechaInicioTicket" name="txtFechaInicioTicket" value="" data-dateformat="dd/mm/yy">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </section>
+
+                    @*FECHA FIN*@
+                    <section class="col-xs-12 col-sm-12 col-md-2 col-lg-2 ">
+                        <label style="color: #2F4050"><strong>Hasta: </strong><strong class="CampoRequerido">*</strong></label>
+                        <div class="input-group date">
+                            <input type="text" class="form-control hasDatepicker" id="txtFechaFinalTicket" name="txtFechaFinalTicket" value="" data-dateformat="dd/mm/yy">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </section>
+
+                    <section class="col-xs-4 col-sm-4 col-md-1 col-lg-1">
+                        <div style="margin-top:25px">
+                            <button style="margin:0px;" tabindex="9" class="btn btn-primary pull-right" type="submit" id="btnBuscar"><i class="fa fa-search"></i> Buscar</button>
+                        </div>
+                    </section>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="widget-grid1">
+        <div class="row">
+
+            <article class="col-xs-12 col-sm-12 col-md-6 col-lg-12  sortable-grid">
+                <div class="jarviswidget jarviswidget-color-white" id="wid-id-rga1" style="border: 2px solid #2F4050;">
+                    <header>
+                        @*<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>*@
+                        <span class="widget-icon" style="width:50px;">
+                            <img width="50" src="../Content/img/gifs/gif05.gif" />
+                        </span>
+                        <h2>
+                            Grafico sobre Reporte de Ticket y Actividades
+                            <i class="icon-append fa fa-info-circle" style="color:blue; cursor:pointer; width:15px; height:15px;" id="btnInfoGrafico1"></i>
+                        </h2>
+                    </header>
+                    <div style="border:none;">
+
+                        <div class="widget-body no-padding">
+
+                            <div class="col-xs-11 clearfix no-padding">
+                                <div id="grGraficaTicketAndActivity" class="hidden" style="height:600px"></div>
+                                <div class="spiner-example" id="imgCargaGraficaTicketAndActivity">
+                                    @Html.Partial("../MensajesParciales/_MensajeCargandoDashboard")
+                                </div>
+                                <div class="hidden" id="msjErrorGraficaTicketAndActivity" style="margin:30px;">
+                                    @Html.Partial("../MensajesParciales/_MensajeError")
+                                </div>
+                                <div class="hidden" id="msjVacioGraficaTicketAndActivity" style="margin: 30px;">
+                                    @Html.Partial("../MensajesParciales/_MensajeVacio")
+                                </div>
+                                <div class="hidden" id="msjErrorListarGraficaTicketAndActivity" style="margin: 30px;">
+                                    @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                                </div>
+                                <div class="hidden" id="msjSuperaLimiteGraficaTicketAndActivity" style="margin:30px;">
+                                    @Html.Partial("../MensajesParciales/_MensajeLimiteGraficas")
+                                </div>
+                            </div>
+                        </div>
+                        <div style="width:100%; margin-bottom:15px;" id="ContenedorExGrafica1" class="hidden clearfix">
+                            <button tabindex="9" class="btn btn-info pull-right" type="button" id="btnExGrafica1" name="btnExGrafica1"><i class="fa fa-file-pdf-o"></i> Exportar</button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+</div>
+
+<div id="ModalTicketActivityList" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true" style="overflow-y:auto;">
+    <div class="modal-dialog" style="width:90%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="lblTitleModal"><strong>Tickets</strong></h4>
+            </div>
+            <div class="modal-body clearfix" style="padding-left:30px; padding-right:30px;">
+
+                <div id="widget-grid2">
+                    <div class="row detalleAlertaCotizacion">
+                        <article class="col-xs-12 ContenedoresReportes">
+
+                            <div class="jarviswidget jarviswidget-color-blue" id="" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050">
+                                <header>
+                                    <span class="widget-icon"> <i class="fa fa-list"></i> </span>
+                                    <h2 id="lblListTicketActivity">Listado de Tickets</h2>
+                                    @*<button class="btn btn-success pull-right" type="button" id="" disabled title="Exportar listado a Excel"><i class="fa fa-file-excel-o"></i> Excel</button>*@
+                                </header>
+                                <div style="border:none;">
+                                    <div class="jarviswidget-editbox">
+                                        <!-- This area used as dropdown edit box -->
+                                    </div>
+                                    <div class="widget-body no-padding" id="ContenedorgrCotizacion">
+                                        <div id="LstTicketXActivity" class="hidden"></div>
+                                        <div class="spiner-example" id="imgCargaLstTicketXActivity">
+                                            @Html.Partial("../MensajesParciales/_MensajeCargando")
+                                        </div>
+                                        <div class="hidden" id="msjErrorLstTicketXActivity" style="margin:30px;">
+                                            @Html.Partial("../MensajesParciales/_MensajeError")
+                                        </div>
+                                        <div class="hidden" id="msjVacioLstTicketXActivity" style="margin:30px;">
+                                            @Html.Partial("../MensajesParciales/_MensajeVacio")
+                                        </div>
+                                        <div class="hidden" id="msjErrorListarLstTicketXActivity" style="margin:30px;">
+                                            @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                                        </div>
+                                        <div class="hidden" id="msjSuperaLimiteLstTicketXActivity" style="margin:30px;">
+                                            @Html.Partial("../MensajesParciales/_MensajeLimiteGraficas")
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+     $(document).ready(function () {
+
+        var estadoMaxGrafico1 = 1;
+
+        //var estadoMaxGrafico16 = 1;
+        //var estadoMaxGrafico17 = 1;
+        /*----------------------------------------------------------------------------------------------- VARIABLES*/
+        $('#widget-grid1').jarvisWidgets({
+
+            grid: 'article',
+            widgets: '.jarviswidget',
+            localStorage: false,
+            deleteSettingsKey: '#deletesettingskey-options',
+            settingsKeyLabel: 'Reset settings?',
+            deletePositionKey: '#deletepositionkey-options',
+            positionKeyLabel: 'Reset position?',
+            sortable: false,
+            buttonsHidden: false,
+
+            // toggle button
+            toggleButton: false,
+            //toggleClass: 'fa fa-minus | fa fa-plus',
+            //toggleSpeed: 200,
+            //onToggle: function () { },
+
+            // delete btn
+            deleteButton: false,
+            //deleteClass: 'fa fa-times',
+            //deleteSpeed: 200,
+            //onDelete: function () { },
+
+            // edit btn
+            editButton: false,
+            //editPlaceholder: '.jarviswidget-editbox',
+            //editClass: 'fa fa-cog | fa fa-save',
+            //editSpeed: 200,
+            //onEdit: function () { },
+
+            // color button
+            colorButton: false,
+
+            // full screen
+            fullscreenButton: true,
+            fullscreenClass: 'fa fa-expand | fa fa-times fa-2x',
+            fullscreenDiff: 3,
+            onFullscreen: function (e) {
+
+                var id = String(e[0].id);
+
+                if (id == "wid-id-rga1") {
+
+                    if (estadoMaxGrafico1 == 1) {
+
+                        $("#grGraficaTicketAndActivity").css("height", "100vh");
+                        estadoMaxGrafico1 = 2;
+                        heightG1 = screen.height;
+
+                    } else {
+
+                        $("#grGraficaTicketAndActivity").css("height", "600px");
+                        estadoMaxGrafico1 = 1;
+
+                        var $container = $('#grGraficaTicketAndActivity');
+                        heightG1 = 600;
+                    }
+                }
+
+            },
+
+            // custom btn
+            customButton: false,
+            //customClass: 'folder-10 | next-10',
+            //customStart: function () {
+            //    alert('Hello you, this is a custom button...')
+            //},
+
+            //customEnd: function () {
+            //    alert('bye, till next time...')
+            //},
+
+            // order
+            //buttonOrder: '%refresh% %custom% %edit% %toggle% %fullscreen% %delete%',
+            //opacity: 1.0,
+            //dragHandle: '> header',
+            //placeholderClass: 'jarviswidget-placeholder',
+            //indicator: true,
+            //indicatorTime: 600,
+            //ajax: true,
+            //timestampPlaceholder: '.jarviswidget-timestamp',
+            //timestampFormat: 'Last update: %m%/%d%/%y% %h%:%i%:%s%',
+            //refreshButton: true,
+            //refreshButtonClass: 'fa fa-refresh',
+            //labelError: 'Sorry but there was a error:',
+            //labelUpdated: 'Last Update:',
+            //labelRefresh: 'Refresh',
+            //labelDelete: 'Delete widget:',
+            //afterLoad: function () { },
+            //rtl: false, // best not to toggle this!
+            //onChange: function () {
+
+            //},
+            //onSave: function () {
+
+            //},
+            //ajaxnav: $.navAsAjax // declears how the localstorage should be saved
+        });
+
+    });
+       
+     /* ------------------- VALUES ----------------- */
+     var Valor = 1;
+     /* - VARIABLES - GRAFICO-1 -*/
+     var dataGroupGrafico1;
+     var resultadojson1;
+     var ImageURI1 = "";
+     
+     var pchartG1;
+     var widthG1;
+     var heightG1 = 600;
+     var estadoCargarGrafico1;
+     var contadorGrafica1 = 0;
+     var tamanoAnchoPantalla1 = 0;
+
+    /* - VARIABLES - GRAFICO-2 -*/
+     var dataGroupGrafico2;
+     var resultadojson2;
+     var ImageURI2 = "";
+     
+     var pchartG2;
+     var widthG2;
+     var heightG2 = 600;
+     var estadoCargarGrafico2;
+     var contadorGrafica2 = 0;
+     var tamanoAnchoPantalla2 = 0;
+
+     /* -------------------- FUNCIONES ---------------*/
+
+     function FormatoFechas() {
+            var FechaHoy = new Date();
+            var FechaActual = new Date(FechaHoy.getFullYear(), FechaHoy.getMonth(), FechaHoy.getDate());
+
+            $('#txtFechaInicioTicket').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                endDate: FechaActual,
+            });
+            $('#txtFechaFinalTicket').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                endDate: FechaActual,
+            });
+
+            //$('#txtCambioDeGuardiaFecha').datepicker({
+            //    keyboardNavigation: false,
+            //    forceParse: false,
+            //    autoclose: true,
+            //    format: 'dd/mm/yyyy',
+            //    endDate: FechaActual,
+            //});
+
+            //$('#txtActivityDateEnd').datepicker({
+            //    keyboardNavigation: false,
+            //    forceParse: false,
+            //    autoclose: true,
+            //    format: 'dd/mm/yyyy',
+            //    //endDate: FechaActual,
+            //});
+
+            $("#txtFechaInicioTicket").datepicker("setDate", primerDiaMes);
+            $("#txtFechaFinalTicket").datepicker("setDate", FechaFinalReporte);
+            //$("#txtCambioDeGuardiaFecha").datepicker("setDate", FechaFinalReporte);
+            //$("#txtActivityDateEnd").datepicker("setDate", FechaFinalReporte);
+        }
+     /* ---- TICKET ---- */
+
+     function listadoTickerPorFecha(estado) {
+
+            $.ajax({
+                type: "GET", /*Puede ser post*/
+                url: tRutaServidor + "/ReportListTicketActivity/ListTicketXActivityDate", /* es importante poner los .. delante*/
+                contentType: "application/json; charset=utf-8",
+                data: {
+                     fechaInicio: $("#txtFechaInicioTicket").val(),
+                     fechaFin: $("#txtFechaFinalTicket").val()
+                },
+                dataType: "json",
+                success: function (resultado) {
+            
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+                        if (resultado[0].ValorConsulta == "1") {
+            
+                             $("#ContenedorExGrafica1").removeClass("hidden");
+                             $("#btnExGrafica1").prop('disabled', false);
+
+                            estadoCargarGrafico1= "1";
+                            //estadoCargarGrafico11 = "1";
+            
+                            resultadojson1 = resultado;
+                            //listadoEstadosCotizaciones(resultado, estado);
+            
+                            llamadaTickerPorFecha(estado);
+            
+                        }
+                        else {
+                            //estadoCargarGrafico11 = "0";
+                            //estadoCargarGrafico11 = "0";
+            
+                            /*Grafico 1*/
+                            $("#grGraficaTicketAndActivity").addClass("hidden");
+                            $("#imgCargaGraficaTicketAndActivity").addClass("hidden");
+                            $("#msjErrorGraficaTicketAndActivity").addClass("hidden");
+                            $("#msjVacioGraficaTicketAndActivity").addClass("hidden");
+                            $("#msjErrorListarGraficaTicketAndActivity").removeClass("hidden");
+                            $("#msjSuperaLimiteGraficaTicketAndActivity").addClass("hidden");
+            
+                            //$("#ContenedorExGrafica11").addClass("hidden");
+                            //$("#btnExGrafica11").prop('disabled', true);
+            
+                            ///*Grafico 2*/
+                            //$("#grGrafica11").addClass("hidden");
+                            //$("#imgCargaGrafica11").addClass("hidden");
+                            //$("#msjErrorGrafica11").addClass("hidden");
+                            //$("#msjVacioGrafica11").addClass("hidden");
+                            //$("#msjErrorListarGrafica11").removeClass("hidden");
+                            //$("#msjSuperaLimiteGrafica11").addClass("hidden");
+            
+                            //$("#ContenedorExGrafica11").addClass("hidden");
+                            //$("#btnExGrafica11").prop('disabled', true);
+            
+                            //$("#btnBuscar").prop('disabled', false);
+                        }
+            
+                    } else {
+
+                        //$("#btnBuscarReporteCotizaciones").prop('disabled', false);
+                        //estadoCargarGrafico11 = "0";
+                        //estadoCargarGrafico11 = "0";
+                        /*Grafico 1*/
+                        $("#grGraficaTicketAndActivity").addClass("hidden");
+                        $("#imgCargaGraficaTicketAndActivity").addClass("hidden");
+                        $("#msjErrorGraficaTicketAndActivity").addClass("hidden");
+                        $("#msjVacioGraficaTicketAndActivity").removeClass("hidden");
+                        $("#msjErrorListarGraficaTicketAndActivity").addClass("hidden");
+                        $("#msjSuperaLimiteGraficaTicketAndActivity").addClass("hidden");
+            
+                        //$("#ContenedorExGrafica11").addClass("hidden");
+                        //$("#btnExGrafica11").prop('disabled', true);
+                        //$("#btnBuscar").prop('disabled', false);
+            
+                        ///*Grafico 2*/
+                        //$("#grGrafica11").addClass("hidden");
+                        //$("#imgCargaGrafica11").addClass("hidden");
+                        //$("#msjErrorGrafica11").addClass("hidden");
+                        //$("#msjVacioGrafica11").removeClass("hidden");
+                        //$("#msjErrorListarGrafica11").addClass("hidden");
+                        //$("#msjSuperaLimiteGrafica11").addClass("hidden");
+            
+                        //$("#ContenedorExGrafica11").addClass("hidden");
+                        //$("#btnExGrafica11").prop('disabled', true);
+                    }
+            
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //estadoCargarGrafico10 = "0";
+                    //estadoCargarGrafico11 = "0";
+                    /*fallo al llamar a la funcion ajax*/
+                    /*Grafico 1*/
+                    $("#grGraficaTicketAndActivity").addClass("hidden");
+                    $("#imgCargaGraficaTicketAndActivity").addClass("hidden");
+                    $("#msjErrorGraficaTicketAndActivity").removeClass("hidden");
+                    $("#msjVacioGraficaTicketAndActivity").addClass("hidden");
+                    $("#msjErrorListarGraficaTicketAndActivity").addClass("hidden");
+                    $("#msjSuperaLimiteGraficaTicketAndActivity").addClass("hidden");
+            
+                    //$("#ContenedorExGrafica10").addClass("hidden");
+                    //$("#btnExGrafica10").prop('disabled', true);
+                    //$("#btnBuscar").prop('disabled', false);
+            
+                    ///*Grafico 2*/
+                    //$("#grGrafica11").addClass("hidden");
+                    //$("#imgCargaGrafica11").addClass("hidden");
+                    //$("#msjErrorGrafica11").removeClass("hidden");
+                    //$("#msjVacioGrafica11").addClass("hidden");
+                    //$("#msjErrorListarGrafica11").addClass("hidden");
+                    //$("#msjSuperaLimiteGrafica11").addClass("hidden");
+            
+                    //$("#ContenedorExGrafica11").addClass("hidden");
+                    //$("#btnExGrafica11").prop('disabled', true);
+            
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+            
+                }
+            });
+        } 
+
+     function llamadaTickerPorFecha(estado) {
+
+            if (estado == "1") {
+
+                /**Llamar a la funcion que dibuja el grafico, y en caso se mueva la pantalla redibujar*/
+                google.charts.load('visualization', '1.0', { 'packages': ['corechart'] });
+                google.charts.setOnLoadCallback(DibujarTickerPorFecha);
+
+                 //Valor1 = '1';
+
+            } else {
+                ConvertirDataTickerPorFecha(estado);
+            }
+         }
+
+     function DibujarTickerPorFecha() {
+             ConvertirDataTickerPorFecha("1");
+        }
+
+     function ConvertirDataTickerPorFecha(estado) {
+         
+             
+             var dataTableData = new google.visualization.DataTable();
+             dataTableData.addColumn('string', 'Fechas'); // Implicit domain label col.
+             dataTableData.addColumn('number', 'Pendiente');
+             dataTableData.addColumn({type: 'string', role: 'annotation'});
+             dataTableData.addColumn('number', 'Completado');
+             dataTableData.addColumn({type: 'string', role: 'annotation'});
+         
+             //for (i = 0; i < resultadojson10.length; i++) {
+             
+                  //if (resultadojson10[i].Latitud == 0 && resultadojson10[i].Latitud == 0) {
+                  //    EstadoCuatro += 1;
+                  //} else if (resultadojson10[i].StatusRegister == 1) {
+                  //    EstadoUno += 1;
+                  //} else if (resultadojson10[i].StatusRegister == 2) {
+                  //    EstadoDos += 1;
+                  //} else if (resultadojson10[i].StatusRegister == 3) {
+                  //    EstadoTres += 1;
+                  //}
+                 //ValoGoogleChart = [
+                 //    { Name: 'P', Estado: resultadojson10[0].Programado},
+                 //    { Name: 'NP', Estado: resultadojson10[0].NoProgramado},
+                 //    //{ Name: 'Superior a 48 Horas', Estado: EstadoTres },
+                 //    //{ Name: 'No existe registros', Estado: EstadoCuatro },
+                 //];
+             //}
+            //if (resultadojson14.length < 59) {
+
+            //    var containerGrafico = document.getElementById('grGraficaNroAtencionByEquipo');
+            //    containerGrafico.style.width = '100%';
+
+            //    var ScrollContenedor = document.getElementById('chartAreaWrapper4');
+            //    ScrollContenedor.style.overflowX = 'hidden';
+            //    ScrollContenedor.style.overflowY = 'hidden';
+            //    ScrollContenedor.style.width = '100%';
+            //}
+            // else {
+             
+            //     var containerGrafico = document.getElementById('grGraficaNroAtencionByEquipo');
+            //     containerGrafico.style.width = '3500px';
+             
+            //     var ScrollContenedor = document.getElementById('chartAreaWrapper4');
+            //     ScrollContenedor.style.overflowX = 'scroll';
+            //     ScrollContenedor.style.overflowY = 'hidden';
+            //     ScrollContenedor.style.width = '100%';
+             
+            //}
+
+            var CantidadPendientes;
+            var CantidadCompletados;
+
+            for (i = 0; i < resultadojson1.length; i++) { //recorro todas las fechas únicas
+
+                CantidadPendientes = resultadojson1[i].CantidadTicketPendiente;
+                CantidadCompletados = resultadojson1[i].CantidadTicketCompletado;
+
+                if (CantidadPendientes == 0) {
+                    CantidadPendientes = CantidadCompletados.toString();
+                } else {
+                    CantidadPendientes = CantidadPendientes.toString();
+                }
+
+                if (CantidadCompletados == 0) {
+                    CantidadCompletados = CantidadCompletados.toString();
+                } else {
+                    CantidadCompletados = CantidadCompletados.toString();
+                }
+
+                dataTableData.addRow([resultadojson1[i].FechaCreacion, resultadojson1[i].CantidadTicketPendiente, CantidadPendientes ,resultadojson1[i].CantidadTicketCompletado, CantidadCompletados]);
+            }
+             
+             dataGroupGrafico1 = dataTableData;
+             GraficaTickerPorFecha(estado);
+         }
+
+     function GraficaTickerPorFecha(estado) {
+            
+             //var optionsGrafico1 = {
+             //    title: 'Cantidad de Tickets por Fecha',
+             //    isStacked: true,
+             //    titleTextStyle: {
+             //        //color: '#0288d1',
+             //        color: 'black',
+             //        fontName: 'Arial',
+             //        fontSize: 20,
+             //        bold: true,
+             //        italic: true,
+             //    },
+             //    slices: {
+             //        0: { color: '#3366CC' }, //azul
+             //        1: { color: '#FF8000' },
+             //        //1: { color: '#DC3912' }, //rojo
+             //        //2: { color: '#FF9900' }, //amarillo
+             //        //3: { color: '#109618' }, //verde
+             //        //4: { color: '#990099' }, //Morado
+             //        //5: { color: '#0099C6' }, //Celeste
+             //        //6: { color: '#DD4477' }, //Rosado
+             //    },
+             //    // focusTarget: 'category',
+             //    chartArea: {
+             //       top: 28,
+             //       height: '40%' 
+             //    },
+             //    legend: {position:'top'},
+             //    vAxis: {
+             //        title: 'CANTIDAD',
+             //        titleTextStyle: {
+             //            fontSize: '15px',
+             //            color: "#439889",
+             //            bold: true,
+             //            italic: true,
+             //        },
+             //        //format: '#,### gal',
+             //        format: 'decimal',
+             //        //viewWindowMode: 'explicit',
+             //        // viewWindow: {   // De que rango a que rango se podra visualizar
+             //        //    max: dataGroupGrafico1.getColumnRange(0).max,
+             //        //    min: 0
+             //        //},
+             //        gridlines: {
+             //            count: 12   // Lineas grises que se desprenderan del eje y de manera horizonatal.
+             //        },
+             //        textStyle: {
+             //            color: "#0288d1",
+             //            fontName: 'Arial',
+             //            fontSize: '15px',
+             //            bold: true,
+             //            italic: true
+             //        },
+             //    },
+             //    hAxis: {
+             //        showTextEvery: 1,
+             //        slantedText: true,
+             //        slantedTextAngle: 90,
+             //        titleTextStyle: {
+             //            fontSize: '15px',
+             //            color: "#439889",
+             //            bold: true,
+             //            italic: true,
+             //        },
+             //        textStyle: {
+             //            color: "#0288d1",
+             //            fontName: 'Arial',
+             //            fontSize: '15px',
+             //            bold: true,
+             //            italic: true,
+
+             //        },
+             //        count: -1, 
+             //        viewWindowMode: 'pretty', 
+             //    },
+             //    animation: {
+             //        duration: 600,
+             //        easing: 'linear', //Constant speed.
+             //        //easing: 'in', // Ease in - Start slow and speed up.
+             //        //easing: 'out', // Ease out - Start fast and slow down.
+             //        //easing: 'inAndOut', // Ease in and out - Start slow, speed up, then slow down.
+             //        startup: true,
+             //    },
+
+             //    /**Opciones para quitar los margenes y padding por defecto*/
+             //    //chartArea: {
+             //    //    width: "100%",
+             //    //    height: "80%",
+             //    //    left: 60,
+             //    //    right: 20, 
+             //    //    //top: 40,
+             //    //    //bottom: 20,
+             //    //},
+             //    lineWidth: 2,
+             //    pointShape: 'point',
+             //    pointSize: 5,
+             //    legend: {
+             //        position: 'bottom',
+             //        textStyle: {
+             //            bold: true,
+             //            italic: true,
+             //        },
+             //    },
+             //    crosshair: { trigger: 'both' },
+             //    //crosshair: { trigger: 'focus' }
+             //    //crosshair: { trigger: 'selection' }
+             //    //crosshair: { orientation: 'both' }
+             //    //crosshair: { orientation: 'horizontal' }
+             //    //crosshair: { orientation: 'vertical' }
+             //    //crosshair: { color: "red" } //'red' or '#f00'
+             //    //crosshair: { opacity: opacity_number }
+             //    //crosshair: { focused: { color: color_string } }
+             //    //crosshair: { focused: { opacity: opacity_number } }
+             //    //crosshair: { selected: { color: color_string } }
+             //    //crosshair: { selected: { opacity: opacity_number } }
+             //    tooltip: {
+             //        isHtml: false,
+             //        showColorCode: true,
+             //        textStyle: {
+             //            //color:  "red",//<string>,
+             //            //fontName: "",//<string>,
+             //            fontSize: 14,//<number>,
+             //            bold: true,//<boolean>,
+             //            //italic: false//<boolean>
+
+             //        },
+             //        //trigger: 'focus',// - The tooltip will be displayed when the user hovers over the element.
+             //        //trigger: 'none', //- The tooltip will not be displayed.
+             //        trigger: 'selection',// - The tooltip will be displayed when the user selects the element.
+             //    }
+
+             //};
+           
+             var optionsGrafico1 = {
+                 title: 'Cantidad de Tickets por Fecha',
+                 isStacked: true,
+                 titleTextStyle: {
+                     //color: '#0288d1',
+                     color: 'black',
+                     fontName: 'Arial',
+                     fontSize: 20,
+                     bold: true,
+                     italic: true,
+                 },
+                 // focusTarget: 'category',
+                 vAxis: {
+                     title: 'CANTIDAD PENDIENTES vs COMPLETADOS',
+                     titleTextStyle: {
+                         fontSize: '15px',
+                         color: "#439889",
+                         bold: true,
+                         italic: true,
+                     },
+                     //format: '#,### gal',
+                     format: '0',
+                     //viewWindowMode: 'explicit',
+                     // viewWindow: {   // De que rango a que rango se podra visualizar
+                     //    max: dataGroupGrafico1.getColumnRange(0).max,
+                     //    min: 0
+                     //},
+                     gridlines: {
+                         count: 12   // Lineas grises que se desprenderan del eje y de manera horizonatal.
+                     },
+                     textStyle: {
+                         color: "#0288d1",
+                         fontName: 'Arial',
+                         fontSize: '15px',
+                         bold: true,
+                         italic: true
+                     },
+                 },
+                 hAxis: {
+                     showTextEvery: 1,
+                     slantedText: true,
+                     slantedTextAngle: 30,
+                     titleTextStyle: {
+                         fontSize: '15px',
+                         color: "#439889",
+                         bold: true,
+                         italic: true,
+                     },
+                     textStyle: {
+                         color: "#0288d1",
+                         fontName: 'Arial',
+                         fontSize: '15px',
+                         bold: true,
+                         italic: true,
+                     },
+                     format: '0',
+                 },
+                 animation: {
+                     duration: 600,
+                     easing: 'linear', //Constant speed.
+                     //easing: 'in', // Ease in - Start slow and speed up.
+                     //easing: 'out', // Ease out - Start fast and slow down.
+                     //easing: 'inAndOut', // Ease in and out - Start slow, speed up, then slow down.
+                     startup: true,
+                 },
+
+                 /**Opciones para quitar los margenes y padding por defecto*/
+                 //chartArea: {
+                 //    width: "100%",
+                 //    //height: "80%",
+                 //    left: 60,
+                 //    right: 20,
+                 //    //top: 40,
+                 //    //bottom: 20,
+                 //},
+                 lineWidth: 2,
+                 pointShape: 'point',
+                 pointSize: 5,
+                 legend: {
+                     position: 'bottom',
+                     textStyle: {
+                         bold: true,
+                         italic: true,
+                     },
+                 },
+                 crosshair: { trigger: 'both' },
+                 //crosshair: { trigger: 'focus' }
+                 //crosshair: { trigger: 'selection' }
+                 //crosshair: { orientation: 'both' }
+                 //crosshair: { orientation: 'horizontal' }
+                 //crosshair: { orientation: 'vertical' }
+                 //crosshair: { color: "red" } //'red' or '#f00'
+                 //crosshair: { opacity: opacity_number }
+                 //crosshair: { focused: { color: color_string } }
+                 //crosshair: { focused: { opacity: opacity_number } }
+                 //crosshair: { selected: { color: color_string } }
+                 //crosshair: { selected: { opacity: opacity_number } }
+                 tooltip: {
+                     isHtml: false,
+                     showColorCode: true,
+                     textStyle: {
+                         //color:  "red",//<string>,
+                         //fontName: "",//<string>,
+                         fontSize: 10,//<number>,
+                         bold: true,//<boolean>,
+                         //italic: false//<boolean>
+
+                     },
+                     //trigger: 'focus',// - The tooltip will be displayed when the user hovers over the element.
+                     //trigger: 'none', //- The tooltip will not be displayed.
+                     trigger: 'selection',// - The tooltip will be displayed when the user selects the element.
+                 }
+
+             };
+
+
+             if (estado == "1") {
+                 var chartDiv = document.getElementById('grGraficaTicketAndActivity');
+                 pchartG1 = new google.visualization.ColumnChart(chartDiv);
+             }
+         
+             $("#grGraficaTicketAndActivity").removeClass("hidden");
+             $("#imgCargaGraficaTicketAndActivity").addClass("hidden");
+             $("#msjErrorGraficaTicketAndActivity").addClass("hidden");
+             $("#msjVacioGraficaTicketAndActivity").addClass("hidden");
+             $("#msjErrorListarGraficaTicketAndActivity").addClass("hidden");
+             $("#msjSuperaLimiteGraficaTicketAndActivity").addClass("hidden");
+         
+             //$("#ContenedorExGrafica12").removeClass("hidden");
+             //$("#btnExGrafica12").prop('disabled', false);
+             //$("#btnBuscar").prop('disabled', false);
+         
+             if (estado == "1") {
+                 /********************************EVENTO ***READY****************************************/
+                 google.visualization.events.addListener(pchartG1, 'ready', function () {
+                     //alert(1);
+                     try {
+                         /*Centrar el titulo del grafico */
+                         var $container = $('#grGraficaTicketAndActivity');
+                         widthG1 = $container.find('svg').width();
+                         //heightG10 = $container.find('svg').height();
+                         //var $titleElem = $container.find("text:contains(" + optionsGrafico12.title + ")");
+                         //var titleWidth = $titleElem.html().length * ($titleElem.attr('font-size') / 2);
+                         //var xAxisAlign = (widthG12 - titleWidth) / 2;
+                         //$titleElem.attr('x', xAxisAlign);
+         
+                     } catch (e) {
+                         console.log(e);
+                     }
+                     /*Setear valor para el exportar*/
+                     ImageURI1 = pchartG1.getImageURI();
+         
+                     /*Redibujar la grafica al cambiar del tamaño de pantalla*/
+                     reDibujarGrafica1();
+         
+                 });
+         
+                 /******************************EVENTO ****ERROR*****************************************/
+                 google.visualization.events.addListener(pchartG1, 'error', function (error) {
+                     /**Para remover el mensaje de error de google del grafico (Tambien hay un atributo para remover todos los errores)*/
+                     console.log(error);
+                     google.visualization.errors.removeError(error.id);
+                 });
+             }
+         
+             pchartG1.draw(dataGroupGrafico1, optionsGrafico1);
+         
+         
+             var columns = [];
+             var series = {};
+             for (var i = 0; i < dataGroupGrafico1.getNumberOfColumns(); i++) {
+                 columns.push(i);
+         
+                 if (i > 0) {
+                     series[i - 1] = {};
+         
+                 }
+             }
+         
+             //if (estado == "1") {
+                 /***********************************EVENTO-SELECT********************************************/
+              google.visualization.events.addListener(pchartG1, 'select', function () {
+                      
+                      //var selec = pchartG1.getSelection();
+                      ////console.log(selec);
+                      
+                      //if (selec.length > 0) {
+                      //    if (selec[0].row == null) {
+                      //        var col = selec[0].column;
+                      //        if (columns[col] == col) {
+                      
+                      //            columns[col] = {
+                      //                label: dataGroupGrafico1.getColumnLabel(col),
+                      //                type: dataGroupGrafico1.getColumnType(col),
+                      //                calc: function () {
+                      //                    return null;
+                      //                }
+                      //            };
+                      //            series[col - 1].color = '#CCCCCC';
+                      //        }
+                      //        else {
+                      
+                      //            columns[col] = col;
+                      //            series[col - 1].color = null;
+                      //        }
+                      
+                      //        /*Se puede agregar opciones con options."atributo" = "El valor " */
+                      //        optionsGrafico1.animation = ''; /*Para quitar la animacion lo pongo como vacio*/
+                      //        optionsGrafico1.series = series;
+                      
+                      //        var view = new google.visualization.DataView(dataGroupGrafico1);
+                      //        view.setColumns(columns);
+                      //        pchartG1.draw(view, optionsGrafico1);
+                      //    }
+                     //}
+
+                     var elementos = pchartG1.getSelection();
+
+                     var value1 = 0;
+                     var value2;
+                     var value3;
+                     //var value4;
+
+                     //console.log(elementos);
+                     //console.log(dataGroupGrafico1);
+
+                     if (elementos.length == 0 || elementos == null || elementos == undefined || elementos[0].row == null || elementos[0].column == null) {
+
+                        value1 = 0;
+
+                     } else {
+                     
+                          value1 = dataGroupGrafico1.getValue(elementos[0].row, elementos[0].column);
+                          value2 = dataGroupGrafico1.getValue(elementos[0].row, 0);
+                          value3 = dataGroupGrafico1.getColumnLabel(elementos[0].column); 
+                          //value4 = dataTableConsumoGeneral.getColumnLabel(elementos[0].column); 
+                     }
+
+
+                     if (value1 != undefined && value1 != "" && value1 != 0) {
+                     
+                         if (value2 != undefined && value2 != "" && value2 != 0) {
+                     
+                             if (value3 != undefined && value3 != "" && value3 != 0) {
+
+                                 if (Valor == 1) {
+
+                                    if (value3 == 'Pendiente') {
+
+                                         document.getElementById("lblTitleModal").innerHTML = "<strong>Tickets</strong> : " + "<span style='color:#e1e100'><strong>" +value3+ "</strong></span>";
+
+                                     } else {
+
+                                         document.getElementById("lblTitleModal").innerHTML = "<strong>Tickets</strong> : " + "<span style='color:green'><strong>" +value3+ "</strong></span>";
+
+                                     }
+
+                                     document.getElementById("lblListTicketActivity").innerHTML = "Listado de Tickets";
+
+                                     GrillaListadoTicket(value3, value2);
+
+                                     $('#ModalTicketActivityList').modal('show');
+
+                                 } 
+
+                             } else {
+                     
+                                 console.log("Error - No se pudo obtener el valor si es pendiente o completado");
+                     
+                             }
+                     
+                         } else {
+                     
+                             console.log("Error - No se pudo obtener el valor de la fecha");
+                     
+                         }
+                     
+                     } else {
+                     
+                         console.log("Error - No se pudo obtener la cantidad");
+                     
+                     }
+
+
+              });
+         
+              /**********************************EVENTO-ONMOUSEOVER*********************************************************************/
+              google.visualization.events.addListener(pchartG1, 'onmouseover', function () { document.getElementById('grGraficaTicketAndActivity').style.cursor = 'pointer'; });
+         
+              /**********************************EVENTO-ONMOUSEOUT**********************************************************************/
+              google.visualization.events.addListener(pchartG1, 'onmouseout', function () { document.getElementById('grGraficaTicketAndActivity').style.cursor = 'default'; });
+             //}
+         
+         }
+
+     function reDibujarGrafica1() {
+
+             jQuery(window).on("resize", function (event) {
+         
+                 if (estadoCargarGrafico1 == "1") {
+         
+                     var win = $(this); //this = window
+         
+                     if (contadorGrafica1 == 0) {
+         
+                         //$("#grGrafica10").html = "";
+         
+                         contadorGrafica1 = 1;
+                         tamanoAnchoPantalla1 = win.width();
+         
+                         var chartDiv = jQuery("#grGraficaTicketAndActivity");
+                         chartDiv.css({ display: "none" });
+                         chartDiv.css({ width: chartDiv.parent().innerWidth(), display: "block" });
+         
+                         GraficaTickerPorFecha("2");
+                         //pchartG10.draw(dataGroup, options);
+         
+                     } else {
+         
+                         //$("#grGrafica10").html = "";
+                         var tamanoAnchoActual = win.width();
+         
+                         var calculo = Math.abs(tamanoAnchoActual - tamanoAnchoPantalla1);
+                         if (calculo > 10) {
+         
+                             tamanoAnchoPantalla1 = win.width();
+         
+                             var chartDiv = jQuery("#grGraficaTicketAndActivity");
+                             chartDiv.css({ display: "none" });
+                             chartDiv.css({ width: chartDiv.parent().innerWidth(), display: "block" });
+         
+                             GraficaTickerPorFecha("2");
+                             //pchartG10.draw(dataGroup, options);
+                         }
+                     }
+                 }
+         
+             });
+         }
+
+     /* ---- ACTIVITY ---- */
+
+     function listadoActivityPorFecha(estado) {
+
+            $.ajax({
+                type: "GET", /*Puede ser post*/
+                url: tRutaServidor + "/ReportListTicketActivity/ListTicketXActivityDate2", /* es importante poner los .. delante*/
+                contentType: "application/json; charset=utf-8",
+                data: {
+                     fechaInicio: $("#txtFechaInicioTicket").val(),
+                     fechaFin: $("#txtFechaFinalTicket").val()
+                },
+                dataType: "json",
+                success: function (resultado) {
+            
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+                        if (resultado[0].ValorConsulta == "1") {
+            
+                            $("#ContenedorExGrafica1").removeClass("hidden");
+                            $("#btnExGrafica1").prop('disabled', false);
+
+                            estadoCargarGrafico2 = "1";
+                            //estadoCargarGrafico11 = "1";
+            
+                            resultadojson2 = resultado;
+                            //listadoEstadosCotizaciones(resultado, estado);
+            
+                            llamadaActivityPorFecha(estado);
+            
+                        }
+                        else {
+                            //estadoCargarGrafico11 = "0";
+                            //estadoCargarGrafico11 = "0";
+            
+                            /*Grafico 1*/
+                            $("#grGraficaTicketAndActivity").addClass("hidden");
+                            $("#imgCargaGraficaTicketAndActivity").addClass("hidden");
+                            $("#msjErrorGraficaTicketAndActivity").addClass("hidden");
+                            $("#msjVacioGraficaTicketAndActivity").addClass("hidden");
+                            $("#msjErrorListarGraficaTicketAndActivity").removeClass("hidden");
+                            $("#msjSuperaLimiteGraficaTicketAndActivity").addClass("hidden");
+            
+                            //$("#ContenedorExGrafica11").addClass("hidden");
+                            //$("#btnExGrafica11").prop('disabled', true);
+            
+                            ///*Grafico 2*/
+                            //$("#grGrafica11").addClass("hidden");
+                            //$("#imgCargaGrafica11").addClass("hidden");
+                            //$("#msjErrorGrafica11").addClass("hidden");
+                            //$("#msjVacioGrafica11").addClass("hidden");
+                            //$("#msjErrorListarGrafica11").removeClass("hidden");
+                            //$("#msjSuperaLimiteGrafica11").addClass("hidden");
+            
+                            //$("#ContenedorExGrafica11").addClass("hidden");
+                            //$("#btnExGrafica11").prop('disabled', true);
+            
+                            //$("#btnBuscar").prop('disabled', false);
+                        }
+            
+                    } else {
+
+                        //$("#btnBuscarReporteCotizaciones").prop('disabled', false);
+                        //estadoCargarGrafico11 = "0";
+                        //estadoCargarGrafico11 = "0";
+                        /*Grafico 1*/
+                        $("#grGraficaTicketAndActivity").addClass("hidden");
+                        $("#imgCargaGraficaTicketAndActivity").addClass("hidden");
+                        $("#msjErrorGraficaTicketAndActivity").addClass("hidden");
+                        $("#msjVacioGraficaTicketAndActivity").removeClass("hidden");
+                        $("#msjErrorListarGraficaTicketAndActivity").addClass("hidden");
+                        $("#msjSuperaLimiteGraficaTicketAndActivity").addClass("hidden");
+            
+                        //$("#ContenedorExGrafica11").addClass("hidden");
+                        //$("#btnExGrafica11").prop('disabled', true);
+                        //$("#btnBuscar").prop('disabled', false);
+            
+                        ///*Grafico 2*/
+                        //$("#grGrafica11").addClass("hidden");
+                        //$("#imgCargaGrafica11").addClass("hidden");
+                        //$("#msjErrorGrafica11").addClass("hidden");
+                        //$("#msjVacioGrafica11").removeClass("hidden");
+                        //$("#msjErrorListarGrafica11").addClass("hidden");
+                        //$("#msjSuperaLimiteGrafica11").addClass("hidden");
+            
+                        //$("#ContenedorExGrafica11").addClass("hidden");
+                        //$("#btnExGrafica11").prop('disabled', true);
+                    }
+            
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //estadoCargarGrafico10 = "0";
+                    //estadoCargarGrafico11 = "0";
+                    /*fallo al llamar a la funcion ajax*/
+                    /*Grafico 1*/
+                    $("#grGraficaTicketAndActivity").addClass("hidden");
+                    $("#imgCargaGraficaTicketAndActivity").addClass("hidden");
+                    $("#msjErrorGraficaTicketAndActivity").removeClass("hidden");
+                    $("#msjVacioGraficaTicketAndActivity").addClass("hidden");
+                    $("#msjErrorListarGraficaTicketAndActivity").addClass("hidden");
+                    $("#msjSuperaLimiteGraficaTicketAndActivity").addClass("hidden");
+            
+                    //$("#ContenedorExGrafica10").addClass("hidden");
+                    //$("#btnExGrafica10").prop('disabled', true);
+                    //$("#btnBuscar").prop('disabled', false);
+            
+                    ///*Grafico 2*/
+                    //$("#grGrafica11").addClass("hidden");
+                    //$("#imgCargaGrafica11").addClass("hidden");
+                    //$("#msjErrorGrafica11").removeClass("hidden");
+                    //$("#msjVacioGrafica11").addClass("hidden");
+                    //$("#msjErrorListarGrafica11").addClass("hidden");
+                    //$("#msjSuperaLimiteGrafica11").addClass("hidden");
+            
+                    //$("#ContenedorExGrafica11").addClass("hidden");
+                    //$("#btnExGrafica11").prop('disabled', true);
+            
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+            
+                }
+            });
+        } 
+
+     function llamadaActivityPorFecha(estado) {
+
+            if (estado == "1") {
+
+                /**Llamar a la funcion que dibuja el grafico, y en caso se mueva la pantalla redibujar*/
+                google.charts.load('visualization', '1.0', { 'packages': ['corechart'] });
+                google.charts.setOnLoadCallback(DibujarActivityPorFecha);
+
+                 //Valor1 = '1';
+
+            } else {
+                ConvertirDataActivityPorFecha(estado);
+            }
+         }
+
+     function DibujarActivityPorFecha() {
+             ConvertirDataActivityPorFecha("1");
+        }
+
+     function ConvertirDataActivityPorFecha(estado) {
+         
+             
+             var dataTableData = new google.visualization.DataTable();
+             dataTableData.addColumn('string', 'Fechas'); // Implicit domain label col.
+             dataTableData.addColumn('number', 'Pendiente');
+             dataTableData.addColumn({type: 'string', role: 'annotation'});
+             dataTableData.addColumn('number', 'Completado');
+             dataTableData.addColumn({type: 'string', role: 'annotation'});
+         
+             //for (i = 0; i < resultadojson10.length; i++) {
+             
+                  //if (resultadojson10[i].Latitud == 0 && resultadojson10[i].Latitud == 0) {
+                  //    EstadoCuatro += 1;
+                  //} else if (resultadojson10[i].StatusRegister == 1) {
+                  //    EstadoUno += 1;
+                  //} else if (resultadojson10[i].StatusRegister == 2) {
+                  //    EstadoDos += 1;
+                  //} else if (resultadojson10[i].StatusRegister == 3) {
+                  //    EstadoTres += 1;
+                  //}
+                 //ValoGoogleChart = [
+                 //    { Name: 'P', Estado: resultadojson10[0].Programado},
+                 //    { Name: 'NP', Estado: resultadojson10[0].NoProgramado},
+                 //    //{ Name: 'Superior a 48 Horas', Estado: EstadoTres },
+                 //    //{ Name: 'No existe registros', Estado: EstadoCuatro },
+                 //];
+             //}
+            //if (resultadojson14.length < 59) {
+
+            //    var containerGrafico = document.getElementById('grGraficaNroAtencionByEquipo');
+            //    containerGrafico.style.width = '100%';
+
+            //    var ScrollContenedor = document.getElementById('chartAreaWrapper4');
+            //    ScrollContenedor.style.overflowX = 'hidden';
+            //    ScrollContenedor.style.overflowY = 'hidden';
+            //    ScrollContenedor.style.width = '100%';
+            //}
+            // else {
+             
+            //     var containerGrafico = document.getElementById('grGraficaNroAtencionByEquipo');
+            //     containerGrafico.style.width = '3500px';
+             
+            //     var ScrollContenedor
+            for (i = 0; i < resultadojson2.length; i++) { //recorro todas las fechas únicas
+
+                CantidadPendientes = resultadojson2[i].CantidadActivityPendiente;
+                CantidadCompletados = resultadojson2[i].CantidadActivityCompletado;
+
+                if (CantidadPendientes == 0) {
+                    //CantidadPendientes = null;
+                    CantidadPendientesActi = CantidadPendientes.toString();
+                } else {
+                    CantidadPendientesActi = CantidadPendientes.toString();
+                }
+
+                if (CantidadCompletados == 0) {
+                    //CantidadCompletados = null;
+                    CantidadCompletadosActi = CantidadCompletados.toString();
+                } else {
+                    CantidadCompletadosActi = CantidadCompletados.toString();
+                }
+
+                dataTableData.addRow([resultadojson2[i].FechaCreacion, resultadojson2[i].CantidadActivityPendiente, CantidadPendientesActi ,resultadojson2[i].CantidadActivityCompletado, CantidadCompletadosActi ]);
+            }
+             
+             dataGroupGrafico2 = dataTableData;
+             GraficaActivityPorFecha(estado);
+         }
+
+     function GraficaActivityPorFecha(estado) {
+            
+             var optionsGrafico2 = {
+                 title: 'Cantidad de Actividades por Fecha',
+                 isStacked: true,
+                 titleTextStyle: {
+                     //color: '#0288d1',
+                     color: 'black',
+                     fontName: 'Arial',
+                     fontSize: 20,
+                     bold: true,
+                     italic: true,
+                 },
+                 // focusTarget: 'category',
+                 vAxis: {
+                     title: 'CANTIDAD PENDIENTES vs COMPLETADOS',
+                     titleTextStyle: {
+                         fontSize: '15px',
+                         color: "#439889",
+                         bold: true,
+                         italic: true,
+                     },
+                     //format: '#,### gal',
+                     format: '0',
+                     //viewWindowMode: 'explicit',
+                     // viewWindow: {   // De que rango a que rango se podra visualizar
+                     //    max: dataGroupGrafico1.getColumnRange(0).max,
+                     //    min: 0
+                     //},
+                     gridlines: {
+                         count: 12   // Lineas grises que se desprenderan del eje y de manera horizonatal.
+                     },
+                     textStyle: {
+                         color: "#0288d1",
+                         fontName: 'Arial',
+                         fontSize: '15px',
+                         bold: true,
+                         italic: true
+                     },
+                 },
+                 hAxis: {
+                     showTextEvery: 1,
+                     slantedText: true,
+                     slantedTextAngle: 30,
+                     titleTextStyle: {
+                         fontSize: '15px',
+                         color: "#439889",
+                         bold: true,
+                         italic: true,
+                     },
+                     textStyle: {
+                         color: "#0288d1",
+                         fontName: 'Arial',
+                         fontSize: '15px',
+                         bold: true,
+                         italic: true,
+                     },
+                     format: '0',
+                 },
+                 animation: {
+                     duration: 600,
+                     easing: 'linear', //Constant speed.
+                     //easing: 'in', // Ease in - Start slow and speed up.
+                     //easing: 'out', // Ease out - Start fast and slow down.
+                     //easing: 'inAndOut', // Ease in and out - Start slow, speed up, then slow down.
+                     startup: true,
+                 },
+
+                 /**Opciones para quitar los margenes y padding por defecto*/
+                 //chartArea: {
+                 //    width: "100%",
+                 //    //height: "80%",
+                 //    left: 60,
+                 //    right: 20,
+                 //    //top: 40,
+                 //    //bottom: 20,
+                 //},
+                 lineWidth: 2,
+                 pointShape: 'point',
+                 pointSize: 5,
+                 legend: {
+                     position: 'bottom',
+                     textStyle: {
+                         bold: true,
+                         italic: true,
+                     },
+                 },
+                 crosshair: { trigger: 'both' },
+                 //crosshair: { trigger: 'focus' }
+                 //crosshair: { trigger: 'selection' }
+                 //crosshair: { orientation: 'both' }
+                 //crosshair: { orientation: 'horizontal' }
+                 //crosshair: { orientation: 'vertical' }
+                 //crosshair: { color: "red" } //'red' or '#f00'
+                 //crosshair: { opacity: opacity_number }
+                 //crosshair: { focused: { color: color_string } }
+                 //crosshair: { focused: { opacity: opacity_number } }
+                 //crosshair: { selected: { color: color_string } }
+                 //crosshair: { selected: { opacity: opacity_number } }
+                 tooltip: {
+                     isHtml: false,
+                     showColorCode: true,
+                     textStyle: {
+                         //color:  "red",//<string>,
+                         //fontName: "",//<string>,
+                         fontSize: 14,//<number>,
+                         bold: true,//<boolean>,
+                         //italic: false//<boolean>
+
+                     },
+                     //trigger: 'focus',// - The tooltip will be displayed when the user hovers over the element.
+                     //trigger: 'none', //- The tooltip will not be displayed.
+                     trigger: 'selection',// - The tooltip will be displayed when the user selects the element.
+                 }
+
+             };
+
+
+             if (estado == "1") {
+                 var chartDiv = document.getElementById('grGraficaTicketAndActivity');
+                 pchartG2 = new google.visualization.ColumnChart(chartDiv);
+             }
+         
+             $("#grGraficaTicketAndActivity").removeClass("hidden");
+             $("#imgCargaGraficaTicketAndActivity").addClass("hidden");
+             $("#msjErrorGraficaTicketAndActivity").addClass("hidden");
+             $("#msjVacioGraficaTicketAndActivity").addClass("hidden");
+             $("#msjErrorListarGraficaTicketAndActivity").addClass("hidden");
+             $("#msjSuperaLimiteGraficaTicketAndActivity").addClass("hidden");
+         
+             //$("#ContenedorExGrafica12").removeClass("hidden");
+             //$("#btnExGrafica12").prop('disabled', false);
+             //$("#btnBuscar").prop('disabled', false);
+         
+             if (estado == "1") {
+                 /********************************EVENTO ***READY****************************************/
+                 google.visualization.events.addListener(pchartG2, 'ready', function () {
+                     //alert(1);
+                     try {
+                         /*Centrar el titulo del grafico */
+                         var $container = $('#grGraficaTicketAndActivity');
+                         widthG2 = $container.find('svg').width();
+                         //heightG10 = $container.find('svg').height();
+                         //var $titleElem = $container.find("text:contains(" + optionsGrafico12.title + ")");
+                         //var titleWidth = $titleElem.html().length * ($titleElem.attr('font-size') / 2);
+                         //var xAxisAlign = (widthG12 - titleWidth) / 2;
+                         //$titleElem.attr('x', xAxisAlign);
+         
+                     } catch (e) {
+                         console.log(e);
+                     }
+                     /*Setear valor para el exportar*/
+                     ImageURI2 = pchartG2.getImageURI();
+         
+                     /*Redibujar la grafica al cambiar del tamaño de pantalla*/
+                     reDibujarGrafica2();
+         
+                 });
+         
+                 /******************************EVENTO ****ERROR*****************************************/
+                 google.visualization.events.addListener(pchartG2, 'error', function (error) {
+                     /**Para remover el mensaje de error de google del grafico (Tambien hay un atributo para remover todos los errores)*/
+                     console.log(error);
+                     google.visualization.errors.removeError(error.id);
+                 });
+             }
+         
+             pchartG2.draw(dataGroupGrafico2, optionsGrafico2);
+         
+         
+             var columns = [];
+             var series = {};
+             for (var i = 0; i < dataGroupGrafico2.getNumberOfColumns(); i++) {
+                 columns.push(i);
+         
+                 if (i > 0) {
+                     series[i - 1] = {};
+         
+                 }
+             }
+         
+             //if (estado == "1") {
+                 /***********************************EVENTO-SELECT********************************************/
+                 google.visualization.events.addListener(pchartG2, 'select', function () {
+         
+                     ////var view = new google.visualization.DataView(dataGroupGrafico13);
+                     ////view.hideColumns([1]);
+                     ////pchartG13.draw(view, optionsGrafico13);
+         
+                     //var selec = pchartG2.getSelection();
+                     ////console.log(selec);
+         
+                     //if (selec.length > 0) {
+                     //    if (selec[0].row == null) {
+                     //        var col = selec[0].column;
+                     //        if (columns[col] == col) {
+         
+                     //            columns[col] = {
+                     //                label: dataGroupGrafico2.getColumnLabel(col),
+                     //                type: dataGroupGrafico2.getColumnType(col),
+                     //                calc: function () {
+                     //                    return null;
+                     //                }
+                     //            };
+                     //            series[col - 1].color = '#CCCCCC';
+                     //        }
+                     //        else {
+         
+                     //            columns[col] = col;
+                     //            series[col - 1].color = null;
+                     //        }
+         
+                     //        /*Se puede agregar opciones con options."atributo" = "El valor " */
+                     //        optionsGrafico2.animation = ''; /*Para quitar la animacion lo pongo como vacio*/
+                     //        optionsGrafico2.series = series;
+         
+                     //        var view = new google.visualization.DataView(dataGroupGrafico2);
+                     //        view.setColumns(columns);
+                     //        pchartG2.draw(view, optionsGrafico2);
+                     //    }        
+                     //}
+
+                     var elementos = pchartG2.getSelection();
+
+                     var value1 = 0;
+                     var value2;
+                     var value3;
+                     //var value4;
+
+                     //console.log(elementos);
+                     //console.log(dataGroupGrafico1);
+
+                     if (elementos.length == 0 || elementos == null || elementos == undefined || elementos[0].row == null || elementos[0].column == null) {
+
+                        value1 = 0;
+
+                     } else {
+                     
+                          value1 = dataGroupGrafico2.getValue(elementos[0].row, elementos[0].column);
+                          value2 = dataGroupGrafico2.getValue(elementos[0].row, 0);
+                          value3 = dataGroupGrafico2.getColumnLabel(elementos[0].column); 
+                          //value4 = dataTableConsumoGeneral.getColumnLabel(elementos[0].column); 
+                     }
+
+
+                     if (value1 != undefined && value1 != "" && value1 != 0) {
+                     
+                         if (value2 != undefined && value2 != "" && value2 != 0) {
+                     
+                             if (value3 != undefined && value3 != "" && value3 != 0) {
+
+                                 if (Valor == 2) {
+
+                                     if (value3 == 'Pendiente') {
+
+                                         document.getElementById("lblTitleModal").innerHTML = "<strong>Actividades</strong> : " + "<span style='color:#e1e100'><strong>" +value3+ "</strong></span>";
+
+                                     } else {
+
+                                         document.getElementById("lblTitleModal").innerHTML = "<strong>Actividades</strong> : " + "<span style='color:green'><strong>" +value3+ "</strong></span>";
+
+                                     }
+                                     
+
+                                     document.getElementById("lblListTicketActivity").innerHTML = "Listado de Actividades";
+
+                                     GrillaListadoActivity(value3, value2);
+
+                                     $('#ModalTicketActivityList').modal('show');
+
+                                 } 
+
+                             }
+                     
+                         } else {
+                     
+                             console.log("Error - No se pudo obtener el valor de la fecha");
+                     
+                         }
+                     
+                     } else {
+                     
+                         console.log("Error - No se pudo obtener la cantidad");
+                     
+                     }
+
+                 });
+         
+                 /**********************************EVENTO-ONMOUSEOVER*********************************************************************/
+                 google.visualization.events.addListener(pchartG2, 'onmouseover', function () { document.getElementById('grGraficaTicketAndActivity').style.cursor = 'pointer'; });
+         
+                 /**********************************EVENTO-ONMOUSEOUT**********************************************************************/
+                 google.visualization.events.addListener(pchartG2, 'onmouseout', function () { document.getElementById('grGraficaTicketAndActivity').style.cursor = 'default'; });
+             //}
+         
+     }
+
+     function reDibujarGrafica2() {
+
+             jQuery(window).on("resize", function (event) {
+         
+                 if (estadoCargarGrafico2 == "1") {
+         
+                     var win = $(this); //this = window
+         
+                     if (contadorGrafica2 == 0) {
+         
+                         //$("#grGrafica10").html = "";
+         
+                         contadorGrafica2 = 1;
+                         tamanoAnchoPantalla2 = win.width();
+         
+                         var chartDiv = jQuery("#grGraficaTicketAndActivity");
+                         chartDiv.css({ display: "none" });
+                         chartDiv.css({ width: chartDiv.parent().innerWidth(), display: "block" });
+         
+                         GraficaActivityPorFecha("2");
+                         //pchartG10.draw(dataGroup, options);
+         
+                     } else {
+         
+                         //$("#grGrafica10").html = "";
+                         var tamanoAnchoActual = win.width();
+         
+                         var calculo = Math.abs(tamanoAnchoActual - tamanoAnchoPantalla2);
+                         if (calculo > 10) {
+         
+                             tamanoAnchoPantalla2 = win.width();
+         
+                             var chartDiv = jQuery("#grGraficaTicketAndActivity");
+                             chartDiv.css({ display: "none" });
+                             chartDiv.css({ width: chartDiv.parent().innerWidth(), display: "block" });
+         
+                             GraficaActivityPorFecha("2");
+                             //pchartG10.draw(dataGroup, options);
+                         }
+                     }
+                 }
+         
+             });
+         }
+
+     /* ---- MODAL - LIST - TICKET & ACTIVITY ---- */
+
+     function GrillaListadoTicket(ValorEstado, FiltroFecha) {
+
+        var dataSource = new kendo.data.DataSource({
+            transport: {
+                read: function (options) {
+                    $.ajax({
+                        type: "GET",
+                        url: tRutaServidor + "/ReportListTicketActivity/ListarTicket", /* es importante poner los .. delante */
+                        dataType: "json",
+                        data: {
+                            StatusBar: ValorEstado,
+                            FilterDate : FiltroFecha
+                        },
+                        /*async: false,*/
+                        success: function (resultado) {
+                           /*exitosamente*/
+                            //let html;
+
+                            if (resultado.length > 0) {
+                                /* proceso exitoso con datos*/
+                                if (resultado[0].ValorConsulta == "1") {
+
+                                    //html = resultado.length;
+
+                                    //document.getElementById("txtCantidadTicketAltaCaducidad").innerHTML = html;
+
+                                    $("#LstTicketXActivity").removeClass("hidden");
+                                    $("#imgCargaLstTicketXActivity").addClass("hidden");
+                                    $("#msjErrorLstTicketXActivity").addClass("hidden");
+                                    $("#msjVacioLstTicketXActivity").addClass("hidden");
+                                    $("#msjErrorListarLstTicketXActivity").addClass("hidden");
+                                    $("#msjSuperaLimiteLstTicketXActivity").addClass("hidden");
+
+                                    //$("#btnBuscar").prop('disabled', false);
+                                    //$("#BtnExportarExcel").prop('disabled', false);
+
+                                } else if (resultado[0].ValorConsulta == "-1") {
+
+                                    $("#LstTicketXActivity").addClass("hidden");
+                                    $("#imgCargaLstTicketXActivity").addClass("hidden");
+                                    $("#msjErrorLstTicketXActivity").addClass("hidden");
+                                    $("#msjVacioLstTicketXActivity").addClass("hidden");
+                                    $("#msjErrorListarLstTicketXActivity").addClass("hidden");
+                                    $("#msjSuperaLimiteLstTicketXActivity").removeClass("hidden");
+
+                                    //$("#btnBuscar").prop('disabled', false);
+                                    //$("#BtnExportarExcel").prop('disabled', true);
+                                }
+                                else {
+                                    /* proceso fallido catch listado datos*/
+                                    $("#LstTicketXActivity").addClass("hidden");
+                                    $("#imgCargaLstTicketXActivity").addClass("hidden");
+                                    $("#msjErrorLstTicketXActivity").addClass("hidden");
+                                    $("#msjVacioLstTicketXActivity").addClass("hidden");
+                                    $("#msjErrorListarLstTicketXActivity").removeClass("hidden");
+                                    $("#msjSuperaLimiteLstTicketXActivity").addClass("hidden");
+
+                                    //$("#btnBuscar").prop('disabled', true);
+                                    //$("#BtnExportarExcel").prop('disabled', true);
+                                    console.log(resultado);
+                                }
+
+                            } else {
+
+                                //html = 0;
+
+                                //document.getElementById("txtCantidadTicketAltaCaducidad").innerHTML = html;
+
+                                $("#LstTicketXActivity").addClass("hidden");
+                                $("#imgCargaLstTicketXActivity").addClass("hidden");
+                                $("#msjErrorLstTicketXActivity").addClass("hidden");
+                                $("#msjVacioLstTicketXActivity").removeClass("hidden");
+                                $("#msjErrorListarLstTicketXActivity").addClass("hidden");
+                                $("#msjSuperaLimiteLstTicketXActivity").addClass("hidden");
+
+                                //$("#btnBuscar").prop('disabled', false);
+                                //$("#BtnExportarExcel").prop('disabled', true);
+                            }
+
+                            options.success(resultado);
+                            var grid = $("#LstTicketXActivity").data("kendoGrid");
+                            if (grid.dataSource.total() > 0) {
+                                grid.setDataSource(dataSource);
+                            }
+
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            /*fallo al llamar a la funcion ajax*/
+                            $("#LstTicketXActivity").addClass("hidden");
+                            $("#imgCargaLstTicketXActivity").addClass("hidden");
+                            $("#msjErrorLstTicketXActivity").removeClass("hidden");
+                            $("#msjVacioLstTicketXActivity").addClass("hidden");
+                            $("#msjErrorListarLstTicketXActivity").addClass("hidden");
+                            $("#msjSuperaLimiteLstTicketXActivity").addClass("hidden");
+
+                            //$("#btnBuscar").prop('disabled', true);
+                            //$("#BtnExportarExcel").prop('disabled', true);
+                            console.log("ERROR AJAX : " + ajaxOptions);
+                            console.log("ERROR AJAX : " + thrownError);
+                            console.log(xhr.responseText);
+                            console.log(xhr);
+
+                        }
+                    });
+                },
+                parameterMap: function (data, operation) {
+                    if (operation !== "read" && data.models) {
+                        return JSON.stringify({ JSONparam: data.models });
+                    }
+                }
+            },
+            error: function (e) {
+                alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+            },
+            batch: false,
+            pageSize: PaginationKendoGrid,
+            schema: {
+                model: {
+                    fields: {
+                        IdTicket: { type: "number" },
+                        NroTicket: { type: "string" },
+                        StartDate: { type: "string" },
+                        FullNameTicket: { type: "string" },
+                        ResponsibleNameTicket: { type: "string" },
+                        LocationNameTicket: { type: "string" },
+                        OperationName: { type: "string" },
+                        ReasonName: { type: "string" },
+                        CriticalityName: { type: "string" },
+                        TitleDescription: { type: "string" },
+                        DetalleText: { type: "string" },
+                        //ResponsibleId: {type: "number"}
+                    }
+                }
+            },
+            //aggregate: [
+            //    {
+            //        field: "TicketNumber",
+            //        aggregate: "count"
+            //    },
+            //    {
+            //        field: "FuelQuantity",
+            //        aggregate: "sum"
+            //    }
+            //]
+        });
+
+        $("#LstTicketXActivity").kendoGrid({
+            dataSource: dataSource,
+            sortable: true,
+            pageable: true,
+            columnMenu: true,
+            columnMenu: {
+                sortable: true,
+                filterable: true,
+                columns: true,
+                messages: {
+                    columns: KendoMsjColumnMenuColumns,
+                    filter: KendoMsjColumnMenuFilter,
+                    sortAscending: KendoMsjColumnMenuSortAscending,
+                    sortDescending: KendoMsjColumnMenuSortDescending,
+                    settings: KendoMsjSettings
+                }
+            },
+            columnMenuInit: function (e) {
+                var menu = e.container.find(".k-menu").data("kendoMenu");
+                menu.bind("select", function (e) {
+                    var EtiquetaInput = $(".k-animation-container > .k-menu-group > .k-item > .k-content > .k-filter-menu > .k-textbox :input");
+                    EtiquetaInput.focus();
+                });
+            },
+            groupable: false,
+            reorderable: true,
+            selectable: "row",
+            scrollable: true,
+            resizable: true,
+            filterable: {
+                multi: true,
+                checkAll: true,
+                search: true,
+                messages: {
+                    clear: KendoMsjClear,
+                    filter: KendoMsjFilter,
+                    selectedItemsFormat: KendoMsjSelectedItemsFormat,
+                    checkAll: KendoMsjCheckAll,
+                    search: KendoMsjSearch
+                }
+            },
+            //groupable: {
+            //    info: true,
+            //    messages: {
+            //        empty: "<b style='font-style:italic';>Arrastre una cabecera aquí para agrupar su información por esa columna</b>"
+            //    }
+            //},
+            pageable: {
+                messages: {
+                    empty: KendoMsjEmpty,
+                    page: kendoMsjPage,
+                    of: KendoMsjOf,
+                    itemsPerPage: KendoMsjItemsPerPage,
+                    first: KendoMsjFirst,
+                    last: KendoMsjLast,
+                    next: KendoMsjNext,
+                    previous: KendoMsjPrevious,
+                    refresh: KendoMsjRefresh,
+                    morePages: KendoMsjMorePages,
+                    display: KendoMsjDisplay
+                },
+                refresh: false,
+                pageSizes: true,
+                pageSizes: [5, 10, 15],
+                /*para la cantidad de paginas se sugieren 5*/
+                buttonCount: 5,
+                /*Posicion de la pagina*/
+                pageSize: 5
+            },
+            //excel: { fileName: "Listado de Acta de Reunión.xlsx", filterable: true, allPages: true },
+            columns: [
+                //{
+                //    width: 60,
+                //    //command: {
+                //    //    template:
+                //    //        "<button class='btn-grid btn-xs BtnVerInfo' type='button' title='Ver datos'><i class='fa fa-lg fa-fw fas fa-eye'></i></button>"
+                //    //        //+ " " +"<button class='btn-grid btn-xs BtnAnular' type='button' title='Ver datos'><i class='fa fa-lg fa-fw fas fa-ban'></i></button>"
+                //    //},
+                //    attributes: { "class": "text-center" },
+                //    title: ""
+                //},
+                { field: "NroTicket", title: "Nro. Ticket", width: 100, attributes: { "class": "text-center" } },
+                { field: "StartDate", title: "Fecha Registro", width: 120, attributes: { "class": "text-center" } },
+                { field: "OperationName", title: "Operacion", width: 120, attributes: { "class": "text-center" } },
+                { field: "FullNameTicket", title: "Quien Llama", width: 170, attributes: { "class": "text-center" } },
+                { field: "ResponsibleNameTicket", title: "Responsable", width: 170, attributes: { "class": "text-center" } },
+                { field: "ReasonName", title: "Razón", width: 120, attributes: { "class": "text-center" } },
+                { field: "CriticalityName", title: "Criticidad", width: 120, attributes: { "class": "text-center" } },
+                { field: "LocationNameTicket", title: "Locación", hidden: true, width: 120, attributes: { "class": "text-center" } },
+                { field: "TitleDescription", title: "Titulo Detalle", width: 150, attributes: { "class": "text-center" } },
+                { field: "DetalleText", title: "Detalle Ticket",hidden: true, width: 150, attributes: { "class": "text-center" } }
+            ]
+
+            //dataBound: function () {
+
+            //    for (i = 0; i < $("#LstCotizacion").data("kendoGrid").dataSource._view.length; i++) {
+            //        var diasRestantes = $("#LstCotizacion").data("kendoGrid").tbody.children()[i].children[2].textContent;
+
+            //        if (diasRestantes < 11) {
+            //            $($("#LstCotizacion").data("kendoGrid").tbody.children()[i]).addClass('colorRojo');
+            //        }
+            //        else if (diasRestantes > 10 && diasRestantes < 21) {
+            //            $($("#LstCotizacion").data("kendoGrid").tbody.children()[i]).addClass('colorAmarillo');
+            //        }
+            //        else if (diasRestantes > 20) {
+            //            $($("#LstCotizacion").data("kendoGrid").tbody.children()[i]).addClass('colorVerde');
+            //        }
+            //        else {
+            //            $($("#LstCotizacion").data("kendoGrid").tbody.children()[i]).addClass('colorRojo');
+            //        }
+            //    }
+
+            //    var Grilla = this;
+            //    Grilla.tbody.find("tr[role='row']").each(function () {
+            //        var model = Grilla.dataItem(this);
+            //        if (model.QuotationStatus != "C") {
+            //            $(this).find("td > button.BtnVerInfo").remove();
+            //        }
+
+            //    });
+
+            //}
+        });
+
+
+    }
+
+     function GrillaListadoActivity(ValorEstado, FiltroFecha) {
+
+        var dataSource = new kendo.data.DataSource({
+            transport: {
+                read: function (options) {
+                    $.ajax({
+                        type: "GET",
+                        url: tRutaServidor + "/ReportListTicketActivity/ListarActivity", /* es importante poner los .. delante */
+                        dataType: "json",
+                        data: {
+                            StatusBar: ValorEstado,
+                            FilterDate : FiltroFecha
+                        },
+                        /*async: false,*/
+                        success: function (resultado) {
+                           /*exitosamente*/
+                            //let html;
+
+                            if (resultado.length > 0) {
+                                /* proceso exitoso con datos*/
+                                if (resultado[0].ValorConsulta == "1") {
+
+                                    //html = resultado.length;
+
+                                    //document.getElementById("txtCantidadTicketAltaCaducidad").innerHTML = html;
+
+                                    $("#LstTicketXActivity").removeClass("hidden");
+                                    $("#imgCargaLstTicketXActivity").addClass("hidden");
+                                    $("#msjErrorLstTicketXActivity").addClass("hidden");
+                                    $("#msjVacioLstTicketXActivity").addClass("hidden");
+                                    $("#msjErrorListarLstTicketXActivity").addClass("hidden");
+                                    $("#msjSuperaLimiteLstTicketXActivity").addClass("hidden");
+
+                                    //$("#btnBuscar").prop('disabled', false);
+                                    //$("#BtnExportarExcel").prop('disabled', false);
+
+                                } else if (resultado[0].ValorConsulta == "-1") {
+
+                                    $("#LstTicketXActivity").addClass("hidden");
+                                    $("#imgCargaLstTicketXActivity").addClass("hidden");
+                                    $("#msjErrorLstTicketXActivity").addClass("hidden");
+                                    $("#msjVacioLstTicketXActivity").addClass("hidden");
+                                    $("#msjErrorListarLstTicketXActivity").addClass("hidden");
+                                    $("#msjSuperaLimiteLstTicketXActivity").removeClass("hidden");
+
+                                    //$("#btnBuscar").prop('disabled', false);
+                                    //$("#BtnExportarExcel").prop('disabled', true);
+                                }
+                                else {
+                                    /* proceso fallido catch listado datos*/
+                                    $("#LstTicketXActivity").addClass("hidden");
+                                    $("#imgCargaLstTicketXActivity").addClass("hidden");
+                                    $("#msjErrorLstTicketXActivity").addClass("hidden");
+                                    $("#msjVacioLstTicketXActivity").addClass("hidden");
+                                    $("#msjErrorListarLstTicketXActivity").removeClass("hidden");
+                                    $("#msjSuperaLimiteLstTicketXActivity").addClass("hidden");
+
+                                    //$("#btnBuscar").prop('disabled', true);
+                                    //$("#BtnExportarExcel").prop('disabled', true);
+                                    console.log(resultado);
+                                }
+
+                            } else {
+
+                                //html = 0;
+
+                                //document.getElementById("txtCantidadTicketAltaCaducidad").innerHTML = html;
+
+                                $("#LstTicketXActivity").addClass("hidden");
+                                $("#imgCargaLstTicketXActivity").addClass("hidden");
+                                $("#msjErrorLstTicketXActivity").addClass("hidden");
+                                $("#msjVacioLstTicketXActivity").removeClass("hidden");
+                                $("#msjErrorListarLstTicketXActivity").addClass("hidden");
+                                $("#msjSuperaLimiteLstTicketXActivity").addClass("hidden");
+
+                                //$("#btnBuscar").prop('disabled', false);
+                                //$("#BtnExportarExcel").prop('disabled', true);
+                            }
+
+                            options.success(resultado);
+                            var grid = $("#LstTicketXActivity").data("kendoGrid");
+                            if (grid.dataSource.total() > 0) {
+                                grid.setDataSource(dataSource);
+                            }
+
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            /*fallo al llamar a la funcion ajax*/
+                            $("#LstTicketXActivity").addClass("hidden");
+                            $("#imgCargaLstTicketXActivity").addClass("hidden");
+                            $("#msjErrorLstTicketXActivity").removeClass("hidden");
+                            $("#msjVacioLstTicketXActivity").addClass("hidden");
+                            $("#msjErrorListarLstTicketXActivity").addClass("hidden");
+                            $("#msjSuperaLimiteLstTicketXActivity").addClass("hidden");
+
+                            //$("#btnBuscar").prop('disabled', true);
+                            //$("#BtnExportarExcel").prop('disabled', true);
+                            console.log("ERROR AJAX : " + ajaxOptions);
+                            console.log("ERROR AJAX : " + thrownError);
+                            console.log(xhr.responseText);
+                            console.log(xhr);
+
+                        }
+                    });
+                },
+                parameterMap: function (data, operation) {
+                    if (operation !== "read" && data.models) {
+                        return JSON.stringify({ JSONparam: data.models });
+                    }
+                }
+            },
+            error: function (e) {
+                alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+            },
+            batch: false,
+            pageSize: PaginationKendoGrid,
+            schema: {
+                model: {
+                    fields: {
+                         IdActivity: { type: "number" },
+                         ActivityText: { type: "string" },
+                         FullNameActivity: { type: "string" },
+                         DescripcionActivity: { type: "string" },
+                         FechaCierre: { type: "string" },
+                         Estado: { type: "string" },
+                         PercentageNumber: { type: "string" },
+                    }
+                }
+            },
+            //aggregate: [
+            //    {
+            //        field: "TicketNumber",
+            //        aggregate: "count"
+            //    },
+            //    {
+            //        field: "FuelQuantity",
+            //        aggregate: "sum"
+            //    }
+            //]
+        });
+
+        $("#LstTicketXActivity").kendoGrid({
+            dataSource: dataSource,
+            sortable: true,
+            pageable: true,
+            columnMenu: true,
+            columnMenu: {
+                sortable: true,
+                filterable: true,
+                columns: true,
+                messages: {
+                    columns: KendoMsjColumnMenuColumns,
+                    filter: KendoMsjColumnMenuFilter,
+                    sortAscending: KendoMsjColumnMenuSortAscending,
+                    sortDescending: KendoMsjColumnMenuSortDescending,
+                    settings: KendoMsjSettings
+                }
+            },
+            columnMenuInit: function (e) {
+                var menu = e.container.find(".k-menu").data("kendoMenu");
+                menu.bind("select", function (e) {
+                    var EtiquetaInput = $(".k-animation-container > .k-menu-group > .k-item > .k-content > .k-filter-menu > .k-textbox :input");
+                    EtiquetaInput.focus();
+                });
+            },
+            groupable: false,
+            reorderable: true,
+            selectable: "row",
+            scrollable: true,
+            resizable: true,
+            filterable: {
+                multi: true,
+                checkAll: true,
+                search: true,
+                messages: {
+                    clear: KendoMsjClear,
+                    filter: KendoMsjFilter,
+                    selectedItemsFormat: KendoMsjSelectedItemsFormat,
+                    checkAll: KendoMsjCheckAll,
+                    search: KendoMsjSearch
+                }
+            },
+            //groupable: {
+            //    info: true,
+            //    messages: {
+            //        empty: "<b style='font-style:italic';>Arrastre una cabecera aquí para agrupar su información por esa columna</b>"
+            //    }
+            //},
+            pageable: {
+                messages: {
+                    empty: KendoMsjEmpty,
+                    page: kendoMsjPage,
+                    of: KendoMsjOf,
+                    itemsPerPage: KendoMsjItemsPerPage,
+                    first: KendoMsjFirst,
+                    last: KendoMsjLast,
+                    next: KendoMsjNext,
+                    previous: KendoMsjPrevious,
+                    refresh: KendoMsjRefresh,
+                    morePages: KendoMsjMorePages,
+                    display: KendoMsjDisplay
+                },
+                refresh: false,
+                pageSizes: true,
+                pageSizes: [5, 10, 15],
+                /*para la cantidad de paginas se sugieren 5*/
+                buttonCount: 5,
+                /*Posicion de la pagina*/
+                pageSize: 5
+            },
+            //excel: { fileName: "Listado de Acta de Reunión.xlsx", filterable: true, allPages: true },
+            columns: [
+                //{
+                //    width: 60,
+                //    //command: {
+                //    //    template:
+                //    //        "<button class='btn-grid btn-xs BtnVerInfo' type='button' title='Ver datos'><i class='fa fa-lg fa-fw fas fa-eye'></i></button>"
+                //    //        //+ " " +"<button class='btn-grid btn-xs BtnAnular' type='button' title='Ver datos'><i class='fa fa-lg fa-fw fas fa-ban'></i></button>"
+                //    //},
+                //    attributes: { "class": "text-center" },
+                //    title: ""
+                //},
+                { field: "ActivityText", title: "Nombre Actividad", width: 120, attributes: { "class": "text-center" } },
+                { field: "FullNameActivity", title: "Responsable", width: 120, attributes: { "class": "text-center" } },
+                //{ field: "DescripcionActivity", title: "Descripcion", width: 120, attributes: { "class": "text-center" } },
+                { field: "FechaCierre", title: "Fecha Cierre", width: 120, attributes: { "class": "text-center" } },
+                //{ field: "Estado", title: "Estado", width: 120, attributes: { "class": "text-center" } },
+                { field: "PercentageNumber", title: "Porcentaje", width: 120, attributes: { "class": "text-center" } }
+            ]
+
+            //dataBound: function () {
+
+            //    for (i = 0; i < $("#LstCotizacion").data("kendoGrid").dataSource._view.length; i++) {
+            //        var diasRestantes = $("#LstCotizacion").data("kendoGrid").tbody.children()[i].children[2].textContent;
+
+            //        if (diasRestantes < 11) {
+            //            $($("#LstCotizacion").data("kendoGrid").tbody.children()[i]).addClass('colorRojo');
+            //        }
+            //        else if (diasRestantes > 10 && diasRestantes < 21) {
+            //            $($("#LstCotizacion").data("kendoGrid").tbody.children()[i]).addClass('colorAmarillo');
+            //        }
+            //        else if (diasRestantes > 20) {
+            //            $($("#LstCotizacion").data("kendoGrid").tbody.children()[i]).addClass('colorVerde');
+            //        }
+            //        else {
+            //            $($("#LstCotizacion").data("kendoGrid").tbody.children()[i]).addClass('colorRojo');
+            //        }
+            //    }
+
+            //    var Grilla = this;
+            //    Grilla.tbody.find("tr[role='row']").each(function () {
+            //        var model = Grilla.dataItem(this);
+            //        if (model.QuotationStatus != "C") {
+            //            $(this).find("td > button.BtnVerInfo").remove();
+            //        }
+
+            //    });
+
+            //}
+        });
+
+
+    }
+     
+    /* ------------------- EVENTOS -----------------*/
+     $("#btnExGrafica1").click(function () {
+        var documento = new jsPDF('l', 'mm', [heightG1, widthG1]);
+
+         if (Valor == 1) {
+             documento.addImage(ImageURI1, 10, 10);
+             documento.save('Grafico de Tickets.pdf');
+         } else {
+             documento.addImage(ImageURI2, 10, 10);
+             documento.save('Grafico de Actividades.pdf');
+         }
+         
+     });
+     
+     $("#btnBuscar").click(function () {
+
+            var $registerForm = $("#FrmFiltrosTicketxActivity").validate({
+                rules: {
+                    txtFechaInicioTicket: {
+                        required: true,
+                        regx: ReFecha
+                    },
+                    txtFechaFinalTicket: {
+                        required: true,
+                        regx: ReFecha
+                    }
+                },
+                messages: {
+                    txtFechaInicioTicket: {
+                        required: tCampoRequerido,
+                        regx: tFormatoFechaNoValido
+                    },
+                    txtFechaFinalTicket: {
+                        required: tCampoRequerido,
+                        regx: tFormatoFechaNoValido
+                    }
+                },
+
+                submitHandler: function (form) {
+
+                    if ($("#txtFechaInicioTicket").val() > $("#txtFechaFinalTicket").val()) {
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"]("La fecha de inicio no puede ser mayor a la fecha final", tTituloError); $toastlast = $toast;
+                        return;
+                    }
+
+                    $("#grGraficaTicketAndActivity").addClass("hidden");
+                    $("#imgCargaGraficaTicketAndActivity").removeClass("hidden");
+                    $("#msjErrorGraficaTicketAndActivity").addClass("hidden");
+                    $("#msjVacioGraficaTicketAndActivity").addClass("hidden");
+                    $("#msjErrorListarGraficaTicketAndActivity").addClass("hidden");
+                    $("#msjSuperaLimiteGraficaTicketAndActivity").addClass("hidden");
+
+                    if (Valor == 1) {
+
+                        listadoTickerPorFecha("1");
+
+                    } else {
+
+                        listadoActivityPorFecha("1");
+
+                    }
+
+                },
+                errorPlacement: function (error, element) {
+                    error.insertAfter(element.parent());
+                }
+            });
+     });
+
+     $('input[type=radio][name=rdoRadioTicketxActivity]').change(function (e) {
+
+          if (e.target.id == 'rdoTicket') {
+
+              Valor = 1;
+
+          } else if (e.target.id == 'rdoActivity') {
+
+              Valor = 2;
+
+          }
+
+     });
+
+     $.validator.addMethod("regx", function (value, element, regexpr) {
+            return regexpr.test(value);
+        }, "");
+
+     FormatoFechas();
+     listadoTickerPorFecha("1");
+
+</script>

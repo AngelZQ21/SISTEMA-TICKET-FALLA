@@ -1,0 +1,2438 @@
+﻿
+<script src="~/Scripts/util/jsUtilCambioGuardia.js"></script>
+<link href="~/Content/plugin/datapicker/datepicker3.css" rel="stylesheet" />
+<link href="~/Content/plugin/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet" />
+<script src="~/Scripts/plugin/datapicker/bootstrap-datepicker.js"></script>
+
+<div id="content">
+
+    <div class="well" style="padding:0px 30px 10px 30px; background-color:white;">
+        <div class="row wrapper">
+            <div style="width: 100%; display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:space-between; text-align:center; align-items:center;">
+                <h2><i class="fa fa-edit fa-fw"></i> Personas</h2>
+                <button class="btn btn-primary" type="button" id="btnNuevo" disabled title="Registra una nueva Persona"><i class="fa fa-plus"></i> Nueva Persona</button>
+            </div>
+            <p>[Listado de Personas]</p>
+        </div>
+
+        <div class="row" style="margin-top: 10px;">
+
+            <section class="col-xs-12 col-sm-5 col-md-5 col-lg-5" style="margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                <div class="input-group">
+                    <input class="form-control" id="txtBuscarValor" type="text" maxlength="150" placeholder="Buscar...">
+                    <div class="input-group-btn">
+                        <button class="btn btn-primary" type="button" id="btnBuscar" disabled><i class="icon-append fa fa-search"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="col-xs-12 col-sm-5 col-md-4 col-lg-4" style="margin-left:0px; padding-left:20px; margin-right:0px; padding-right:0px; padding-top:5px;">
+                <div class="input-group">
+                    <section class="radio radio-info radio-inline">
+                        <input tabindex="7" type="radio" name="RrbTipo" id="RrbActivos" disabled checked="checked">
+                        <label for="RrbActivos"> Activos </label>
+                    </section>
+                    <section class="radio radio-info radio-inline">
+                        <input tabindex="7" type="radio" name="RrbTipo" id="RrbInactivos" disabled>
+                        <label for="RrbInactivos"> Inactivos </label>
+                    </section>
+                </div>
+            </section>
+
+            <section class="col-xs-12 col-sm-2 col-md-3 col-lg-3" style="margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                <button class="btn btn-success pull-right" type="button" id="BtnExportarExcel" disabled title="Exportar listado a Excel"><i class="fa fa-file-excel-o"></i> Excel</button>
+            </section>
+        </div>
+    </div>
+
+
+    <div id="widget-grid">
+
+        <div class="row">
+            <article class="col-xs-12">
+
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-persona" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-list"></i> </span>
+                        <h2>Listado de Personas </h2>
+                    </header>
+                    <div style="border:none;">
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                        </div>
+                        <div class="widget-body no-padding">
+
+                            <div id="GrillaPersona" class="hidden"></div>
+                            <div class="spiner-example" id="ImagenCarga">
+                                @Html.Partial("../MensajesParciales/_MensajeCargando")
+                            </div>
+                            <div class="hidden" id="MensajeError" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeError")
+                            </div>
+                            <div class="hidden" id="MensajeVacio" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeVacio")
+                            </div>
+                            <div class="hidden" id="MensajeErrorListar" style="margin:30px;">
+                                @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+</div>
+
+
+<div id="ModalPersona" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <div class="modal-dialog" style="width:80%;">
+        <div class="modal-content animated">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Datos de Persona</h4>
+            </div>
+            <div class="modal-body clearfix" style="padding-left:10px; padding-right:10px;">
+
+                <form id="FrmPerson" onsubmit="return false">
+                    <div class="row">
+                        <section class="col-xs-12 col-md-3">
+                            <label style="color: #2F4050">Tipo de Documento: <strong class="CampoRequerido">*</strong></label>
+                            <div class="input-group" style="width: 100%;">
+                                <input id="pComboTpDocumento" class="" style="width: 100%;" />
+                            </div>
+                        </section>
+
+                        @*<section class="col-xs-12 col-md-3">
+                                <label style="color: #2F4050">Tipo Documentos <strong class="CampoRequerido">*</strong></label>
+                                <div class="input-group" style="width:100%;">
+                                    <select id="pComboTpDocumento" style="width:100%;" class="ui-selectable-helper" />
+                                </div>
+                            </section>*@
+                        <section class="col-xs-12 col-md-3">
+                            <label style="color: #2F4050">Nro. de Documento: <strong class="CampoRequerido">*</strong></label>
+                            <div class="input-group">
+                                <input type="text" tabindex="6" class="form-control" name="ptxtDocument" id="ptxtDocument" maxlength="20" style="padding-left:5px;" />
+                                <span class="input-group-addon"><i class="icon-prev fa fa-list-alt"></i></span>
+                            </div>
+                        </section>
+                        <section class="col-xs-12 col-md-3">
+                            <label style="color: #2F4050">Nombres: <strong class="CampoRequerido">*</strong></label>
+                            <div class="input-group">
+                                <input type="text" tabindex="7" class="form-control" name="ptxtNombres" id="ptxtNombres" maxlength="25" style="padding-left:5px;" />
+                                <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                            </div>
+                        </section>
+
+                        <section class="col-xs-12 col-md-3">
+                            <label style="color: #2F4050">Rol: <strong class="CampoRequerido">*</strong></label>
+                            <div class="input-group" style="width: 100%;">
+                                <input tabindex="8" id="pComboCargo" class="" style="width: 100%;" />
+                            </div>
+                        </section>
+                    </div>
+                    <div class="row">
+                        <section class="col-xs-12 col-md-4">
+                            <label style="color: #2F4050">Apellido Paterno: <strong class="CampoRequerido">*</strong></label>
+                            <div class="input-group">
+                                <input type="text" tabindex="9" class="form-control" name="ptxtApePaterno" id="ptxtApePaterno" maxlength="25" style="padding-left:5px;" />
+                                <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                            </div>
+                        </section>
+                        <section class="col-xs-12 col-md-4">
+                            <label style="color: #2F4050">Apellido Materno: <strong class="CampoRequerido">*</strong></label>
+                            <div class="input-group">
+                                <input type="text" tabindex="10" class="form-control" name="ptxtApeMaterno" id="ptxtApeMaterno" maxlength="25" style="padding-left:5px;" />
+                                <span class="input-group-addon"><i class="icon-prev fa fa-edit"></i></span>
+                            </div>
+                        </section>
+                        @*<section class="col-xs-12 col-md-4">
+                                <label style="color: #2F4050">Fotocheck: <strong class="CampoRequerido">*</strong></label>
+                                <div class="input-group">
+                                    <input type="text" tabindex="11" class="form-control" name="ptxtFotocheck" id="ptxtFotocheck" maxlength="11" style="padding-left:5px;" />
+                                    <span class="input-group-addon"><i class="icon-prev fa fa-credit-card"></i></span>
+                                </div>
+                            </section>*@
+                    </div>
+                    <div class="row">
+                        <section class="col-xs-12 col-md-9">
+                            <label style="color: #2F4050">Correo: </label>
+                            <div class="input-group">
+                                <input type="text" tabindex="12" class="form-control" name="ptxtCorreo" id="ptxtCorreo" maxlength="50" style="padding-left:5px;" />
+                                <span class="input-group-addon"><i class="icon-prev fa fa-list-alt"></i></span>
+                            </div>
+                        </section>
+                        <section class="col-xs-12 col-md-3">
+                            <label style="color: #2F4050">Fecha de nacimiento: </label>
+                            <div class="input-group date dtpickerFI" style="width:100%;">
+
+                                <input type="text" tabindex="13" class="form-control hasDatepicker" id="ptxtFechaNacimiento" name="ptxtFechaNacimiento" value="" data-dateformat="dd/mm/yy">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="row">
+                        <section class="col-xs-12 col-md-9">
+                            <label style="color: #2F4050">Dirección: </label>
+                            <div class="input-group">
+                                <input type="text" tabindex="14" class="form-control" name="ptxtDireccion" id="ptxtDireccion" maxlength="100" style="padding-left:5px;" />
+                                <span class="input-group-addon"><i class="icon-prev fa fa-home"></i></span>
+                            </div>
+                        </section>
+                        <section class="col-xs-12 col-md-3">
+                            <label style="color: #2F4050">Teléfono/Celular: </label>
+                            <div class="input-group">
+                                <input type="text" tabindex="15" class="form-control" name="ptxtTelefono" id="ptxtTelefono" maxlength="9" style="padding-left:5px;" />
+                                <span class="input-group-addon"><i class="icon-prev fa fa-phone"></i></span>
+                            </div>
+                        </section>
+                    </div>
+                    @*<section class="col-xs-12 col-md-3">
+                            <label style="color: #2F4050">Cargo </label>
+                            <div class="input-group" style="width:100%;">
+                                <select id="pComboCargo" style="width:100%;" class="ui-selectable-helper" />
+                            </div>
+                        </section>*@
+                    <div class="col-xs-12 col-lg-12" hidden="hidden">
+                        <fieldset>
+                            <legend><label style="color: #2F4050; font-size: 13px;">Tipo</label></legend>
+                        </fieldset>
+                    </div>
+
+                    <div class="col-xs-12 col-lg-12" hidden="hidden">
+                        <div style="padding-left:30px;">
+                            <div class="checkbox checkbox-success checkbox-inline">
+                                <input type="checkbox" id="ckboxUsuario">
+                                <label for="inlineCheckbox3"> Usuario </label>
+                            </div>
+                            <div class="checkbox checkbox-success checkbox-inline ">
+                                <input type="checkbox" id="ckboxOperador">
+                                <label for="inlineCheckbox1"> Operador </label>
+                            </div>
+                            <div class="checkbox checkbox-success checkbox-inline">
+                                <input type="checkbox" id="ckboxConductor">
+                                <label for="inlineCheckbox2"> Conductor </label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <section class="col-xs-12" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:space-between">
+                        <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-start">
+                            @Html.Partial("../MensajesParciales/_MensajeLeyendaCampoRequerido")
+                        </div>
+                        <div style="margin-top:10px; display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-end">
+                            <button style="margin:3px;" tabindex="17" class="btn btn-danger" type="button" id="pbtnCancelar"><i class="fa fa-times-circle"></i> Cancelar</button>
+                            <button style="margin:3px;" tabindex="16" class="btn btn-primary" type="submit" id="pbtnGrabar"><i class="fa fa-save"></i> Grabar</button>
+                        </div>
+                    </section>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Usuario -Conductor-->
+<div id="ModalUsuarioConductor" class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:80%;">
+        <div class="modal-content animated">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Registro de <span class="tituloModalUsuarioConductor"></span></h4>
+            </div>
+            <div class="modal-body clearfix" style="padding-left:10px; padding-right:10px;">
+
+                <div class="row">
+                    <article class="col-xs-12">
+                        <section>
+                            <section class="col-xs-12" style="margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                                <p style="color:red; font-size:16px;"><span style="font-weight:bold">(*) </span>El siguiente <span class="tituloModalUsuarioConductor"></span> está relacionado a la persona: <span style="font-weight:bold" id="txtUsuarioConductor"></span></p>
+                                @*<p style="color: red; font-size: 16px;">Favor de inhabilitar al <span class="tituloModalUsuarioConductor"></span> asociado a esta persona para poder desactivar este registro.</p>*@
+                                <p id="msjInhabilitarRegistros"></p>
+                            </section>
+                        </section>
+                    </article>
+                </div>
+                <!--GRILLA CONDUCTOR-->
+                @*<section class="col-xs-12 grConductor hidden" style="margin-bottom:10px;">
+                        <button class="btn btn-success pull-right" type="button" id="BtnExportarExcelConductor" title="Exportar listado a Excel"><i class="fa fa-file-excel-o"></i> Excel</button>
+                        <a target="_blank" href="@Url.Action("VDriver", "Driver")" class="btn btn-info pull-right" style="margin-right:10px;" type="button" title="Abrir una pestaña del Mantenimiento Conductor"><i class="fa fa-forward"></i> Ir a Conductor</a>
+                    </section>
+                    <div class="row grConductor hidden">
+                        <article class="col-xs-12">
+                            <div class="jarviswidget jarviswidget-color-blue" id="wid-id-compania" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050">
+                                <header>
+                                    <span class="widget-icon"> <i class="fa fa-list"></i> </span>
+                                    <h2>Conductor</h2>
+                                </header>
+                                <div style="border:none;">
+                                    <div class="jarviswidget-editbox">
+
+                                    </div>
+                                    <div class="widget-body no-padding">
+                                        <div id="GrillaConductor" class="hidden"></div>
+                                        <div class="spiner-example" id="ImagenCargaConductor">
+                                            @Html.Partial("../MensajesParciales/_MensajeCargando")
+                                        </div>
+                                        <div class="hidden" id="MensajeErrorConductor" style="margin:30px;">
+                                            @Html.Partial("../MensajesParciales/_MensajeError")
+                                        </div>
+                                        <div class="hidden" id="MensajeVacioConductor" style="margin:30px;">
+                                            @Html.Partial("../MensajesParciales/_MensajeVacio")
+                                        </div>
+                                        <div class="hidden" id="MensajeErrorListarConductor" style="margin:30px;">
+                                            @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>*@
+
+                <!--GRILLA USUARIO-->
+                <section class="col-xs-12 grUsuario hidden" style="margin-bottom:10px;">
+                    <button class="btn btn-success pull-right" type="button" id="BtnExportarExcelUsuario" title="Exportar listado a Excel"><i class="fa fa-file-excel-o"></i> Excel</button>
+                    <a target="_blank" href="@Url.Action("VUser", "User")" class="btn btn-info pull-right" style="margin-right:10px;" type="button" title="Abrir una pestaña del Mantenimiento Usuario"><i class="fa fa-forward"></i> Ir a Usuario</a>
+                </section>
+                <div class="row grUsuario hidden">
+                    <article class="col-xs-12">
+
+                        <div class="jarviswidget jarviswidget-color-blue" id="wid-id-compania" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050">
+                            <header>
+                                <span class="widget-icon"> <i class="fa fa-list"></i> </span>
+                                <h2>Listado de Usuario</h2>
+                            </header>
+                            <div style="border:none;">
+                                <div class="jarviswidget-editbox">
+                                    <!-- This area used as dropdown edit box -->
+                                </div>
+                                <div class="widget-body no-padding">
+                                    <div id="GrillaUsuario" class="hidden"></div>
+                                    <div class="spiner-example" id="ImagenCargaUsuario">
+                                        @Html.Partial("../MensajesParciales/_MensajeCargando")
+                                    </div>
+                                    <div class="hidden" id="MensajeErrorUsuario" style="margin:30px;">
+                                        @Html.Partial("../MensajesParciales/_MensajeError")
+                                    </div>
+                                    <div class="hidden" id="MensajeVacioUsuario" style="margin:30px;">
+                                        @Html.Partial("../MensajesParciales/_MensajeVacio")
+                                    </div>
+                                    <div class="hidden" id="MensajeErrorListarUsuario" style="margin:30px;">
+                                        @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <!--GRILLA OPERADOR-->
+                @*<section class="col-xs-12 grOperador hidden" style="margin-bottom:10px;">
+                        <button class="btn btn-success pull-right" type="button" id="BtnExportarExcelOperador" title="Exportar listado a Excel"><i class="fa fa-file-excel-o"></i> Excel</button>
+                        <a target="_blank" href="@Url.Action("VOperator", "Operator")" class="btn btn-info pull-right" style="margin-right:10px;" type="button" title="Abrir una pestaña del Mantenimiento Operador"><i class="fa fa-forward"></i> Ir a Operador</a>
+                    </section>
+                    <div class="row grOperador hidden">
+                        <article class="col-xs-12">
+
+                            <div class="jarviswidget jarviswidget-color-blue" id="wid-id-compania" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050">
+                                <header>
+                                    <span class="widget-icon"> <i class="fa fa-list"></i> </span>
+                                    <h2>Listado de Operador</h2>
+                                </header>
+                                <div style="border:none;">
+                                    <div class="jarviswidget-editbox">
+
+                                    </div>
+                                    <div class="widget-body no-padding">
+                                        <div id="GrillaOperador" class="hidden"></div>
+                                        <div class="spiner-example" id="ImagenCargaOperador">
+                                            @Html.Partial("../MensajesParciales/_MensajeCargando")
+                                        </div>
+                                        <div class="hidden" id="MensajeErrorOperador" style="margin:30px;">
+                                            @Html.Partial("../MensajesParciales/_MensajeError")
+                                        </div>
+                                        <div class="hidden" id="MensajeVacioOperador" style="margin:30px;">
+                                            @Html.Partial("../MensajesParciales/_MensajeVacio")
+                                        </div>
+                                        <div class="hidden" id="MensajeErrorListarOperador" style="margin:30px;">
+                                            @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>*@
+                <!--GRILLA VEHICULO-->
+                @*<section class="col-xs-12 grVehiculo hidden" style="margin-bottom:10px;">
+                        <button class="btn btn-success pull-right" type="button" id="BtnExportarExcelVehiculo" title="Exportar listado a Excel"><i class="fa fa-file-excel-o"></i> Excel</button>
+                    </section>
+                    <div class="row grVehiculo hidden">
+                        <article class="col-xs-12">
+
+                            <div class="jarviswidget jarviswidget-color-blue" id="wid-id-compania" data-widget-editbutton="false" data-widget-custombutton="false" style="border: 2px solid #2F4050">
+                                <header>
+                                    <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+                                    <h2>Listado Vehículos</h2>
+                                </header>
+                                <div style="border:none;">
+                                    <div class="jarviswidget-editbox">
+
+                                    </div>
+                                    <div class="widget-body no-padding">
+                                        <div id="GrillaVehiculo" class="hidden"></div>
+                                        <div class="spiner-example" id="ImagenCargaVehiculo">
+                                            @Html.Partial("../MensajesParciales/_MensajeCargando")
+                                        </div>
+                                        <div class="hidden" id="MensajeErrorVehiculo" style="margin:30px;">
+                                            @Html.Partial("../MensajesParciales/_MensajeError")
+                                        </div>
+                                        <div class="hidden" id="MensajeVacioVehiculo" style="margin:30px;">
+                                            @Html.Partial("../MensajesParciales/_MensajeVacio")
+                                        </div>
+                                        <div class="hidden" id="MensajeErrorListarVehiculo" style="margin:30px;">
+                                            @Html.Partial("../MensajesParciales/_MensajeErrorListar")
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>*@
+                <div class="row">
+                    <article class="col-xs-12">
+                        <button style="margin:3px;" tabindex="8" class="btn btn-danger pull-right" type="button" id="btnCancelarUsuarioConductor"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        function ValidarCaracter(cadenaAnalizar) {
+            var flag = false;
+            var CampoNoValidos = "<>";
+            for (var i = 0; i < cadenaAnalizar.length; i++) {
+
+                var caracter = cadenaAnalizar.charAt(i);
+                flag = false;
+                for (var y = 0; y < CampoNoValidos.length; y++) {
+                    var CaracterValido = CampoNoValidos.charAt(y);
+                    if (caracter == CaracterValido) {
+                        flag = true;
+                        break;
+                    }
+                }
+
+                if (flag == true) {
+                    flag = true;
+                    break;
+                }
+            }
+            return flag;
+        }
+
+        /*----------------------------------------------------------------------------------------------- VARIABLES*/
+        var idPerson = 0;
+        var idDocument = 0;
+        var idRole = 0;
+        var EtiquetaFocus = '';
+        var conductoresEncontrados = 0;
+        var operadoresEncontrado = 0;
+        var usuariosEncontrados = 0;
+
+        var EstadoRegistro = '1';
+        var htmlBody = "<button class='btn-grid btn-xs BtnEditarPerson' type='button' title='Editar'><i class='fa fa-lg fa-fw fa-edit'></i></button>" + " " +
+            "<button class='btn-grid btn-xs BtnEditarEstadoPerson' type='button' title='Activar / Desactivar'><i class='fa fa-lg fa-fw fa-check'></i></button>";
+
+        /*----------------------------------------------------------------------------------------------- GRILLAS*/
+        function GrillaListadoPerson() {
+
+            if ($.session.get("vbi_SearchValue") != null && $.session.get("vbi_RegistrationStatus") != null) {
+
+                var vbi_SearchValue = "";
+                var vbi_RegistrationStatus = "";
+                vbi_SearchValue = $.session.get("vbi_SearchValue");
+                vbi_RegistrationStatus = $.session.get("vbi_RegistrationStatus");
+
+                $("#txtBuscarValor").val(vbi_SearchValue);
+
+                if (vbi_RegistrationStatus == 'A') {
+                    EstadoRegistro = 1;
+                    $('#RrbActivos').prop('checked', true);
+                } else if (vbi_RegistrationStatus == 'I') {
+                    $('#RrbInactivos').prop('checked', true);
+                    EstadoRegistro = 2;
+                }
+
+                $.session.remove("vbi_SearchValue");
+                $.session.remove("vbi_RegistrationStatus");
+            }
+
+            var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: function (options) {
+                        $.ajax({
+                            type: "GET", /*Puede ser post*/
+                            url: tRutaServidor + "/Person/ListarPersona", /* es importante poner los .. delante*/
+                            contentType: "application/json; charset=utf-8",
+                            data: "valorBusqueda=" + $("#txtBuscarValor").val().trim() + "&valorConsulta=" + EstadoRegistro,
+                            dataType: "json",
+                            /*async: false,*/
+                            success: function (resultado) {
+
+                                /*exitosamente*/
+
+                                if (resultado.length > 0) {
+                                    /* proceso exitoso con datos*/
+                                    if (resultado[0].ValorConsulta == "1") {
+                                        $("#ImagenCarga").addClass("hidden");
+                                        $("#GrillaPersona").removeClass("hidden");
+                                        $("#MensajeError").addClass("hidden");
+                                        $("#MensajeErrorListar").addClass("hidden");
+                                        $("#MensajeVacio").addClass("hidden");
+
+                                        $("#BtnExportarExcel").prop('disabled', false);
+                                        $("#btnBuscar").prop('disabled', false);
+                                        $("#btnNuevo").prop('disabled', false);
+                                        $("#RrbActivos").prop('disabled', false);
+                                        $("#RrbInactivos").prop('disabled', false);
+
+                                    } else {
+                                        /* proceso fallido catch listado datos*/
+                                        $("#ImagenCarga").addClass("hidden");
+                                        $("#GrillaPersona").addClass("hidden");
+                                        $("#MensajeError").addClass("hidden");
+                                        $("#MensajeErrorListar").removeClass("hidden");
+                                        $("#MensajeVacio").addClass("hidden");
+
+                                        $("#BtnExportarExcel").prop('disabled', true);
+                                        $("#btnBuscar").prop('disabled', true);
+                                        $("#btnNuevo").prop('disabled', true);
+                                        $("#RrbActivos").prop('disabled', true);
+                                        $("#RrbInactivos").prop('disabled', true);
+
+                                        console.log(resultado);
+                                    }
+
+                                } else {
+                                    $("#ImagenCarga").addClass("hidden");
+                                    $("#GrillaPersona").addClass("hidden");
+                                    $("#MensajeError").addClass("hidden");
+                                    $("#MensajeVacio").removeClass("hidden");
+                                    $("#MensajeErrorListar").addClass("hidden");
+
+                                    $("#btnBuscar").prop('disabled', false);
+                                    $("#btnNuevo").prop('disabled', false);
+                                    $("#BtnExportarExcel").prop('disabled', true);
+                                    $("#RrbActivos").prop('disabled', false);
+                                    $("#RrbInactivos").prop('disabled', false);
+                                }
+                                options.success(resultado);
+                                var grid = $("#GrillaPersona").data("kendoGrid");
+                                if (grid.dataSource.total() > 0) {
+                                    grid.setDataSource(dataSource);
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                /*fallo al llamar a la funcion ajax*/
+                                $("#ImagenCarga").addClass("hidden");
+                                $("#GrillaPersona").addClass("hidden");
+                                $("#MensajeError").removeClass("hidden");
+                                $("#MensajeVacio").addClass("hidden");
+                                $("#MensajeErrorListar").addClass("hidden");
+
+                                $("#BtnExportarExcel").prop('disabled', true);
+                                $("#btnBuscar").prop('disabled', true);
+                                $("#btnNuevo").prop('disabled', true);
+                                $("#RrbActivos").prop('disabled', true);
+                                $("#RrbInactivos").prop('disabled', true);
+
+                                console.log("ERROR AJAX : " + ajaxOptions);
+                                console.log("ERROR AJAX : " + thrownError);
+                                console.log(xhr.responseText);
+                                console.log(xhr);
+
+                            }
+                        });
+                    },
+                    parameterMap: function (data, operation) {
+                        if (operation !== "read" && data.models) {
+                            return JSON.stringify({ JSONparam: data.models });
+                        }
+                    }
+                },
+                error: function (e) {
+                    alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+                },
+                batch: false,
+                pageSize: PaginationKendoGrid,
+                schema: {
+                    model: {
+                        fields: {
+                            IdPerson: { type: "number" },
+                            IdRole: { type: "number" },
+                            DocumentId: { type: "string" },
+                            DocumentNumber: { type: "string" },
+                            PersonName: { type: "string" },
+                            FirstLastName: { type: "string" },
+                            SecondLastName: { type: "string" },
+                            PersonMainAddress: { type: "string" },
+                            PersonPhone: { type: "string" },
+                            Birthdate: { type: "string" },
+                            PersonMail: { type: "string" },
+                            Photocheck: { type: "string" },
+                            UserStatus: { type: "string" },
+                            OperatorStatus: { type: "string" },
+                            DriverStatus: { type: "string" },
+                            RoleName: { type: "string" },
+                            RegistrationStatus: { type: "string" },
+                            RegistrationStatusDesc: { type: "string" },
+                            UpdateDate: { type: "date" }, //FECHA ACTUALIZACION
+                            UserDesc: { type: "string" }, //USUARIO ACTUALIZACION
+                            RegistrationDate: { type: "date" }, //FECHA REGISTRO
+                            UserRegistrationDesc: { type: "string" } //USUARIO REGISTRO
+                        }
+                    }
+                }
+            });
+
+            $("#GrillaPersona").kendoGrid({
+                dataSource: dataSource,
+                sortable: true,
+                pageable: true,
+                columnMenu: true,
+                columnMenu: {
+                    columns: true,
+                    filterable: true,
+                    sortable: true,
+                    messages: {
+                        columns: KendoMsjColumnMenuColumns,
+                        filter: KendoMsjColumnMenuFilter,
+                        sortAscending: KendoMsjColumnMenuSortAscending,
+                        sortDescending: KendoMsjColumnMenuSortDescending,
+                        settings: KendoMsjSettings
+                    }
+                },
+                columnMenuInit: function (e) {
+                    var menu = e.container.find(".k-menu").data("kendoMenu");
+                    menu.bind("select", function (e) {
+                        var EtiquetaInput = $(".k-animation-container > .k-menu-group > .k-item > .k-content > .k-filter-menu > .k-textbox :input");
+                        EtiquetaInput.focus();
+                    });
+                },
+                groupable: false,
+                reorderable: true,
+                selectable: "row",
+                scrollable: true,
+                resizable: true,
+                filterable: {
+                    multi: true,
+                    checkAll: true,
+                    search: true,
+                    messages: {
+                        clear: KendoMsjClear,
+                        filter: KendoMsjFilter,
+                        selectedItemsFormat: KendoMsjSelectedItemsFormat,
+                        checkAll: KendoMsjCheckAll,
+                        search: KendoMsjSearch
+                    }
+                },
+                pageable: {
+                    refresh: false,
+                    pageSize: 10,
+                    pageSizes: true,
+                    pageSizes: [5, 10, 15],
+                    buttonCount: 5,
+                    messages: {
+                        empty: KendoMsjEmpty,
+                        page: kendoMsjPage,
+                        of: KendoMsjOf,
+                        itemsPerPage: KendoMsjItemsPerPage,
+                        first: KendoMsjFirst,
+                        last: KendoMsjLast,
+                        next: KendoMsjNext,
+                        previous: KendoMsjPrevious,
+                        refresh: KendoMsjRefresh,
+                        morePages: KendoMsjMorePages,
+                        display: KendoMsjDisplay
+                    }
+                },
+                excel: { fileName: "Listado de Personas.xlsx", filterable: true, allPages: true },
+                columns: [
+                    {
+                        width: 130,
+                        command: {
+                            template: htmlBody,
+                        },
+                        attributes: { "class": "text-center" },
+                        title: ""
+                    },
+                    //{ field: "IdPerson", title: "Id", width: 120, hidden: true, attributes: { "class": "text-center" } },
+                    //{ field: "IdRole", title: "IdPerson", width: 120, hidden: true, attributes: { "class": "text-center" } },
+                    //{ field: "DocumentId", title: "DocumentId", width: 120, hidden: true, attributes: { "class": "text-center" } },
+                    { field: "FirstLastName", title: "Apellido Paterno", width: 300, attributes: { "class": "text-center" } },
+                    { field: "SecondLastName", title: "Apellido Materno", width: 300, attributes: { "class": "text-center" } },
+                    { field: "PersonName", title: "Nombres", width: 250, attributes: { "class": "text-center" } },
+                    { field: "DocumentNumber", title: "Nro. de Documento", width: 180, attributes: { "class": "text-center" } },
+                    { field: "PersonMainAddress", title: "Dirección", width: 300, hidden: true, attributes: { "class": "text-center" } },
+                    { field: "PersonPhone", title: "Teléfono", width: 300, hidden: true, attributes: { "class": "text-center" } },
+                    { field: "Birthdate", title: "Fecha de Nacimiento", width: 300, hidden: true, attributes: { "class": "text-center" } },
+                    { field: "PersonMail", title: "E-mail", width: 300, hidden: true, attributes: { "class": "text-center" } },
+                    { field: "Photocheck", title: "Fotocheck", width: 150, attributes: { "class": "text-center" } },
+                    { field: "Role.RoleName", title: "Rol", width: 150, attributes: { "class": "text-center" } },
+                    //{ field: "UserStatus", title: "UserStatus", width: 100, hidden: true, attributes: { "class": "text-left" } },
+                    //{ field: "OperatorStatus", title: "OperatorStatus", width: 150, hidden: true, attributes: { "class": "text-left" } },
+                    //{ field: "DriverStatus", title: "DriverStatus", width: 150, hidden: true, attributes: { "class": "text-left" } },
+                    //{ field: "RegistrationStatus", title: "RegistrationStatus", hidden: true, width: 150, attributes: { "class": "text-center" } },
+                    { field: "RegistrationStatusDesc", title: "Estado", width: 150, attributes: { "class": "text-center" } },
+                    { field: "UpdateDate", title: "Fecha de Actualización", hidden: true, width: 250, format: "{0:dd/MM/yyyy HH:mm:ss}", attributes: { "class": "text-center" } },
+                    { field: "UserDesc", title: "Usuario de Actualización", hidden: true, width: 250, attributes: { "class": "text-center" } },
+                    { field: "RegistrationDate", title: "Fecha de Registro", hidden: true, width: 250, format: "{0:dd/MM/yyyy HH:mm:ss}", attributes: { "class": "text-center" } },
+                    { field: "UserRegistrationDesc", title: "Usuario de Registro", hidden: true, width: 250, attributes: { "class": "text-center" } }
+                ],
+                dataBound: function () {
+
+                    var Grilla = this;
+                    Grilla.tbody.find("tr[role='row']").each(function () {
+                        var model = Grilla.dataItem(this);
+                        //console.log(model);
+                        if (model.RegistrationStatus == "I") {
+                            $(this).find("td > button.BtnEditarEstadoPerson > i").removeClass("fa-ban");
+                            $(this).find("td > button.BtnEditarEstadoPerson > i").addClass("fa-check");
+                            $(this).find("td > button.BtnEditarEstadoPerson").addClass("Color-gris");
+                            $(this).find("td > button.BtnEditarEstadoPerson").removeClass("bg-color-blueDark");
+
+                        } else if (model.RegistrationStatus == "A") {
+                            $(this).find("td > button.BtnEditarEstadoPerson > i").removeClass("fa-check");
+                            $(this).find("td > button.BtnEditarEstadoPerson > i").addClass("fa-ban");
+                        }
+                    });
+                }
+            });
+
+        }
+
+        function ValidarRelacionConductor() {
+            $("#CargaTemporal").removeClass("hidden");
+
+            $(".tituloModalUsuarioConductor").html("");
+            $("#msjInhabilitarRegistros").html("");
+            var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: function (options) {
+                        $.ajax({
+                            type: "GET", /*Puede ser post*/
+                            url: tRutaServidor + "/Person/ValidarRelacionPersonaConductor", /* es importante poner los .. delante*/
+                            contentType: "application/json; charset=utf-8",
+                            data: "idPerson=" + idPerson,
+                            //data: "valorBusqueda=" + $("#txtBuscarValorCC").val(),
+                            async: false,
+                            success: function (resultado) {
+                                //resultado.length = 0;
+                                //resultado[0].ValorConsulta = "0";
+                                /*exitosamente*/
+                                if (resultado.length > 0) {
+                                    /* proceso exitoso con datos*/
+                                    if (resultado[0].ValorConsulta == "1") {
+                                        $(".grConductor").removeClass("hidden");
+                                        conductoresEncontrados = 1;
+
+                                        $("#ImagenCargaConductor").addClass("hidden");
+                                        $("#GrillaConductor").removeClass("hidden");
+                                        $("#MensajeErrorConductor").addClass("hidden");
+                                        $("#MensajeErrorListarConductor").addClass("hidden");
+                                        $("#MensajeVacioConductor").addClass("hidden");
+
+                                        ValidarRelacionUsuario();
+                                    } else {
+                                        /* proceso fallido catch listado datos*/
+                                        $(".grConductor").removeClass("hidden");
+                                        conductoresEncontrados = 0;
+
+                                        toastr.options.timeOut = nTiempoMedio;
+                                        toastr.options.extendedTimeOut = nTiempoMedio;
+                                        /*success - info - warning - error*/
+                                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+
+                                        $("#ImagenCargaConductor").addClass("hidden");
+                                        $("#GrillaConductor").addClass("hidden");
+                                        $("#MensajeErrorConductor").addClass("hidden");
+                                        $("#MensajeErrorListarConductor").removeClass("hidden");
+                                        $("#MensajeVacioConductor").addClass("hidden");
+
+                                        console.log(tMensajeLogError + resultado[0].MensajeConsulta);
+                                        $("#CargaTemporal").addClass("hidden");
+                                    }
+
+                                } else {
+                                    conductoresEncontrados = 0;
+                                    $(".grConductor").addClass("hidden");
+
+                                    $("#ImagenCargaConductor").addClass("hidden");
+                                    $("#GrillaConductor").addClass("hidden");
+                                    $("#MensajeErrorConductor").addClass("hidden");
+                                    $("#MensajeErrorListarConductor").addClass("hidden");
+                                    $("#MensajeVacioConductor").removeClass("hidden");
+                                    ValidarRelacionUsuario();
+                                }
+                                options.success(resultado);
+                                var grid = $("#GrillaConductor").data("kendoGrid");
+                                if (grid.dataSource.total() > 0) {
+                                    grid.setDataSource(dataSource);
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+
+                                $("#CargaTemporal").addClass("hidden");
+                                $(".grConductor").removeClass("hidden");
+                                conductoresEncontrados = 0;
+
+                                toastr.options.timeOut = nTiempoMedio;
+                                toastr.options.extendedTimeOut = nTiempoMedio;
+                                /*success - info - warning - error*/
+                                var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+
+                                /*fallo al llamar a la funcion ajax*/
+                                $("#ImagenCargaConductor").addClass("hidden");
+                                $("#GrillaConductor").addClass("hidden");
+                                $("#MensajeErrorConductor").removeClass("hidden");
+                                $("#MensajeVacioConductor").addClass("hidden");
+                                $("#MensajeErrorListarConductor").addClass("hidden");
+
+
+                                console.log("ERROR AJAX : " + ajaxOptions);
+                                console.log("ERROR AJAX : " + thrownError);
+                                console.log(xhr.responseText);
+                                console.log(xhr);
+
+                            }
+                        });
+                    },
+                    parameterMap: function (data, operation) {
+                        if (operation !== "read" && data.models) {
+                            return JSON.stringify({ JSONparam: data.models });
+                        }
+                    }
+                },
+                error: function (e) {
+                    alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+                },
+                batch: false,
+                pageSize: PaginationKendoGrid,
+                schema: {
+                    model: {
+                        fields: {
+                            IdPerson: { type: "number" },
+                            FullName: { type: "string" },
+                            Photocheck: { type: "string" },
+                            ExpirationDateString: { type: "string" },
+                            RegistrationDateString: { type: "string" },
+                            UpdateDateString: { type: "string" }
+                        }
+                    }
+                }
+            });
+
+            $("#GrillaConductor").kendoGrid({
+                dataSource: dataSource,
+                sortable: true,
+                pageable: true,
+                columnMenu: true,
+                columnMenuInit: function (e) {
+                    var menu = e.container.find(".k-menu").data("kendoMenu");
+                    menu.bind("select", function (e) {
+                        var EtiquetaInput = $(".k-animation-container > .k-menu-group > .k-item > .k-content > .k-filter-menu > .k-textbox :input");
+                        EtiquetaInput.focus();
+                    });
+                },
+                groupable: false,
+                reorderable: true,
+                selectable: "row",
+                scrollable: true,
+                resizable: true,
+                filterable: {
+                    multi: true,
+                    checkAll: true,
+                    search: true,
+                    messages: {
+                        clear: "Limpiar",
+                        filter: "Filtrar",
+                        selectedItemsFormat: "Hay {0} items seleccionados",
+                        checkAll: "Seleccionar todo"
+                    }
+                },
+                pageable: {
+                    refresh: false,
+                    pageSize: 10,
+                    pageSizes: true,
+                    pageSizes: [5, 10, 15],
+                    buttonCount: 5,
+                    messages: {
+                        empty: KendoMsjEmpty,
+                        page: kendoMsjPage,
+                        of: KendoMsjOf,
+                        itemsPerPage: KendoMsjItemsPerPage,
+                        first: KendoMsjFirst,
+                        last: KendoMsjLast,
+                        next: KendoMsjNext,
+                        previous: KendoMsjPrevious,
+                        refresh: KendoMsjRefresh,
+                        morePages: KendoMsjMorePages,
+                        display: KendoMsjDisplay
+                    }
+                },
+                excel: { fileName: "ListadoConductor.xlsx", filterable: true, allPages: true },
+                columns: [
+
+                    //{ field: "IdPerson", title: "Id Persona", width: 120, hidden: true, attributes: { "class": "text-center" } },
+                    { field: "FullName", title: "Nombres", width: 400, attributes: { "class": "text-center" } },
+                    { field: "Photocheck", title: "Fotocheck", width: 400, attributes: { "class": "text-center" } },
+                    //{ field: "IdPerson", title: "Fecha Expiración Contrato", width: 350, attributes: { "class": "text-center" } },
+                    { field: "RegistrationDateString", title: "Fecha Registro", hidden: true, width: 200, attributes: { "class": "text-center" } },
+                    { field: "UpdateDateString", title: "Fecha Actualización", hidden: true, width: 200, attributes: { "class": "text-center" } }
+                ],
+                dataBound: function () {
+
+                    var Grilla = this;
+                    Grilla.tbody.find("tr[role='row']").each(function () {
+                        var model = Grilla.dataItem(this);
+                        //console.log(model);
+                        if (model.RegistrationStatus == "I") {
+                            $(this).find("td > button.BtnEditarEstadoCC > i").removeClass("fa-check");
+                            $(this).find("td > button.BtnEditarEstadoCC > i").addClass("fa-ban");
+                            $(this).find("td > button.BtnEditarEstadoCC").addClass("Color-gris");
+                            $(this).find("td > button.BtnEditarEstadoCC").removeClass("bg-color-blueDark");
+
+                        } else if (model.RegistrationStatus == "A") {
+                            $(this).find("td > button.BtnEditarEstadoCC > i").removeClass("fa-ban");
+                            $(this).find("td > button.BtnEditarEstadoCC > i").addClass("fa-check");
+                        }
+                        //ValidarRelacionUsuario();
+                    });
+
+                }, change: function (e) {
+                },
+            });
+        }
+
+        function ValidarRelacionUsuario() {
+
+            var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: function (options) {
+                        $.ajax({
+                            type: "GET", /*Puede ser post*/
+                            url: tRutaServidor + "/Person/ValidarRelacionPersonaUsuario", /* es importante poner los .. delante*/
+                            contentType: "application/json; charset=utf-8",
+                            data: "idPerson=" + idPerson,
+                            //data: "valorBusqueda=" + $("#txtBuscarValorCC").val(),
+                            //async: false,
+                            success: function (resultado) {
+                                //resultado.length = 0;
+                                //resultado[0].ValorConsulta = "0";
+                                /*exitosamente*/
+                                if (resultado.length > 0) {
+                                    /* proceso exitoso con datos*/
+                                    if (resultado[0].ValorConsulta == "1") {
+                                        $("#ModalUsuarioConductor").modal("show");
+
+                                        usuariosEncontrados = 1;
+                                        $(".grUsuario").removeClass("hidden");
+
+                                        $("#ImagenCargaUsuario").addClass("hidden");
+                                        $("#GrillaUsuario").removeClass("hidden");
+                                        $("#MensajeErrorUsuario").addClass("hidden");
+                                        $("#MensajeErrorListarUsuario").addClass("hidden");
+                                        $("#MensajeVacioUsuario").addClass("hidden");
+                                        //ValidarRelacionVehiculo();
+                                        //ValidarRelacionOperador();
+
+                                        if (usuariosEncontrados == 1) {
+                                            $("#ModalUsuarioConductor").modal("show");
+                                            $(".tituloModalUsuarioConductor").html("Usuario");
+                                            $("#msjInhabilitarRegistros").html("<span style='color:red; font-size:17px;'>Favor de <span style='font-weight:bold; font-size:19px;'>inhabilitar al usuario</span> asociado a esta persona para poder desactivar este registro.</span>");
+                                        }
+
+                                        //$(".grOperador").removeClass("hidden");
+
+                                        usuariosEncontrados = 0;
+
+                                        //$("#ImagenCargaOperador").addClass("hidden");
+                                        //$("#GrillaOperador").removeClass("hidden");
+                                        //$("#MensajeErrorOperador").addClass("hidden");
+                                        //$("#MensajeErrorListarOperador").addClass("hidden");
+                                        //$("#MensajeVacioOperador").addClass("hidden");
+
+                                        $("#CargaTemporal").addClass("hidden");
+
+                                    } else {
+                                        /* proceso fallido catch listado datos*/
+                                        $(".grUsuario").removeClass("hidden");
+                                        //conductoresEncontrados = 0;
+                                        usuariosEncontrados = 0;
+
+                                        toastr.options.timeOut = nTiempoMedio;
+                                        toastr.options.extendedTimeOut = nTiempoMedio;
+                                        /*success - info - warning - error*/
+                                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+
+                                        $("#ImagenCargaUsuario").addClass("hidden");
+                                        $("#GrillaUsuario").addClass("hidden");
+                                        $("#MensajeErrorUsuario").addClass("hidden");
+                                        $("#MensajeErrorListarUsuario").removeClass("hidden");
+                                        $("#MensajeVacioUsuario").addClass("hidden");
+
+                                        console.log(tMensajeLogError + resultado[0].MensajeConsulta);
+                                        $("#CargaTemporal").addClass("hidden");
+                                    }
+
+                                } else {
+                                    //conductoresEncontrados = 0;
+                                    usuariosEncontrados = 0;
+
+                                    $(".grUsuario").addClass("hidden");
+                                    $("#ImagenCargaUsuario").addClass("hidden");
+                                    $("#GrillaUsuario").addClass("hidden");
+                                    $("#MensajeErrorUsuario").addClass("hidden");
+                                    $("#MensajeErrorListarUsuario").addClass("hidden");
+                                    $("#MensajeVacioUsuario").removeClass("hidden");
+                                    //ValidarRelacionVehiculo();
+                                    //ValidarRelacionOperador();
+
+                                    //EditarEstadoPerson();
+
+
+                                    usuariosEncontrados = 0;
+                                    EditarEstadoPerson();
+                                    $("#CargaTemporal").addClass("hidden");
+
+                                }
+                                options.success(resultado);
+                                var grid = $("#GrillaUsuario").data("kendoGrid");
+                                if (grid.dataSource.total() > 0) {
+                                    grid.setDataSource(dataSource);
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                $("#CargaTemporal").addClass("hidden");
+                                //conductoresEncontrados = 0;
+                                usuariosEncontrados = 0;
+                                $(".grUsuario").removeClass("hidden");
+
+                                toastr.options.timeOut = nTiempoMedio;
+                                toastr.options.extendedTimeOut = nTiempoMedio;
+                                /*success - info - warning - error*/
+                                var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                                /*fallo al llamar a la funcion ajax*/
+                                $("#ImagenCargaUsuario").addClass("hidden");
+                                $("#GrillaUsuario").addClass("hidden");
+                                $("#MensajeErrorUsuario").removeClass("hidden");
+                                $("#MensajeVacioUsuario").addClass("hidden");
+                                $("#MensajeErrorListarUsuario").addClass("hidden");
+
+
+                                console.log("ERROR AJAX : " + ajaxOptions);
+                                console.log("ERROR AJAX : " + thrownError);
+                                console.log(xhr.responseText);
+                                console.log(xhr);
+
+                            }
+                        });
+                    },
+                    parameterMap: function (data, operation) {
+                        if (operation !== "read" && data.models) {
+                            return JSON.stringify({ JSONparam: data.models });
+                        }
+                    }
+                },
+                error: function (e) {
+                    alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+                },
+                batch: false,
+                pageSize: PaginationKendoGrid,
+                schema: {
+                    model: {
+                        fields: {
+                            IdUser: { type: "number" },
+                            UUser: { type: "string" },
+                            IdPerson: { type: "number" },
+                            FullName: { type: "string" },
+                            ExpirationDateString: { type: "string" },
+                            RegistrationDateString: { type: "string" },
+                            UpdateDateString: { type: "string" }
+                        }
+                    }
+                }
+            });
+
+            $("#GrillaUsuario").kendoGrid({
+                dataSource: dataSource,
+                sortable: true,
+                pageable: true,
+                columnMenu: true,
+                columnMenuInit: function (e) {
+                    var menu = e.container.find(".k-menu").data("kendoMenu");
+                    menu.bind("select", function (e) {
+                        var EtiquetaInput = $(".k-animation-container > .k-menu-group > .k-item > .k-content > .k-filter-menu > .k-textbox :input");
+                        EtiquetaInput.focus();
+                    });
+                },
+                groupable: false,
+                reorderable: true,
+                selectable: "row",
+                scrollable: true,
+                resizable: true,
+                filterable: {
+                    multi: true,
+                    checkAll: true,
+                    search: true,
+                    messages: {
+                        clear: "Limpiar",
+                        filter: "Filtrar",
+                        selectedItemsFormat: "Hay {0} items seleccionados",
+                        checkAll: "Seleccionar todo"
+                    }
+                },
+                pageable: {
+                    refresh: false,
+                    pageSize: 10,
+                    pageSizes: true,
+                    pageSizes: [5, 10, 15],
+                    buttonCount: 5,
+                    messages: {
+                        empty: KendoMsjEmpty,
+                        page: kendoMsjPage,
+                        of: KendoMsjOf,
+                        itemsPerPage: KendoMsjItemsPerPage,
+                        first: KendoMsjFirst,
+                        last: KendoMsjLast,
+                        next: KendoMsjNext,
+                        previous: KendoMsjPrevious,
+                        refresh: KendoMsjRefresh,
+                        morePages: KendoMsjMorePages,
+                        display: KendoMsjDisplay
+                    }
+                },
+                excel: { fileName: "Listado de Usuarios.xlsx", filterable: true, allPages: true },
+                columns: [
+
+                    //{ field: "IdUser", title: "Id Usuario", width: 120, hidden: true, attributes: { "class": "text-center" } },
+                    { field: "Person.FullName", title: "Nombres", width: 400, attributes: { "class": "text-center" } },
+                    { field: "UUser", title: "Usuario", width: 400, attributes: { "class": "text-center" } },
+                    //{ field: "IdPerson", title: "Id Person", width: 350, attributes: { "class": "text-center" } },
+                    { field: "RegistrationDateString", title: "Fecha de Registro de la Persona", hidden: true, width: 200, attributes: { "class": "text-center" } },
+                    { field: "UpdateDateString", title: "Fecha de Actualización de la Persona", hidden: true, width: 200, attributes: { "class": "text-center" } }
+                ],
+                dataBound: function () {
+
+                    var Grilla = this;
+                    Grilla.tbody.find("tr[role='row']").each(function () {
+                        var model = Grilla.dataItem(this);
+                        //console.log(model);
+                        if (model.RegistrationStatus == "I") {
+                            $(this).find("td > button.BtnEditarEstadoCC > i").removeClass("fa-check");
+                            $(this).find("td > button.BtnEditarEstadoCC > i").addClass("fa-ban");
+                            $(this).find("td > button.BtnEditarEstadoCC").addClass("Color-gris");
+                            $(this).find("td > button.BtnEditarEstadoCC").removeClass("bg-color-blueDark");
+
+                        } else if (model.RegistrationStatus == "A") {
+                            $(this).find("td > button.BtnEditarEstadoCC > i").removeClass("fa-ban");
+                            $(this).find("td > button.BtnEditarEstadoCC > i").addClass("fa-check");
+                        }
+                    });
+                }
+            });
+
+        }
+
+        function ValidarRelacionOperador() {
+
+            var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: function (options) {
+                        $.ajax({
+                            type: "GET", /*Puede ser post*/
+                            url: tRutaServidor + "/Person/ValidarRelacionPersonaOperador", /* es importante poner los .. delante*/
+                            contentType: "application/json; charset=utf-8",
+                            data: "idPerson=" + idPerson,
+                            //data: "valorBusqueda=" + $("#txtBuscarValorCC").val(),
+                            //async: false,
+                            success: function (resultado) {
+                                //resultado.length = 0;
+                                //resultado[0].ValorConsulta = "0";
+                                /*exitosamente*/
+                                if (resultado.length > 0) {
+                                    /* proceso exitoso con datos*/
+                                    if (resultado[0].ValorConsulta == "1") {
+                                        //operadoresEncontrado = 1;
+
+                                        $("#ModalUsuarioConductor").modal("show");
+
+                                        if (usuariosEncontrados == 0) {
+                                            $(".tituloModalUsuarioConductor").html("Operador");
+                                            $("#msjInhabilitarRegistros").html("<span style='color:red; font-size:17px;'>Favor de <span style='font-weight:bold; font-size:19px;'>inhabilitar al operador</span> para poder desactivar este registro.</span>");
+                                        } else {
+                                            $(".tituloModalUsuarioConductor").html("Usuario y Operador");
+                                            $("#msjInhabilitarRegistros").html("<span style='color:red; font-size:17px;'>Favor de <span style='font-weight:bold; font-size:19px;'>inhabilitar al usuario y operador</span> asociado a esta persona para poder desactivar este registro.</span>");
+                                        }
+
+                                        $(".grOperador").removeClass("hidden");
+                                        ;
+                                        usuariosEncontrados = 0;
+
+                                        $("#ImagenCargaOperador").addClass("hidden");
+                                        $("#GrillaOperador").removeClass("hidden");
+                                        $("#MensajeErrorOperador").addClass("hidden");
+                                        $("#MensajeErrorListarOperador").addClass("hidden");
+                                        $("#MensajeVacioOperador").addClass("hidden");
+
+                                        $("#CargaTemporal").addClass("hidden");
+                                    } else {
+                                        /* proceso fallido catch listado datos*/
+                                        $(".grOperador").removeClass("hidden");
+                                        //conductoresEncontrados = 0;
+                                        usuariosEncontrados = 0;
+
+                                        toastr.options.timeOut = nTiempoMedio;
+                                        toastr.options.extendedTimeOut = nTiempoMedio;
+                                        /*success - info - warning - error*/
+                                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+
+                                        $("#ImagenCargaOperador").addClass("hidden");
+                                        $("#GrillaOperador").addClass("hidden");
+                                        $("#MensajeErrorOperador").addClass("hidden");
+                                        $("#MensajeErrorListarOperador").removeClass("hidden");
+                                        $("#MensajeVacioOperador").addClass("hidden");
+
+                                        console.log(tMensajeLogError + resultado[0].MensajeConsulta);
+                                        $("#CargaTemporal").addClass("hidden");
+                                    }
+
+                                } else {
+                                    if (usuariosEncontrados == 1) {
+                                        $("#ModalUsuarioConductor").modal("show");
+
+                                        if (usuariosEncontrados != 0) {
+                                            $(".tituloModalUsuarioConductor").html("Usuario");
+                                            $("#msjInhabilitarRegistros").html("<span style='color:red; font-size:17px;'>Favor de <span style='font-weight:bold; font-size:19px;'>inhabilitar al usuario</span> asociado a esta persona para poder desactivar este registro.</span>");
+                                        }
+
+                                        usuariosEncontrados = 0;
+                                        $(".grOperador").addClass("hidden");
+
+                                        $("#ImagenCargaOperador").addClass("hidden");
+                                        $("#GrillaOperador").addClass("hidden");
+                                        $("#MensajeErrorOperador").addClass("hidden");
+                                        $("#MensajeErrorListarOperador").addClass("hidden");
+                                        $("#MensajeVacioOperador").removeClass("hidden");
+
+                                    } else if (conductoresEncontrados == 1) {
+
+                                        $("#ModalUsuarioConductor").modal("show");
+
+                                        $(".tituloModalUsuarioConductor").html("Conductor");
+                                        $("#msjInhabilitarRegistros").html("<span style='color:red; font-size:17px;'>Favor de <span style='font-weight:bold; font-size:19px;'>inhabilitar al conductor</span> asociado a esta persona para poder desactivar este registro.</span>");
+
+                                    } else {
+
+                                        usuariosEncontrados = 0;
+                                        EditarEstadoPerson();
+                                    }
+                                    $("#CargaTemporal").addClass("hidden");
+                                }
+                                options.success(resultado);
+                                var grid = $("#GrillaOperador").data("kendoGrid");
+                                if (grid.dataSource.total() > 0) {
+                                    grid.setDataSource(dataSource);
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                $("#CargaTemporal").addClass("hidden");
+                                $(".grOperador").removeClass("hidden");
+
+                                usuariosEncontrados = 0;
+
+                                toastr.options.timeOut = nTiempoMedio;
+                                toastr.options.extendedTimeOut = nTiempoMedio;
+                                /*success - info - warning - error*/
+                                var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+
+                                /*fallo al llamar a la funcion ajax*/
+                                $("#ImagenCargaOperador").addClass("hidden");
+                                $("#GrillaOperador").addClass("hidden");
+                                $("#MensajeErrorOperador").removeClass("hidden");
+                                $("#MensajeVacioOperador").addClass("hidden");
+                                $("#MensajeErrorListarOperador").addClass("hidden");
+
+
+                                console.log("ERROR AJAX : " + ajaxOptions);
+                                console.log("ERROR AJAX : " + thrownError);
+                                console.log(xhr.responseText);
+                                console.log(xhr);
+
+                            }
+                        });
+                    },
+                    parameterMap: function (data, operation) {
+                        if (operation !== "read" && data.models) {
+                            return JSON.stringify({ JSONparam: data.models });
+                        }
+                    }
+                },
+                error: function (e) {
+                    alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+                },
+                batch: false,
+                pageSize: PaginationKendoGrid,
+                schema: {
+                    model: {
+                        fields: {
+                            IdPerson: { type: "number" },
+                            FullName: { type: "string" },
+                            Photocheck: { type: "string" },
+                            ExpirationDateString: { type: "string" },
+                            RegistrationDateString: { type: "string" },
+                            UpdateDateString: { type: "string" }
+                        }
+                    }
+                }
+            });
+
+            $("#GrillaOperador").kendoGrid({
+                dataSource: dataSource,
+                sortable: true,
+                pageable: true,
+                columnMenu: true,
+                columnMenuInit: function (e) {
+                    var menu = e.container.find(".k-menu").data("kendoMenu");
+                    menu.bind("select", function (e) {
+                        var EtiquetaInput = $(".k-animation-container > .k-menu-group > .k-item > .k-content > .k-filter-menu > .k-textbox :input");
+                        EtiquetaInput.focus();
+                    });
+                },
+                groupable: false,
+                reorderable: true,
+                selectable: "row",
+                scrollable: true,
+                resizable: true,
+                filterable: {
+                    multi: true,
+                    checkAll: true,
+                    search: true,
+                    messages: {
+                        clear: "Limpiar",
+                        filter: "Filtrar",
+                        selectedItemsFormat: "Hay {0} items seleccionados",
+                        checkAll: "Seleccionar todo"
+                    }
+                },
+                pageable: {
+                    refresh: false,
+                    pageSize: 10,
+                    pageSizes: true,
+                    pageSizes: [5, 10, 15],
+                    buttonCount: 5,
+                    messages: {
+                        empty: KendoMsjEmpty,
+                        page: kendoMsjPage,
+                        of: KendoMsjOf,
+                        itemsPerPage: KendoMsjItemsPerPage,
+                        first: KendoMsjFirst,
+                        last: KendoMsjLast,
+                        next: KendoMsjNext,
+                        previous: KendoMsjPrevious,
+                        refresh: KendoMsjRefresh,
+                        morePages: KendoMsjMorePages,
+                        display: KendoMsjDisplay
+                    }
+                },
+                excel: { fileName: "Listado de Operadores.xlsx", filterable: true, allPages: true },
+                columns: [
+
+                    //{ field: "IdPerson", title: "Id Persona", width: 120, hidden: true, attributes: { "class": "text-center" } },
+                    { field: "FullName", title: "Nombres", width: 400, attributes: { "class": "text-center" } },
+                    { field: "Photocheck", title: "Fotocheck", width: 400, attributes: { "class": "text-center" } },
+                    //{ field: "IdPerson", title: "Fecha Expiración Contrato", width: 350, attributes: { "class": "text-center" } },
+                    { field: "RegistrationDateString", title: "Fecha Registro", hidden: true, width: 200, attributes: { "class": "text-center" } },
+                    { field: "UpdateDateString", title: "Fecha Actualización", hidden: true, width: 200, attributes: { "class": "text-center" } }
+                ],
+                dataBound: function () {
+
+                    var Grilla = this;
+                    Grilla.tbody.find("tr[role='row']").each(function () {
+                        var model = Grilla.dataItem(this);
+                        //console.log(model);
+                        if (model.RegistrationStatus == "I") {
+                            $(this).find("td > button.BtnEditarEstadoCC > i").removeClass("fa-check");
+                            $(this).find("td > button.BtnEditarEstadoCC > i").addClass("fa-ban");
+                            $(this).find("td > button.BtnEditarEstadoCC").addClass("Color-gris");
+                            $(this).find("td > button.BtnEditarEstadoCC").removeClass("bg-color-blueDark");
+
+                        } else if (model.RegistrationStatus == "A") {
+                            $(this).find("td > button.BtnEditarEstadoCC > i").removeClass("fa-ban");
+                            $(this).find("td > button.BtnEditarEstadoCC > i").addClass("fa-check");
+                        }
+                    });
+                }
+            });
+
+        }
+
+        /*----------------------------------------------------------------------------------------------- FUNCIONES GUARDAR/ACTUALIZAR/ELIMINAR ETC*/
+
+        function CrearPerson() {
+
+            var ptxtFechaNacimiento = ""; //$("#ptxtFechaNacimiento").val();
+            //var d = kendo.parseDate($("#ptxtFechaNacimiento").val(), "dd/MM/yyyy");
+            //if (!d) {
+            //flag = false;
+            //    ptxtFechaNacimiento = "01/01/1950"
+            // } else {
+            //flag = true;
+            ptxtFechaNacimiento = $("#ptxtFechaNacimiento").val();
+            // }
+
+            var pComboTipoDocumento = $("#pComboTpDocumento").data("kendoDropDownList").value();
+            var pComboCargo = idRole; //$("#pComboCargo").data("kendoDropDownList").value();
+            var ptxtDocument = $("#ptxtDocument").val();
+            var ptxtNombres = $("#ptxtNombres").val().trim();
+            var ptxtApePaterno = $("#ptxtApePaterno").val().trim();
+            var ptxtApeMaterno = $("#ptxtApeMaterno").val().trim();
+            //var ptxtFotocheck = $("#ptxtFotocheck").val();
+            var ptxtCorreo = $("#ptxtCorreo").val();
+            var ptxtDireccion = $("#ptxtDireccion").val();
+            var ptxtTelefono = $("#ptxtTelefono").val();
+
+            $("#CargaTemporal").removeClass("hidden");
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Person/CrearPersona",
+                dataType: "json",
+                data: {
+                    IdRole: pComboCargo,
+                    DocumentId: pComboTipoDocumento,
+                    DocumentNumber: ptxtDocument,
+                    PersonName: ptxtNombres,
+                    FirstLastName: ptxtApePaterno,
+                    SecondLastName: ptxtApeMaterno,
+                    PersonMainAddress: ptxtDireccion,
+                    PersonPhone: ptxtTelefono,
+                    Birthdate: ptxtFechaNacimiento,
+                    PersonMail: ptxtCorreo,
+                    Photocheck: "",
+                    UserStatus: "",
+                    OperatorStatus: "",
+                    DriverStatus: ""
+                },
+                success: function (resultado) {
+
+                    if (resultado == "1") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["success"](tMensajeCreadoExito, tTituloExito); $toastlast = $toast;
+
+                        $("#ImagenCarga").removeClass("hidden");
+                        $("#GrillaPersona").addClass("hidden");
+                        $("#MensajeError").addClass("hidden");
+                        $("#MensajeErrorListar").addClass("hidden");
+                        $("#MensajeVacio").addClass("hidden");
+
+                        $("#BtnExportarExcel").prop('disabled', true);
+                        $("#btnBuscar").prop('disabled', true);
+                        $("#btnNuevo").prop('disabled', true);
+                        $("#RrbActivos").prop('disabled', true);
+                        $("#RrbInactivos").prop('disabled', true);
+
+                        $('#txtBuscarValor').val("");
+
+                        $("#GrillaPersona").data("kendoGrid").dataSource.read();
+                        $('#ModalPersona').modal('hide');
+                    } else if (resultado == "6") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoLargo;
+                        toastr.options.extendedTimeOut = nTiempoLargo;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValidacionRolInactivo, tTituloError); $toastlast = $toast;
+
+                    } else if (resultado == "2") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorYaExiste, tTituloError); $toastlast = $toast;
+                    } else if (resultado == "0") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    } else if (resultado == "4") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValidacionFechaNacimiento, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    } else {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+        }
+
+        function EditarPerson() {
+            var ptxtFechaNacimiento = ""; //$("#ptxtFechaNacimiento").val();
+            //var d = kendo.parseDate($("#ptxtFechaNacimiento").val(), "dd/MM/yyyy");
+            //if (!d) {
+            //flag = false;
+            //    ptxtFechaNacimiento = "01/01/1950"
+            //} else {
+            //flag = true;
+            ptxtFechaNacimiento = $("#ptxtFechaNacimiento").val();
+            //}
+
+            var pComboTipoDocumento = $("#pComboTpDocumento").data("kendoDropDownList").value();
+            var pComboCargo = idRole//$("#pComboCargo").data("kendoDropDownList").value();
+
+            var ptxtDocument = $("#ptxtDocument").val();
+            var ptxtNombres = $("#ptxtNombres").val();
+            var ptxtApePaterno = $("#ptxtApePaterno").val();
+            var ptxtApeMaterno = $("#ptxtApeMaterno").val();
+            //var ptxtFotocheck = $("#ptxtFotocheck").val();
+            var ptxtCorreo = $("#ptxtCorreo").val();
+            var ptxtDireccion = $("#ptxtDireccion").val();
+            var ptxtTelefono = $("#ptxtTelefono").val();
+
+            $("#CargaTemporal").removeClass("hidden");
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Person/EditarPersona",
+                dataType: "json",
+                data: "IdPerson=" + idPerson
+                    + "&IdRole=" + pComboCargo
+                    + "&DocumentId=" + pComboTipoDocumento
+                    + "&DocumentNumber=" + ptxtDocument
+                    + "&PersonName=" + ptxtNombres
+                    + "&FirstLastName=" + ptxtApePaterno
+                    + "&SecondLastName=" + ptxtApeMaterno
+                    + "&PersonMainAddress=" + ptxtDireccion
+                    + "&PersonPhone=" + ptxtTelefono
+                    + "&Birthdate=" + ptxtFechaNacimiento
+                    + "&PersonMail=" + ptxtCorreo
+                    + "&Photocheck=" + ""
+                    + "&UserStatus=" + ""
+                    + "&OperatorStatus=" + ""
+                    + "&DriverStatus=" + "",
+                success: function (resultado) {
+
+                    if (resultado == "1") {
+                        $("#CargaTemporal").addClass("hidden");
+                        $('#ModalPersona').modal('hide');
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["success"](tMensajeActualizadoExito, tTituloExito); $toastlast = $toast;
+
+                        $("#ImagenCarga").removeClass("hidden");
+                        $("#GrillaPersona").addClass("hidden");
+                        $("#MensajeError").addClass("hidden");
+                        $("#MensajeErrorListar").addClass("hidden");
+                        $("#MensajeVacio").addClass("hidden");
+
+                        $("#BtnExportarExcel").prop('disabled', true);
+                        $("#btnBuscar").prop('disabled', true);
+                        $("#btnNuevo").prop('disabled', true);
+                        $("#RrbActivos").prop('disabled', true);
+                        $("#RrbInactivos").prop('disabled', true);
+
+                        $('#txtBuscarValor').val("");
+
+                        $("#GrillaPersona").data("kendoGrid").dataSource.read();
+
+                    } else if (resultado == "2") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorYaExiste, tTituloError); $toastlast = $toast;
+                    } else if (resultado == "3") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoLargo;
+                        toastr.options.extendedTimeOut = nTiempoLargo;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorNoExiste, tTituloError); $toastlast = $toast;
+
+                    } else if (resultado == "7") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoLargo;
+                        toastr.options.extendedTimeOut = nTiempoLargo;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValidacionPersonaInactivoB, tTituloError); $toastlast = $toast;
+
+                    } else if (resultado == "6") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoLargo;
+                        toastr.options.extendedTimeOut = nTiempoLargo;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValidacionRolInactivo, tTituloError); $toastlast = $toast;
+
+                    } else if (resultado == "0") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    } else if (resultado == "4") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValidacionFechaNacimiento, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    } else {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+
+        }
+
+        function EditarEstadoPerson() {
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Person/EditarEstadoPersona",
+                dataType: "json",
+                data: {
+                    IdPerson: idPerson
+                },
+                success: function (resultado) {
+
+                    if (resultado == "1") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["success"](tMensajeCanceladoExito, tTituloExito); $toastlast = $toast;
+
+                        $("#ImagenCarga").removeClass("hidden");
+                        $("#GrillaPersona").addClass("hidden");
+                        $("#MensajeError").addClass("hidden");
+                        $("#MensajeErrorListar").addClass("hidden");
+                        $("#MensajeVacio").addClass("hidden");
+
+                        $("#BtnExportarExcel").prop('disabled', true);
+                        $("#btnBuscar").prop('disabled', true);
+                        $("#btnNuevo").prop('disabled', true);
+                        $("#RrbActivos").prop('disabled', true);
+                        $("#RrbInactivos").prop('disabled', true);
+
+                        $("#GrillaPersona").data("kendoGrid").dataSource.read();
+                        $('#ModalPersona').modal('hide');
+                    } else if (resultado == "0") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    } else if (resultado == "3") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoLargo;
+                        toastr.options.extendedTimeOut = nTiempoLargo;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorNoExiste, tTituloError); $toastlast = $toast;
+
+                    } else {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+        }
+
+        function EliminarPerson() {
+
+            $("#CargaTemporal").removeClass("hidden");
+
+            $.ajax({
+                type: "POST",
+                url: tRutaServidor + "/Person/EliminarPersona",
+                dataType: "json",
+                data: {
+                    IdPerson: idPerson
+                },
+                success: function (resultado) {
+
+                    if (resultado == "1") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["success"](tMensajeEliminadoExito, tTituloExito); $toastlast = $toast;
+                        $("#ImagenCarga").removeClass("hidden");
+                        $("#GrillaPersona").addClass("hidden");
+                        $("#MensajeError").addClass("hidden");
+                        $("#MensajeErrorListar").addClass("hidden");
+                        $("#MensajeVacio").addClass("hidden");
+
+                        $("#BtnExportarExcel").prop('disabled', true);
+                        $("#btnBuscar").prop('disabled', true);
+                        $("#btnNuevo").prop('disabled', true);
+                        $("#RrbActivos").prop('disabled', true);
+                        $("#RrbInactivos").prop('disabled', true);
+                        $("#GrillaPersona").data("kendoGrid").dataSource.read();
+
+                    } else if (resultado == "0") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+
+                    } else if (resultado == "2") {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorRegistroNoInactivo, tTituloError); $toastlast = $toast;
+
+                        console.log("Mensaje del error : " + resultado)
+                    } else if (resultado == "3") {
+                        $("#CargaTemporal").addClass("hidden");
+
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorNoExiste, tTituloError); $toastlast = $toast;
+
+                        console.log("Mensaje del error : " + resultado)
+                    } else {
+                        $("#CargaTemporal").addClass("hidden");
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tMensajeErrorDesconocido, tTituloError); $toastlast = $toast;
+                        console.log("Mensaje del error : " + resultado)
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+        }
+
+        /*----------------------------------------------------------------------------------------------- OTRAS*/
+        function ExportarExcel(Etiqueta) {
+            var Grilla = $("#" + Etiqueta).data("kendoGrid");
+            swal({
+                title: tTituloExportarExcel,
+                text: tMensajeExportarExcel,
+                type: "warning"
+            });
+            Grilla.saveAsExcel();
+        };
+
+        function ComboCargo() {
+            $("#CargaTemporal").removeClass("hidden");
+            var buscarCargo = "";
+
+            $.ajax({
+                type: "GET", /*Puede ser post*/
+                url: tRutaServidor + "/Role/ListarRole", /* es importante poner los .. delante*/
+                contentType: "application/json; charset=utf-8",
+                data: "valorBusqueda=" + buscarCargo + "&valorConsulta=6",
+                dataType: "json",
+                /*async: false,*/
+                success: function (resultado) {
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+                        if (resultado[0].ValorConsulta == "1") {
+                            $("#pComboCargo").kendoDropDownList({
+                                dataTextField: "RoleName",
+                                dataValueField: "IdRole",
+                                filter: "contains",
+                                autoBind: true,
+                                minLength: 1,
+                                dataSource: {
+                                    data: resultado
+                                },
+                                select: onSelectRole
+                            });
+
+                            if (idPerson != 0) {
+                                $("#pComboCargo").data("kendoDropDownList").value(idRole);
+                            } else {
+                                $("#pComboCargo").data("kendoDropDownList").value(resultado[0].IdRole);
+                                idRole = $("#pComboCargo").data("kendoDropDownList").value();
+                            }
+
+
+                            $("#CargaTemporal").addClass("hidden");
+                            $('#ModalPersona').modal('show');
+                        } else {
+                            /* proceso fallido catch listado datos*/
+                            toastr.options.timeOut = nTiempoMedio;
+                            toastr.options.extendedTimeOut = nTiempoMedio;
+                            /*success - info - warning - error*/
+                            var $toast = toastr["error"](tValidacionListaComboCargo, tTituloError); $toastlast = $toast;
+                            console.log(resultado);
+                            $("#CargaTemporal").addClass("hidden");
+                        }
+                    } else {
+                        /* proceso fallido catch listado datos*/
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValidacionListaComboCargo, tTituloError); $toastlast = $toast;
+                        $("#CargaTemporal").addClass("hidden");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+        }
+
+
+        function onSelectRole(e) {
+
+            var dataItem = this.dataItem(e.item.index());
+            idRole = dataItem.IdRole;
+
+        };
+
+        function ComboDocumentos() {
+
+            $.ajax({
+                type: "GET", /*Puede ser post*/
+                url: tRutaServidor + "/Value/ListarValues", /* es importante poner los .. delante*/
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    valorBusqueda: "",
+                    nombreTabla: "TB_PERSON",
+                    nombreColumna: "DocumentId"
+                },
+                dataType: "json",
+                /*async: false,*/
+                success: function (resultado) {
+                    /*exitosamente*/
+                    if (resultado.length > 0) {
+                        /* proceso exitoso con datos*/
+                        if (resultado[0].ValorConsulta == "1") {
+                            $("#pComboTpDocumento").kendoDropDownList({
+                                dataTextField: "Meaning",
+                                dataValueField: "Attribute",
+                                filter: "contains",
+                                autoBind: true,
+                                minLength: 1,
+                                dataSource: {
+                                    data: resultado
+                                }
+                            });
+                            if (idPerson != 0) {
+                                $("#pComboTpDocumento").data("kendoDropDownList").value(idDocument);
+                            } else {
+                                $("#pComboTpDocumento").data("kendoDropDownList").value(resultado[0].Attribute);
+                            }
+                            ComboCargo();
+                        } else {
+                            /* proceso fallido catch listado datos*/
+                            toastr.options.timeOut = nTiempoMedio;
+                            toastr.options.extendedTimeOut = nTiempoMedio;
+                            /*success - info - warning - error*/
+                            var $toast = toastr["error"](tValidacionListaComboDocumentos, tTituloError); $toastlast = $toast;
+                            console.log(resultado);
+                            $("#CargaTemporal").addClass("hidden");
+                        }
+                    } else {
+                        /* proceso fallido catch listado datos*/
+                        toastr.options.timeOut = nTiempoMedio;
+                        toastr.options.extendedTimeOut = nTiempoMedio;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValidacionListaComboDocumentos, tTituloError); $toastlast = $toast;
+                        $("#CargaTemporal").addClass("hidden");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $("#CargaTemporal").addClass("hidden");
+                    /*fallo al llamar a la funcion ajax*/
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tMensajeErrorConexion, tTituloErrorConexion); $toastlast = $toast;
+                    console.log("ERROR AJAX : " + ajaxOptions);
+                    console.log("ERROR AJAX : " + thrownError);
+                    console.log(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+        }
+
+        function LimpiarEtiquetas() {
+            $("#ptxtDocument").val("");
+            $("#ptxtNombres").val("");
+            $("#ptxtApePaterno").val("");
+            $("#ptxtApeMaterno").val("");
+            //$("#ptxtFotocheck").val("");
+            $("#ptxtCorreo").val("");
+            $("#ptxtDireccion").val("");
+            $("#ptxtTelefono").val("");
+
+            //$("#pComboTpDocumento").data("kendoDropDownList").select();
+        }
+
+        function FormatoFechas() {
+
+            var FechaHoy = new Date();
+            var FechaMaxima = new Date(FechaHoy.getFullYear() - 17, FechaHoy.getMonth(), FechaHoy.getDate());
+
+            $('#ptxtFechaNacimiento').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                endDate: FechaMaxima
+            });
+
+            $("#ptxtFechaNacimiento").datepicker("setDate", "01/01/1950");
+        }
+
+        $('#rbOperacion').on('click', function () {
+            if ($(this).is(':checked')) {
+                userType = 'P';
+                $("#TabContratistas").hide();
+            }
+        });
+
+        $('#rbContratistas').on('click', function () {
+            if ($(this).is(':checked')) {
+                userType = 'T';
+                $("#TabContratistas").show();
+            }
+        });
+
+        /*----------------------------------------------------------------------------------------------- ASIGNAR FUNCIONES*/
+        $('#ButtonHiddenBoxUp').click(function () {
+            $("#HiddenBox").slideUp();
+            $('#ButtonHiddenBoxUp').css("display", "none");
+            $('#ButtonHiddenBoxDown').css("display", "block");
+        });
+
+        $('#ButtonHiddenBoxDown').click(function () {
+            $("#HiddenBox").slideDown();
+            $('#ButtonHiddenBoxUp').css("display", "block");
+            $('#ButtonHiddenBoxDown').css("display", "none");
+        });
+
+        $('#ModalPersona').on('shown.bs.modal', function () {
+            $(document).off('focusin.modal');
+        });
+
+        $('#ckboxOperador').on('click', function () {
+            if ($(this).is(':checked')) {
+                $("#TabOperador").show();
+            } else {
+                $("#TabOperador").hide();
+            }
+        });
+
+        $('#ckboxConductor').on('click', function () {
+            if ($(this).is(':checked')) {
+                $("#TabConductor").show();
+            } else {
+                $("#TabConductor").hide();
+            }
+        });
+
+        $('#ckboxUsuario').on('click', function () {
+            if ($(this).is(':checked')) {
+                $("#TabUser").show();
+            } else {
+                $("#TabUser").hide();
+            }
+        });
+
+        $.validator.addMethod("regx", function (value, element, regexpr) {
+
+            var valido = false;
+
+            if (value == '') {
+                valido = true;
+            } else {
+                valido = regexpr.test(value);
+            }
+
+            return valido; // regexpr.test(value);
+        }, "");
+
+        $("#pbtnGrabar").click(function () {
+
+            var $registerForm = $("#FrmPerson").validate({
+                rules: {
+                    ptxtDocument: {
+                        required: true,
+                        maxlength: function () {
+
+                            var tipo_documento = $("#pComboTpDocumento").data("kendoDropDownList").text();
+
+                            if (tipo_documento == 'DNI') {
+                                return 8;
+                            } else if (tipo_documento == 'CARNET DE EXTRANJERIA') {
+                                return 12;
+                            } else if (tipo_documento == 'PASAPORTE') {
+                                return 12;
+                            } else if (tipo_documento == 'PERMISO VEHICULAR') {
+                                return 9;
+                            } else if (tipo_documento == 'RUC') {
+                                return 11;
+                            } else {
+                                return 15;
+                            }
+                        },
+                        minlength: 6,
+                        //regx: ReSoloLetraYNumeros // /^[A-Za-z0-9]*$/
+                        regx: function () {
+                            var tipo_documento = $("#pComboTpDocumento").data("kendoDropDownList").text();
+
+                            if (tipo_documento == 'DNI') {
+                                return ReSoloNumeros;
+                            } else if (tipo_documento == 'CARNET DE EXTRANJERIA') {
+                                return ReSoloNumeros;
+                            } else if (tipo_documento == 'PASAPORTE') {
+                                return ReSoloLetraYNumeros;
+                            } else if (tipo_documento == 'PERMISO VEHICULAR') {
+                                return ReSoloLetraYNumeros;
+                            } else if (tipo_documento == 'RUC') {
+                                return ReRUC;
+                            } else {
+                                return ReSoloNumeros;
+                            }
+                        }
+                    },
+                    ptxtNombres: {
+                        required: true,
+                        maxlength: 25,
+                        minlength: 2,
+                        regx: ReSoloLetrasyNumerosConEspacioPunto // /^[A-Za-z ]*$/
+                    },
+                    ptxtApePaterno: {
+                        required: true,
+                        maxlength: 25,
+                        minlength: 2,
+                        regx: ReSoloLetrasyNumerosConEspacioPunto // /^[A-Za-z ]*$/
+                    },
+                    ptxtApeMaterno: {
+                        required: true,
+                        maxlength: 25,
+                        minlength: 2,
+                        regx: ReSoloLetrasyNumerosConEspacioPunto // /^[A-Za-z ]*$/
+                    },
+                    //ptxtFotocheck: {
+                    //    required: true,
+                    //    maxlength: 11,
+                    //    minlength: 5,
+                    //    regx: ReSoloAlfanumericos // /^[A-Za-z0-9]*$/
+                    //},
+                    ptxtCorreo: {
+                        maxlength: 50,
+                        minlength: 0,
+                        regx: ReEmail
+                    },
+                    ptxtFechaNacimiento: {
+                        regx: ReFecha // /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/
+                    },
+                    ptxtDireccion: {
+                        maxlength: 100,
+                        minlength: 0,
+                        regx: ReTexto // /^[A-Za-z0-9-ÁÉÍÓÚáéíóú,. ]*$/
+                    },
+                    ptxtTelefono: {
+                        maxlength: 9,
+                        minlength: 0,
+                        regx: ReTelefono // /^[0-9#-]*$/
+                    }
+                },
+                messages: {
+                    ptxtDocument: {
+                        required: tCampoRequerido,
+                        minlength: tMinLength,
+                        maxlength: tMaxLength,
+                        regx: tCaracteresNoValido
+                    },
+                    ptxtNombres: {
+                        required: tCampoRequerido,
+                        minlength: tMinLength,
+                        maxlength: tMaxLength,
+                        regx: tCaracteresNoValido
+                    },
+                    ptxtApePaterno: {
+                        required: tCampoRequerido,
+                        minlength: tMinLength,
+                        maxlength: tMaxLength,
+                        regx: tCaracteresNoValido
+                    },
+                    ptxtApeMaterno: {
+                        required: tCampoRequerido,
+                        minlength: tMinLength,
+                        maxlength: tMaxLength,
+                        regx: tCaracteresNoValido
+                    },
+                    //ptxtFotocheck: {
+                    //    required: tCampoRequerido,
+                    //    minlength: tMinLength,
+                    //    maxlength: tMaxLength,
+                    //    regx: tCaracteresNoValido
+                    //},
+                    ptxtCorreo: {
+                        minlength: tMinLength,
+                        maxlength: tMaxLength,
+                        regx: tValidacionCorreo
+                    },
+                    ptxtFechaNacimiento: {
+                        regx: tCaracteresNoValido
+                    },
+                    ptxtDireccion: {
+                        minlength: tMinLength,
+                        maxlength: tMaxLength,
+                        regx: tCaracteresNoValido
+                    },
+                    ptxtTelefono: {
+                        minlength: tMinLength,
+                        maxlength: tMaxLength,
+                        regx: tCaracteresNoValido
+                    }
+                },
+                submitHandler: function (form) {
+                    if ($("#ptxtNombres").val().trim() == "" || $("#ptxtApePaterno").val().trim() == "" || $("#ptxtApeMaterno").val().trim() == "") {
+                        toastr.options.timeOut = nTiempoCorto;
+                        toastr.options.extendedTimeOut = nTiempoCorto;
+                        /*success - info - warning - error*/
+                        var $toast = toastr["error"](tValoresVacios, tTituloError); $toastlast = $toast;
+                        return;
+                    }
+                    if (idPerson == 0) {
+                        CrearPerson();
+                    } else {
+                        EditarPerson();
+                    }
+
+
+                },
+
+                errorPlacement: function (error, element) {
+                    error.insertAfter(element.parent());
+                }
+            });
+
+        });
+
+        $("#pbtnCancelar").click(function () {
+            LimpiarEtiquetas();
+            $('#ModalPersona').modal('hide');
+        });
+
+        $("#btnNuevo").click(function () {
+            $("#CargaTemporal").removeClass("hidden");
+            $("#ptxtFechaNacimiento").datepicker("setDate", "01/01/1950");
+            LimpiarEtiquetas();
+            idPerson = 0;
+            idDocument = 0;
+            idRole = 0;
+            ComboDocumentos();
+        });
+
+        $("#btnBuscar").click(function () {
+
+            var valorAnalizar = $('#txtBuscarValor').val();
+            if (ValidarCaracter(valorAnalizar) == true) {
+                toastr.options.timeOut = nTiempoLargo;
+                toastr.options.extendedTimeOut = nTiempoLargo;
+                /*success - info - warning - error*/
+                var $toast = toastr["error"](tCaracteresNoValido, tTituloError); $toastlast = $toast;
+            } else {
+                $("#BtnExportarExcel").prop('disabled', true);
+                $("#btnBuscar").prop('disabled', true);
+                $("#btnNuevo").prop('disabled', true);
+                $("#RrbActivos").prop('disabled', true);
+                $("#RrbInactivos").prop('disabled', true);
+
+                $("#ImagenCarga").removeClass("hidden");
+                $("#GrillaPersona").addClass("hidden");
+                $("#MensajeError").addClass("hidden");
+                $("#MensajeErrorListar").addClass("hidden");
+                $("#MensajeVacio").addClass("hidden");
+
+                var Grilla = $("#GrillaPersona").data("kendoGrid");
+                Grilla.one("dataBound", function () {
+                    this.dataSource.page(1);
+                });
+
+                //$("#GrillaPersona").data("kendoGrid").dataSource.read();
+                GrillaListadoPerson();
+            }
+        });
+
+        $("#BtnExportarExcel").click(function () {
+            ExportarExcel("GrillaPersona");
+        });
+
+        $("#BtnExportarExcelConductor").click(function () {
+            ExportarExcel("GrillaConductor");
+        });
+        $("#BtnExportarExcelUsuario").click(function () {
+            ExportarExcel("GrillaUsuario");
+        });
+        //$("#BtnExportarExcelVehiculo").click(function () {
+        //    ExportarExcel("GrillaVehiculo");
+        //});
+
+        $("#BtnExportarExcelOperador").click(function () {
+            ExportarExcel("GrillaOperador");
+        });
+
+        $("#btnCancelarUsuarioConductor").click(function () {
+            $('#ModalUsuarioConductor').modal('hide');
+        });
+
+        /*----------------------------------------------------------------------------------------------- ASIGNAR FUNCIONES GRILLA*/
+
+        $("#GrillaPersona").delegate(".BtnEditarPerson", "click", function (e) {
+
+            var grid = $("#GrillaPersona").data("kendoGrid");
+            var myVar = grid.dataItem($(this).closest("tr"));
+
+            idPerson = myVar.IdPerson;
+            idDocument = myVar.DocumentId;
+            idRole = myVar.IdRole;
+            /*Datos persona*/
+            $("#ptxtDocument").val(myVar.DocumentNumber);
+            $("#ptxtNombres").val(myVar.PersonName);
+            $("#ptxtApePaterno").val(myVar.FirstLastName);
+            $("#ptxtApeMaterno").val(myVar.SecondLastName);
+            //$("#ptxtFotocheck").val(myVar.Photocheck);
+            $("#ptxtCorreo").val(myVar.PersonMail);
+
+            if (myVar.Birthdate == "01/01/1950 00:00:00" || myVar.Birthdate == "1/01/1950 00:00:00") {
+                $("#ptxtFechaNacimiento").val("");
+            } else {
+                var fechaNacimiento = myVar.Birthdate;
+                $("#ptxtFechaNacimiento").val(fechaNacimiento.substr(0, 10).trim());
+            }
+
+            $("#ptxtDireccion").val(myVar.PersonMainAddress);
+            $("#ptxtTelefono").val(myVar.PersonPhone);
+            ComboDocumentos();
+            /*Panel Usuario*/
+
+            //$("#txtUsuario").val(myVar.UUser);
+            //$("#txtClave").val(myVar.UPasword);
+        });
+
+        $("#GrillaPersona").delegate(".BtnEditarEstadoPerson", "click", function (e) {
+
+            var grid = $("#GrillaPersona").data("kendoGrid");
+            var myVar = grid.dataItem($(this).closest("tr"));
+            idPerson = myVar.IdPerson;
+            $("#txtUsuarioConductor").html("[ " + myVar.FullName + " ].");
+            ValidarRelacionUsuario();
+            //ValidarRelacionConductor();
+
+        });
+
+        $("#GrillaPersona").delegate(".BtnEliminarPerson", "click", function (e) {
+
+            var grid = $("#GrillaPersona").data("kendoGrid");
+            var myVar = grid.dataItem($(this).closest("tr"));
+            idPerson = myVar.IdPerson;
+
+            swal({
+                title: tTituloConfirmacion,
+                text: tMensajeConfirmacionPersona,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: tColorBoton,
+                confirmButtonText: tNombreBotonSi,
+                cancelButtonText: tNombreBotonNo,
+                closeOnConfirm: true
+            }, function () {
+                EliminarPerson();
+            });
+
+        });
+
+        $('input[type=radio][name=RrbTipo]').change(function (e) {
+
+            if (e.target.id == 'RrbActivos') {
+
+                EstadoRegistro = '1';
+                htmlBody = "<button class='btn-grid btn-xs BtnEditarPerson' type='button' title='Editar'><i class='fa fa-lg fa-fw fa-edit'></i></button>" + " " +
+                    "<button class='btn-grid btn-xs BtnEditarEstadoPerson' type='button' title='Activar / Desactivar'><i class='fa fa-lg fa-fw fa-check'></i></button>";
+
+                var valorAnalizar = $('#txtBuscarValor').val();
+                if (ValidarCaracter(valorAnalizar) == true) {
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tCaracteresNoValido, tTituloError); $toastlast = $toast;
+                } else {
+                    $("#BtnExportarExcel").prop('disabled', true);
+                    $("#btnBuscar").prop('disabled', true);
+                    $("#btnNuevo").prop('disabled', true);
+                    $("#RrbActivos").prop('disabled', true);
+                    $("#RrbInactivos").prop('disabled', true);
+
+                    $("#ImagenCarga").removeClass("hidden");
+                    $("#GrillaPersona").addClass("hidden");
+                    $("#MensajeError").addClass("hidden");
+                    $("#MensajeErrorListar").addClass("hidden");
+                    $("#MensajeVacio").addClass("hidden");
+                    GrillaListadoPerson();
+                }
+
+            } else {
+
+                EstadoRegistro = '2';
+                htmlBody = "<button class='btn-grid btn-xs BtnEditarEstadoPerson' type='button' title='Activar / Desactivar'><i class='fa fa-lg fa-fw fa-check'></i></button>" + " " +
+                    "<button class='btn-grid btn-xs BtnEliminarPerson' type='button' title='Eliminar'><i class='fa fa-lg fa-fw fa-trash-o'></i></button>";
+
+                var valorAnalizar = $('#txtBuscarValor').val();
+                if (ValidarCaracter(valorAnalizar) == true) {
+                    toastr.options.timeOut = nTiempoLargo;
+                    toastr.options.extendedTimeOut = nTiempoLargo;
+                    /*success - info - warning - error*/
+                    var $toast = toastr["error"](tCaracteresNoValido, tTituloError); $toastlast = $toast;
+                } else {
+
+                    $("#BtnExportarExcel").prop('disabled', true);
+                    $("#btnBuscar").prop('disabled', true);
+                    $("#btnNuevo").prop('disabled', true);
+                    $("#RrbActivos").prop('disabled', true);
+                    $("#RrbInactivos").prop('disabled', true);
+
+                    $("#ImagenCarga").removeClass("hidden");
+                    $("#GrillaPersona").addClass("hidden");
+                    $("#MensajeError").addClass("hidden");
+                    $("#MensajeErrorListar").addClass("hidden");
+                    $("#MensajeVacio").addClass("hidden");
+
+                    GrillaListadoPerson();
+                }
+            }
+        });
+        /*----------------------------------------------------------------------------------------------- CALENDAR*/
+        //var today = new Date();
+
+        //$("#ptxtFechaNacimiento").kendoDatePicker({
+        //    format: "dd/MM/yyyy",
+        //    min: new Date(1960, 1, 1),
+        //    max: new Date(today.setDate(today.getDate()))
+        //});
+        $('.dtpickerFI').on('click', function () {
+            if (!document.getElementById('ptxtFechaNacimiento').disabled) {
+                $('#ptxtFechaNacimiento').datepicker('show');
+            }
+
+        });
+        /*----------------------------------------------------------------------------------------------- METODOS INICIALES*/
+
+        GrillaListadoPerson();
+        FormatoFechas();
+    });
+
+</script>
+
+<style>
+    .alertaTexto {
+        color: red;
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    .focoTexto {
+        font-weight: bold;
+    }
+</style>

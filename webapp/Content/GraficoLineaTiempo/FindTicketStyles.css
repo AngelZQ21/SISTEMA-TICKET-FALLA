@@ -1,0 +1,452 @@
+﻿body {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.content {
+    margin: auto;
+    width: 100%;
+    /*font-family: Roboto;*/
+}
+
+textarea {
+    resize: none;
+}
+
+.sectionHidden {
+    width: 100%;
+    height: 200px;
+}
+
+.headerFindTicket {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    padding: 5px;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    -webkit-box-shadow: 2px 2px 5px -2px rgba(0,0,0,0.75);
+    -moz-box-shadow: 2px 2px 5px -2px rgba(0,0,0,0.75);
+    box-shadow: 2px 2px 5px -2px rgba(0,0,0,0.75);
+}
+
+#btnNuevoTicketCelular, #btnAdministradorCelular {
+    display: none;
+}
+
+#btnNuevoTicketEscritorio, #btnAdministradorEscritorio {
+    display: block;
+}
+
+.headerFindTicket div:first-child {
+    margin-left: 20px;
+}
+
+.headerFindTicket div:nth-child(2) {
+    display: flex;
+    flex-flow: row nowrap;
+    margin-right: 20px;
+}
+
+    .headerFindTicket div:nth-child(2) a {
+        text-decoration: none;
+        color: white;
+        background-color: #0A94D5;
+        padding: 10px 20px;
+        border-radius: 3px;
+        cursor: pointer;
+        -webkit-box-shadow: 2px 2px 5px -2px rgba(0,0,0,0.75);
+        -moz-box-shadow: 2px 2px 5px -2px rgba(0,0,0,0.75);
+        box-shadow: 2px 2px 5px -2px rgba(0,0,0,0.75);
+    }
+
+        .headerFindTicket div:nth-child(2) a:hover {
+            background-color: #167CAC;
+        }
+
+.sectionFindTicket {
+    width: 100%;
+    height: 320px;
+    position: relative;
+    background: url("../Content/img/GraficoLineaTiempo/fondo_loginB.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: #464646;
+}
+
+.articleColorPic {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+}
+
+.articleContent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 5px 0 5px;
+}
+
+.divMessageContent {
+    width: 100%;
+    text-align: center;
+    color: white;
+}
+
+    .divMessageContent h1 {
+        font-size: 4.5em;
+    }
+
+    .divMessageContent p {
+        font-size: 1.5em;
+    }
+
+.divFindTicket {
+    margin-top: 10px;
+    width: 25%;
+    padding: 5px 0px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+}
+
+
+.sectionFindTicket article input {
+    width: 80%;
+    border: none;
+    padding: 6.5px;
+    font-size: 1.5em;
+}
+
+.sectionFindTicket article button {
+    border: none;
+    padding: 10px 15px;
+    background-color: #0A94D5;
+    color: white;
+}
+
+    .sectionFindTicket article button:hover {
+        background-color: #167CAC;
+    }
+
+.sectionContent {
+    /*position:relative;*/
+    /*margin:60px;*/
+    border: 1px solid lightgray;
+    /*padding:5px 20px;
+    content: url('../Content/img/GraficoLineaTiempo/ticket.png');
+    opacity: 0.5;*/
+    position: relative;
+    margin: 60px;
+    /*z-index:-1;*/
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+    background-color: white;
+    /*margin:0 auto;*/
+    /*background:url("../Content/img/GraficoLineaTiempo/ticket.png");*/
+    /*background-position: center center;*/
+    /*background-repeat: no-repeat;*/
+    /*background-size: cover;*/
+    /*background-color: #464646;*/
+}
+
+.DataContent {
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.oneItem-row {
+    justify-content: flex-start;
+}
+
+.twoItems-row {
+    justify-content: space-between;
+}
+
+.inputStyle {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+    .inputStyle input {
+        border: 1px solid lightgray;
+        padding: 5px;
+    }
+
+#txtNroTicket {
+    width: 150px;
+}
+
+#txtFechaSolicitud {
+    width: 200px;
+}
+
+#txtFechaSolucion {
+    width: 200px;
+}
+
+#txtTecnicoAsignado {
+    width: 270px;
+}
+
+#txtSolicitante {
+    width: 270px;
+}
+
+#txtDescripcion {
+    width: 600px;
+}
+
+#txtSolucion {
+    width: 600px;
+}
+
+.inputStyle i {
+    background-color: #0A94D5;
+    padding: 10px 15px;
+    color: white;
+}
+
+
+/*TimeLine Styles*/
+.progressBarStepLineDiv {
+    width: 100%;
+    /*margin: 25px auto;*/
+    margin: 10px auto;
+    z-index: 1;
+}
+
+.progressBarStepLine li {
+    list-style-type: none;
+    float: left;
+    /*width: 19%;*/
+    width: 23%;
+    position: relative;
+    text-align: center;
+    cursor: pointer;
+}
+
+    .progressBarStepLine li:before {
+        content: url('../img/GraficoLineaTiempo/minus.png');
+        width: 60px;
+        height: 60px;
+        line-height: 70px;
+        border: 3px solid #ddd;
+        display: block;
+        text-align: center;
+        margin: 0 auto 10px auto;
+        border-radius: 50%;
+        background-color: white;
+    }
+
+    .progressBarStepLine li:after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 4px;
+        background-color: #ddd;
+        top: 25px;
+        left: -50%;
+        z-index: -1;
+    }
+
+    .progressBarStepLine li:first-child::after {
+        content: none;
+    }
+
+    .progressBarStepLine li.activeStep {
+        color: #17A9ED;
+    }
+
+        .progressBarStepLine li.activeStep:before {
+            content: url('../img/GraficoLineaTiempo/checked_white.png');
+            border-color: #17A9ED;
+            width: 50px;
+            height: 50px;
+            line-height: 55px;
+            border: 5px solid;
+            background-color: lightgreen;
+            -webkit-box-shadow: 2px 2px 5px -2px rgba(0,0,0,0.75);
+            -moz-box-shadow: 2px 2px 5px -2px rgba(0,0,0,0.75);
+            box-shadow: 2px 2px 5px -2px rgba(0,0,0,0.75);
+        }
+
+        .progressBarStepLine li.activeStep + li::after {
+            background-color: #17A9ED;
+        }
+
+
+.footerFindTicket {
+    width: 100%;
+    color: white;
+    font-weight: lighter;
+    background-color: #272727;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+
+    .footerFindTicket a {
+        text-decoration: none;
+        color: darkred;
+    }
+
+        .footerFindTicket a:hover {
+            color: darkred;
+            font-style: unset;
+            text-decoration: underline;
+        }
+
+.footerContact {
+    width: 100%;
+    display: flex;
+    margin-top: 40px;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
+
+.footerSocialLink a {
+    margin-left: 10px;
+    font-size: 14px;
+    color: #777777;
+}
+
+    .footerSocialLink a:hover {
+        color: #777777;
+    }
+
+
+.footerCopyRight {
+    padding: 20px 50px 10px 50px;
+    background-color: #222222;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+/* Clase que tendra el tooltip */
+.cssToolTip {
+    position: relative; /* Esta clase tiene que tener posicion relativa */
+    color: #ff8c00; /* Color del texto */
+}
+
+    /* El tooltip */
+    .cssToolTip span {
+        background-color: lightgray;
+        color: black;
+        font-weight: bold;
+        display: none; /* El tooltip por defecto estara oculto */
+        font-size: 1.5em;
+        padding: 5px 2px 5px 2px;
+        position: absolute; /* El tooltip se posiciona de forma absoluta para no modificar el aspezto del resto de la pagina */
+        top: 80px; /* Posicion apartir de la parte superior del primer elemento padre con posicion relativa */
+        left: 70px; /* Posicion apartir de la parte izquierda del primer elemento padre con posicion relativa */
+        z-index: 100; /* Poner un z-index alto para que aparezca por encima del resto de elementos */
+    }
+
+    /* El tooltip cuando se muestra */
+    .cssToolTip:hover span {
+        display: inline; /* Para mostrarlo simplemente usamos display block por ejemplo */
+    }
+
+
+
+/*Medida para Tabletas*/
+@media only screen and (max-width: 780px) {
+
+    .divMessageContent h1 {
+        font-size: 3.5em;
+    }
+
+    .divMessageContent p {
+        font-size: 1.2em;
+    }
+
+    .divFindTicket {
+        width: 80%;
+    }
+
+    .verticalLine {
+        /*border-left: thick solid #ff0000;*/
+        width: 1050px;
+        height: 100px;
+        background-color: #0A94D5;
+    }
+
+    .DataContent {
+        flex-flow: column nowrap;
+    }
+
+    .footerContact {
+        align-self: flex-start;
+        margin-left: 10px;
+    }
+
+    #txtnroTicket, #txtFechaSolicitud, #txtFechaSolucion, #txtTecnicoAsignado, #txtSolicitante {
+        width: 60%;
+    }
+
+    #txtDescripcion, #txtSolucion {
+        width: 100%;
+    }
+}
+
+
+/*Medida para NoteBook*/
+@media only screen and (max-width: 480px) {
+
+    .divMessageContent h1 {
+        font-size: 3em;
+    }
+
+    .divMessageContent p {
+        font-size: 1.2em;
+    }
+
+    .divFindTicket {
+        width: 100%;
+    }
+
+    .sectionFindTicket article input {
+        padding: 10px;
+        font-size: 1.2em;
+    }
+
+    .footerCopyRight {
+        flex-flow: column nowrap;
+    }
+
+    .inputStyle input {
+        width: 100%;
+    }
+
+    #txtnroTicket, #txtFechaSolicitud, #txtFechaSolucion, #txtTecnicoAsignado, #txtSolicitante, #txtDescripcion, #txtSolucion {
+        width: 100%;
+    }
+
+    .footerContact {
+        justify-content: center;
+    }
+
+    #btnNuevoTicketCelular, #btnAdministradorCelular {
+        display: block;
+    }
+
+    #btnNuevoTicketEscritorio, #btnAdministradorEscritorio {
+        display: none;
+    }
+}

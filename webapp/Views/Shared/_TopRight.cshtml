@@ -1,0 +1,204 @@
+﻿<!-- collapse menu button -->
+<div id="hide-menu" class="btn-header pull-right">
+    <span> <a href="javascript:void(0);" data-action="toggleMenu" title="Collapse Menu"><i class="fa fa-reorder"></i></a> </span>
+</div>
+<!-- end collapse menu -->
+<!-- #MOBILE -->
+<!-- Top menu profile link : this shows only when top menu is active -->
+<ul id="mobile-profile-img" class="header-dropdown-list hidden-xs padding-5">
+    <li class="">
+        <a href="#" class="dropdown-toggle no-margin userdropdown" data-toggle="dropdown">
+            <img src="~/content/img/avatars/sunny.png" alt="John Doe" class="online" />
+        </a>
+        <ul class="dropdown-menu pull-right">
+            <li>
+                <a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0"><i class="fa fa-cog"></i> Setting</a>
+            </li>
+            <li class="divider"></li>
+            <li>
+                <a href="#" class="padding-10 padding-top-0 padding-bottom-0"> <i class="fa fa-user"></i> Profile</a>
+            </li>
+            <li class="divider"></li>
+            <li>
+                <a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0" data-action="toggleShortcut"><i class="fa fa-arrow-down"></i> <>S</>hortcut</a>
+            </li>
+            <li class="divider"></li>
+            <li>
+                <a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0" data-action="launchFullscreen"><i class="fa fa-arrows-alt"></i> Full <>S</>creen</a>
+            </li>
+            <li class="divider"></li>
+            <li>
+                <a href="@Url.Action("login", "account")" class="padding-10 padding-top-5 padding-bottom-5" data-action="userLogout"><i class="fa fa-sign-out fa-lg"></i> <strong><>L</>ogout</strong></a>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+<!-- logout button -->
+<div id="logout" class="btn-header transparent pull-right">
+    <span> <a href="@Url.Action("login", "account")" title="Cerrar Sesión" data-action="userLogout" data-logout-msg="¿Seguro que desea salir del sistema?"><i class="fa fa-sign-out"></i></a> </span>
+</div>
+
+<div id="fullscreen" class="btn-header transparent pull-right">
+    <span> <a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen"><i class="fa fa-arrows-alt"></i></a> </span>
+</div>
+<!-- end logout button -->
+<!-- search mobile button (this is hidden till mobile view port) -->
+<div id="search-mobile" class="btn-header transparent pull-right">
+    <span> <a href="javascript:void(0)" title="Search"><i class="fa fa-search"></i></a> </span>
+</div>
+<!-- end search mobile button -->
+<!-- input: search field -->
+
+
+    
+ @*</section>*@
+
+
+<form id="search-form" action="" class="header-search pull-right">
+    @*<section class="col-xs-12 col-sm-12 col-md-5 col-lg-12">*@
+    
+
+    <input id="search-fld" type="text" name="param" placeholder="Búsqueda...">
+    <button type="submit" class="btnBuscarGeneral">
+        <i class="fa fa-search"></i>
+    </button>
+    @*<a href="javascript:void(0);" id="cancel-search-js" title="Cancel Search"><i class="fa fa-times"></i></a>*@
+</form>
+<!-- end input: search field -->
+<!-- fullscreen button -->
+
+<div class="btn-header transparent pull-right" style="margin-top:12px">
+    @*<div style="width: 100%;">
+        <input tabindex="7" type="radio" name="rdoRadioPlatMov2" id="rdoSearchPlataforma2" checked="checked">
+        <label style="color: #2F4050"><strong>Plataforma </strong></label>
+        <input tabindex="7" type="radio" name="rdoRadioPlatMov2" id="rdoSearchMovil2" style="margin-left:30px">
+        <label style="color: #2F4050;"><strong>Movil </strong></label>
+    </div>*@
+</div>
+<!-- end fullscreen button -->
+<!-- multiple lang dropdown : find all flags in the flags page -->
+<!--<ul class="header-dropdown-list hidden-xs">
+    <li>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img src="~/content/img/blank.gif" class="flag flag-us" alt="United States"> <span> English (US) </span> <i class="fa fa-angle-down"></i> </a>
+        <ul class="dropdown-menu pull-right">
+            <li class="active">
+                <a href="javascript:void(0);"><img src="~/content/img/blank.gif" class="flag flag-us" alt="United States"> English (US)</a>
+            </li>
+            <li>
+                <a href="javascript:void(0);"><img src="~/content/img/blank.gif" class="flag flag-fr" alt="France"> Français</a>
+            </li>
+            <li>
+                <a href="javascript:void(0);"><img src="~/content/img/blank.gif" class="flag flag-es" alt="Spanish"> Español</a>
+            </li>
+            <li>
+                <a href="javascript:void(0);"><img src="~/content/img/blank.gif" class="flag flag-de" alt="German"> Deutsch</a>
+            </li>
+            <li>
+                <a href="javascript:void(0);"><img src="~/content/img/blank.gif" class="flag flag-jp" alt="Japan"> 日本語</a>
+            </li>
+            <li>
+                <a href="javascript:void(0);"><img src="~/content/img/blank.gif" class="flag flag-cn" alt="China"> 中文</a>
+            </li>
+            <li>
+                <a href="javascript:void(0);"><img src="~/content/img/blank.gif" class="flag flag-it" alt="Italy"> Italiano</a>
+            </li>
+            <li>
+                <a href="javascript:void(0);"><img src="~/content/img/blank.gif" class="flag flag-pt" alt="Portugal"> Portugal</a>
+            </li>
+            <li>
+                <a href="javascript:void(0);"><img src="~/content/img/blank.gif" class="flag flag-ru" alt="Russia"> Русский язык</a>
+            </li>
+            <li>
+                <a href="javascript:void(0);"><img src="~/content/img/blank.gif" class="flag flag-kr" alt="Korea"> 한국어</a>
+            </li>
+
+        </ul>
+    </li>
+</ul>-->
+<!-- end multiple lang -->
+
+<script type="text/javascript">
+
+    var valorInputBusquedaInteligente = "";
+    var FilterPlatMov = 'P';
+    var BuscadorPrincipal = "1";
+
+    $(".btnBuscarGeneral").click(function () {
+
+        valorInputBusquedaInteligente = $("#search-fld").val().trim();
+        var tamanoValorInput = valorInputBusquedaInteligente.length;
+
+        if (tamanoValorInput > 2 && tamanoValorInput <= 30) {
+
+            @*$.session.set("valorBusquedaInteligente", valorInputBusquedaInteligente);
+            var url = '@Url.Action("VSearch", "Search")';
+            window.location.href = url;*@
+            BuscadorPrincipal = "1";
+
+            /*$("#txtSearchValues").val(valorInputBusquedaInteligente);*/
+
+            $('#ModalBuscarTicket').modal('show');
+
+            GrillaListadoBusqueda();
+
+            
+
+        } else {
+
+            toastr.options.timeOut = 1600;
+            toastr.options.extendedTimeOut = 1600;
+            /*success - info - warning - error*/
+            var $toast = toastr["info"]("La búsqueda permite el ingreso de palabras entre 3 y 30 caracteres.", "Atención"); $toastlast = $toast;
+        }
+
+
+    });
+
+    $("#search-fld").keypress(function (event) {
+        // Verifica si la tecla presionada es Enter (código 13)
+        if (event.which === 13) {
+            // Llama a la función de búsqueda al presionar Enter
+            $(".btnBuscarGeneral").click();
+        }
+    });
+
+    $("#search-form").submit(function (event) {
+        event.preventDefault();
+        // Agrega cualquier lógica adicional de búsqueda aquí si es necesario
+    });
+
+    //$('input[type=radio][name=rdoRadioPlatMov2]').change(function (e) {
+
+    //    if (e.target.id == 'rdoSearchPlataforma2') {
+
+    //        $(".Container3WS").removeClass("hidden");
+    //        $(".ContainerCasesMovilTicket").addClass("hidden");
+    //        $(".ContainerVitacoraTicket").removeClass("hidden");
+
+    //        $(".Container3WS").removeClass("hidden");
+    //        FilterPlatMov = 'P';
+
+    //        $('#rdoSearchPlataforma').is(":checked") = true;
+    //        $('#rdoSearchMovil').is(":checked") = false;
+
+
+    //        /*GrillaListadoBusqueda();*/
+
+    //    } else if (e.target.id == 'rdoSearchMovil2') {
+
+    //        $(".Container3WS").addClass("hidden");
+    //        $(".ContainerCasesMovilTicket").removeClass("hidden");
+    //        $(".ContainerVitacoraTicket").addClass("hidden");
+
+    //        FilterPlatMov = 'M';
+
+    //        $('#rdoSearchPlataforma').is(":checked") = false;
+    //        $('#rdoSearchMovil').is(":checked") = true;
+
+    //    }
+
+    //});
+
+</script>
+

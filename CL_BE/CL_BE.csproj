@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E3D984E9-01FC-466A-B23D-D76D69C2ED03}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CL_BE</RootNamespace>
+    <AssemblyName>CL_BE</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BE_Action.cs" />
+    <Compile Include="BE_Activity.cs" />
+    <Compile Include="BE_ActivityDetail.cs" />
+    <Compile Include="BE_Almacen.cs" />
+    <Compile Include="BE_Area.cs" />
+    <Compile Include="BE_Attendant.cs" />
+    <Compile Include="BE_Audit.cs" />
+    <Compile Include="BE_Board.cs" />
+    <Compile Include="BE_Components.cs" />
+    <Compile Include="BE_Configuration.cs" />
+    <Compile Include="BE_Contratista.cs" />
+    <Compile Include="BE_Criticality.cs" />
+    <Compile Include="BE_Employee.cs" />
+    <Compile Include="BE_Grafic_Value.cs" />
+    <Compile Include="BE_GuardChange.cs" />
+    <Compile Include="BE_Indicator_Type.cs" />
+    <Compile Include="BE_Indicator_User.cs" />
+    <Compile Include="BE_Error.cs" />
+    <Compile Include="BE_Indicator.cs" />
+    <Compile Include="BE_Indicator_Answer.cs" />
+    <Compile Include="BE_Indicator_Navigation.cs" />
+    <Compile Include="BE_Indicator_Register.cs" />
+    <Compile Include="BE_Locacion.cs" />
+    <Compile Include="BE_Location.cs" />
+    <Compile Include="BE_Meeting_Record.cs" />
+    <Compile Include="BE_Meeting_Record_Activity.cs" />
+    <Compile Include="BE_Meeting_Record_Detail.cs" />
+    <Compile Include="BE_Menu.cs" />
+    <Compile Include="BE_Menu_Profile.cs" />
+    <Compile Include="BE_Menu_Profile_Action.cs" />
+    <Compile Include="BE_Operation.cs" />
+    <Compile Include="BE_PathFile.cs" />
+    <Compile Include="BE_Person.cs" />
+    <Compile Include="BE_Position.cs" />
+    <Compile Include="BE_Profile.cs" />
+    <Compile Include="BE_Profile_Indicator.cs" />
+    <Compile Include="BE_Reason.cs" />
+    <Compile Include="BE_Restriction.cs" />
+    <Compile Include="BE_Search.cs" />
+    <Compile Include="BE_Ticket.cs" />
+    <Compile Include="BE_TicketDetail.cs" />
+    <Compile Include="BE_Time.cs" />
+    <Compile Include="BE_User.cs" />
+    <Compile Include="BE_Value.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="BE_Role.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

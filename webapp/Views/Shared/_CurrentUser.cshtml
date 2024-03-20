@@ -1,0 +1,16 @@
+﻿<div class="login-info" >
+    <span >
+        <a style="cursor:pointer" >
+            <i style="font-size: 1.5em; margin:5px;" class="fa fa-user"></i>
+            <span>BIENVENIDO : </span>
+            <span id="show-shortcut" class="txtUser" style="text-overflow: ellipsis; white-space:nowrap; width:88px;"> </span>
+            <!--<i class="fa fa-angle-down"></i>-->
+        </a>
+    </span>
+</div>
+
+<script type="text/javascript">
+    var USER = "@User.Identity.Name.ToUpper().ToString()";
+    var split = USER.split(',')
+    $('.txtUser').html(" " + split[4]);
+</script>
